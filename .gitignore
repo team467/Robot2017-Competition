@@ -1,0 +1,13 @@
+/bin/
+/testbin/
+/dist/
+/build/
+sysProps.xml
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.DS_Store
