@@ -39,6 +39,27 @@ public class Steering
      */
     private double steeringCenter;
 
+    class SteeringPIDSource implements PIDSource
+    {
+        @Override
+        public double pidGet()
+        {
+            return (getSensorValue());
+        }
+
+        @Override
+        public void setPIDSourceType(PIDSourceType pidSource)
+        {
+            // Don't set source type
+        }
+
+        @Override
+        public PIDSourceType getPIDSourceType()
+        {
+            return PIDSourceType.kDisplacement;
+        }
+    }
+
     /**
      * Constructor for steering subsystem
      *
@@ -63,7 +84,7 @@ public class Steering
         steeringCenter = center;
 
         // Make PID Controller
-        steeringPID = new PIDController(pid.p, pid.i, pid.d, steeringSensor, steeringMotor);
+        steeringPID = new PIDController(pid.p, pid.i, pid.d, new SteeringPIDSource(), steeringMotor);
 
         // Set PID Controller settings
         steeringPID.setInputRange(0.0, RobotMap.STEERING_RANGE);
@@ -181,7 +202,6 @@ public class Steering
      */
     public double getSensorValue()
     {
-        // return RobotMap.STEERING_RANGE - steeringSensor.getAverageValue();
         return steeringSensor.getAverageValue();
     }
     
