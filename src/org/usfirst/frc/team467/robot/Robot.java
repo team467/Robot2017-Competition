@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot
     private Drive drive;
 
     int session;
-    
+
     /**
      * Time in milliseconds
      */
@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot
         drive = Drive.getInstance();
 
         Calibration.init();
-        
+
     }
 
     public void disabledInit()
@@ -57,7 +57,6 @@ public class Robot extends IterativeRobot
     {
     }
 
-    @Override
     public void autonomousInit()
     {
     }
@@ -114,7 +113,7 @@ public class Robot extends IterativeRobot
                     wheelpod.setAbsoluteAngle(0);
                 }
                 break;
-                
+
             case TURN:
                 drive.turnDrive(-driverstation.getDriveJoystick().getTwist()/2);
                 break;
@@ -124,16 +123,16 @@ public class Robot extends IterativeRobot
                 {
                     // Don't start driving until commanded speed greater than minimum
                     drive.stop();
-                } 
+                }
                 else
                 {
-                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(), 
+                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
                     				driverstation.getDriveJoystick().getStickDistance());
                 }
                 break;
             case STRAFE:
             	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
             	break;
-        }        
+        }
     }
 }

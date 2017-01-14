@@ -9,7 +9,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.*;
 
 /**
- * 
+ *
  */
 public class Drive extends RobotDrive
 {
@@ -68,7 +68,7 @@ public class Drive extends RobotDrive
 
     /**
      * Gets the single instance of this class.
-     * 
+     *
      * @return The single instance.
      */
     public static Drive getInstance()
@@ -123,9 +123,9 @@ public class Drive extends RobotDrive
         {
             throw new NullPointerException("Null motor provided");
         }
-        
+
         final double MAX_DRIVE_ANGLE = Math.PI / 25;
-        
+
         // Don't drive until wheels are close to the commanded steering angle
         if (steering[RobotMap.FRONT_LEFT] .getAngleDelta() < MAX_DRIVE_ANGLE ||
             steering[RobotMap.FRONT_RIGHT].getAngleDelta() < MAX_DRIVE_ANGLE ||
@@ -136,7 +136,7 @@ public class Drive extends RobotDrive
             m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
             m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
             m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
-        } 
+        }
         else
         {
             m_frontLeftMotor.set(0);
@@ -169,10 +169,10 @@ public class Drive extends RobotDrive
     /**
      * Set angles in "turn in place" position
      * Wrap around will check whether the closest angle is facing forward or backward
-     * 
+     *
      * Front Left- / \ - Front Right<br>
      * Back Left - \ / - Back Right
-     * 
+     *
      * @param speed
      */
     public void turnDrive(double speed)
@@ -180,12 +180,12 @@ public class Drive extends RobotDrive
         WheelCorrection frontLeft = wrapAroundCorrect(RobotMap.FRONT_LEFT, TURN_IN_PLACE_ANGLE, -speed);
         WheelCorrection frontRight = wrapAroundCorrect(RobotMap.FRONT_RIGHT, -TURN_IN_PLACE_ANGLE, speed);
         WheelCorrection backLeft = wrapAroundCorrect(RobotMap.BACK_LEFT, -TURN_IN_PLACE_ANGLE, -speed);
-        WheelCorrection backRight = wrapAroundCorrect(RobotMap.BACK_RIGHT, TURN_IN_PLACE_ANGLE, speed);               
-        
+        WheelCorrection backRight = wrapAroundCorrect(RobotMap.BACK_RIGHT, TURN_IN_PLACE_ANGLE, speed);
+
         this.fourWheelSteer(frontLeft.angle, frontRight.angle, backLeft.angle, backRight.angle);
         this.fourWheelDrive(frontLeft.speed, frontRight.speed, backLeft.speed, backRight.speed);
     }
-    
+
     // Previous speeds for the four wheels
     private double lastSpeed[] = new double[]{0.0,0.0,0.0,0.0};
 
@@ -273,20 +273,20 @@ public class Drive extends RobotDrive
 
     /**
      * Drive left or right at a fixed speed.
-     * 
+     *
      * @param direction
      * @param speed
      */
-    
-    
+
+
     public void strafeDrive(int POVangle)
-    {    	
+    {
         double speed = SPEED_STRAFE;
         double angle = POVangle*Math.PI / 180;
-        crabDrive(angle, speed);  
-   
+        crabDrive(angle, speed);
+
     }
-    
+
     /**
      * Individually controls a specific driving motor
      *
@@ -343,7 +343,7 @@ public class Drive extends RobotDrive
 
     /**
      * Only used for steering
-     * 
+     *
      * @param steeringIndex
      *            - which wheel pod
      * @param targetAngle
@@ -416,7 +416,6 @@ class WheelCorrection
         speed = speedIn;
     }
 
-    @Override
     public String toString()
     {
         return "WheelCorrection [speed=" + speed + ", angle=" + angle + "]";
