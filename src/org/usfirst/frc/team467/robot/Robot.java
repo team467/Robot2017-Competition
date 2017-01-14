@@ -23,13 +23,11 @@ public class Robot extends IterativeRobot
 
     // Robot objects
     private DriverStation2015 driverstation;
-    private Shooter shooters;
-    
 
     private Drive drive;
 
     int session;
-    
+
     /**
      * Time in milliseconds
      */
@@ -46,10 +44,9 @@ public class Robot extends IterativeRobot
         // Make robot objects
         driverstation = DriverStation2015.getInstance();
         drive = Drive.getInstance();
-        shooters = new Shooter();
 
         Calibration.init();
-        
+
     }
 
     public void disabledInit()
@@ -60,7 +57,6 @@ public class Robot extends IterativeRobot
     {
     }
 
-    @Override
     public void autonomousInit()
     {
     }
@@ -100,8 +96,6 @@ public class Robot extends IterativeRobot
             // Drive Mode
             updateDrive();
         }
-        
-        
     }
 
     /**
@@ -110,15 +104,6 @@ public class Robot extends IterativeRobot
      */
     private void updateDrive()
     {
-    	if (driverstation.getDriveJoystick().buttonPressed(4)){
-    		shooters.increaseSpeed();
-    		shooters.shoot(true);
-    	}
-    	else if (driverstation.getDriveJoystick().buttonPressed(3)){
-    		shooters.decreaseSpeed();
-    		shooters.shoot(true);
-    	}
-    	
         DriveMode driveMode = driverstation.getDriveMode();
         switch (driveMode)
         {
@@ -128,7 +113,7 @@ public class Robot extends IterativeRobot
                     wheelpod.setAbsoluteAngle(0);
                 }
                 break;
-                
+
             case TURN:
                 drive.turnDrive(-driverstation.getDriveJoystick().getTwist()/2);
                 break;
@@ -138,18 +123,16 @@ public class Robot extends IterativeRobot
                 {
                     // Don't start driving until commanded speed greater than minimum
                     drive.stop();
-                } 
+                }
                 else
                 {
-                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(), 
+                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
                     				driverstation.getDriveJoystick().getStickDistance());
                 }
                 break;
             case STRAFE:
             	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
-            	
             	break;
-        }    
-        
+        }
     }
 }

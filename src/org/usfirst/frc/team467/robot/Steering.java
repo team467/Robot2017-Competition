@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
  *
  * There are 2 adjustments that may be necessary in this code to adjust for
  * electronics or mechanical issues.
- * 
+ *
  * 1. If the steering motors are driving in the wrong direction (due to wiring or gearing changes)
  * - invert the sign of the steering PID - defined in RobotMap.java
- * 
+ *
  * 2. If the steering sensors are reading in the wrong direction
  * - invert the value read from the sensor by changing the value returned from
  * getSensorValue() to be (RobotMap.STEERING_RANGE - steeringSensor.getAverageValue())
@@ -41,19 +41,16 @@ public class Steering
 
     class SteeringPIDSource implements PIDSource
     {
-        @Override
         public double pidGet()
         {
             return (getSensorValue());
         }
 
-        @Override
         public void setPIDSourceType(PIDSourceType pidSource)
         {
             // Don't set source type
         }
 
-        @Override
         public PIDSourceType getPIDSourceType()
         {
             return PIDSourceType.kDisplacement;
@@ -117,7 +114,7 @@ public class Steering
     {
         return steeringPID.getSetpoint();
     }
-    
+
     /**
      * @return The setPoint in radians
      */
@@ -125,7 +122,7 @@ public class Steering
     {
         return (getSetPoint() * (Math.PI * 2) / LEVELS_PER_ROTATION);
     }
-    
+
     /**
      * @return The absolute difference between the setPoint and sensorAngle in radians
      */
@@ -136,7 +133,7 @@ public class Steering
 
     /**
      * Get the Talon motor of this steering object
-     * 
+     *
      * @return
      */
     public Talon getMotor()
@@ -155,7 +152,7 @@ public class Steering
         double sensor = steeringSensor.getAverageValue() - steeringCenter;
 
         double output = sensor * (Math.PI * 2) / LEVELS_PER_ROTATION;
-        
+
         if (steeringSensor.getChannel() == RobotMap.FRONT_LEFT_STEERING_SENSOR_CHANNEL)
         {
             SmartDashboard.putNumber("Front-Left Angle", output);
@@ -194,7 +191,7 @@ public class Steering
         System.out.print(" S: " + steeringPID.getSetpoint());
         System.out.println();
     }
-    
+
     /**
      * Get directly the value of the sensor
      *
@@ -204,10 +201,10 @@ public class Steering
     {
         return steeringSensor.getAverageValue();
     }
-    
+
     /**
      * Set angle of front steering. A value of 0.0 corresponds to normally forward position.
-     * 
+     *
      * @param requestedAngle
      *            - any value between -PI and +PI
      */
@@ -229,11 +226,11 @@ public class Steering
 
         setAbsoluteAngle(outputAngle);
     }
-    
+
     /**
-     * Set absolute angle of front steering. A value of 0.0 corresponds to normally forward position 
+     * Set absolute angle of front steering. A value of 0.0 corresponds to normally forward position
      * with the rotation sensor in the center position also.
-     * 
+     *
      * @param requestedAngle
      *            - any value between -PI and +PI
      */
@@ -252,7 +249,7 @@ public class Steering
 
     /**
      * Limit range to -6PI to +6PI
-     * 
+     *
      * @param angle
      * @return
      */
@@ -271,7 +268,7 @@ public class Steering
 
     /**
      * Change the center point of this steering motor
-     * 
+     *
      * @param center
      */
     public void setCenter(double center)

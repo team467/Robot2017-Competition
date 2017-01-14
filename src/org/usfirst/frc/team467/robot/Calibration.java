@@ -76,12 +76,11 @@ public class Calibration
 
     /**
      * Gets the wheel selected by the stick.
-     * 
+     *
      * @param prevSelectedWheel
      *            previously selected wheel
      * @return int val of which wheel to select
      */
-    @SuppressWarnings("unused")   // used if/when joystick is used for calibration
     private static int getWheelStick(int prevSelectedWheel)
     {
         Joystick467 joystick = DriverStation2015.getInstance().getCalibrationJoystick();
@@ -122,7 +121,7 @@ public class Calibration
 
     /**
      * Gets the angle to set the calibrating wheel.
-     * 
+     *
      * @param prevCalibrationAngle
      *            previous angle to update
      * @return angle for setting the angle
@@ -142,7 +141,7 @@ public class Calibration
 
     /**
      * rate of turn slow down modifier
-     * 
+     *
      * @return
      */
     private static double getCalibrationSlowTurnRate()
@@ -152,7 +151,7 @@ public class Calibration
 
     // This is a static variable to define the wheel being calibrated.
     private static int calibrateWheelSelect = 0;
- 
+
     /**
      * Update steering calibration control
      */
