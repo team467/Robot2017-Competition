@@ -41,7 +41,7 @@ public class Drive extends RobotDrive
 
     // Speed to use for Strafe and Revolve Drive
     private static final double SPEED_STRAFE = 0.6;
-
+// TODO: some stuff
 
     // Private constructor
     private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor)
@@ -277,31 +277,14 @@ public class Drive extends RobotDrive
      * @param direction
      * @param speed
      */
-    public void strafeDrive(Direction direction)
-    {
-        double angle = 0.0;
-        switch (direction)
-        {
-            case FRONT:
-                // Not used, here to be thorough
-                angle = 0.0;
-                break;
-            case LEFT:
-                angle = -Math.PI / 2;
-                break;
-            case RIGHT:
-                angle = Math.PI / 2;
-                break;
-            case BACK:
-                angle = Math.PI;
-                break;
-        }
-        
+    
+    
+    public void strafeDrive(int POVangle)
+    {    	
         double speed = SPEED_STRAFE;
-
-        WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
-        fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-        fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+        double angle = POVangle*Math.PI / 180;
+        crabDrive(angle, speed);  
+   
     }
     
     /**

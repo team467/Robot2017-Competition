@@ -5,6 +5,8 @@ public class DriverStation2015
     private static DriverStation2015 driverstation2015 = null;
 
     Joystick467 driverJoy = null;
+    //Instantiated this in main class instead of inside of getDriveMode
+    DriveMode drivemode;
     
     // Mapping of functions to Joystick Buttons for normal operation
     private static int SLOW_BUTTON = Joystick467.TRIGGER;
@@ -83,7 +85,10 @@ public class DriverStation2015
      */
     public DriveMode getDriveMode()
     {
-        DriveMode drivemode = DriveMode.CRAB;  // default is regular crab drive
+    	//Instantiated outside of this class and in main class
+    	//crab drive is default. if else, it is strafe.
+    	//return the chosen drivemode
+       drivemode = DriveMode.CRAB;  // default is regular crab drive
         
         if (getDriveJoystick().buttonDown(TURN_BUTTON))
         {
@@ -94,7 +99,10 @@ public class DriverStation2015
         {
             drivemode = DriveMode.UNWIND;
         }
-        return drivemode;
+        if(getDriveJoystick().getPOV() != -1){
+        	drivemode = DriveMode.STRAFE;
+        }
+		return drivemode;
     }
 
     /**

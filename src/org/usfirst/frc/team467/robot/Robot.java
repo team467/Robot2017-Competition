@@ -124,13 +124,16 @@ public class Robot extends IterativeRobot
                 {
                     // Don't start driving until commanded speed greater than minimum
                     drive.stop();
-                }
+                } 
                 else
                 {
                     drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(), 
                     				driverstation.getDriveJoystick().getStickDistance());
                 }
                 break;
+            case STRAFE:
+            	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+            	break;
         }        
     }
 }
