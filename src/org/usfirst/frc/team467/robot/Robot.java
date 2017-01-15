@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot
 
     // Robot objects
     private DriverStation2015 driverstation;
-
+    private Shooter shooter;
     private Drive drive;
 
     int session;
@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot
         // Make robot objects
         driverstation = DriverStation2015.getInstance();
         drive = Drive.getInstance();
-
+        shooter = new Shooter();
         Calibration.init();
 
     }
@@ -104,7 +104,17 @@ public class Robot extends IterativeRobot
      */
     private void updateDrive()
     {
-        DriveMode driveMode = driverstation.getDriveMode();
+        if(driverstation.getDriveJoystick().buttonPressed(4))
+        {
+        	shooter.increaseSpeed();
+        }
+        if(driverstation.getDriveJoystick().buttonPressed(3))
+        {
+        	shooter.decreaseSpeed();
+        }
+        shooter.shoot(true);
+        
+    	DriveMode driveMode = driverstation.getDriveMode();
         switch (driveMode)
         {
             case UNWIND:

@@ -13,8 +13,8 @@ public class DriverStation2015
     private static int TURN_BUTTON = 2;
     private static int TURBO_BUTTON = 7;
     private static int GYRO_RESET_BUTTON = 8;
-    private static int SHOOTER_UP = 3;
-    private static int SHOOTER_DOWN = 4;
+    private static int SHOOTER_UP = 4;
+    private static int SHOOTER_DOWN = 3;
     
     // Mapping of functions to Joystick Buttons for calibration mode
     private static int CALIBRATE_CONFIRM_BUTTON = Joystick467.TRIGGER;
