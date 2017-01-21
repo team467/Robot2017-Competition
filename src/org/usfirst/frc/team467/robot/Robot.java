@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot
         // Make robot objects
         driverstation = DriverStation2015.getInstance();
         drive = Drive.getInstance();
-        shooter = new Shooter();
+        shooter = Shooter.getInstance();
         Calibration.init();
 
     }
