@@ -37,6 +37,7 @@ public class Robot extends IterativeRobot {
         talontest.init();
         timer.reset();
         timer.start();
+        
     }
 
     /**
@@ -70,9 +71,9 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
-        myRobot.arcadeDrive(stick);
-        talontest.currentValues();
-        talontest.drive(0.7);
+        //myRobot.arcadeDrive(stick);
+        //talontest.currentValues();
+        //talontest.drive(0.7);
     }
 
     /**

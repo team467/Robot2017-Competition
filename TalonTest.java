@@ -26,6 +26,7 @@ public class TalonTest
     private static double temp;
     private static boolean isReversed;
     Writer writer;
+    SmartDashboard dashboard;
 
     /**
      *
@@ -47,6 +48,8 @@ public class TalonTest
         kD = DEFAULT_Kd;
         maxSpeed = 400;
         F = 3.0001;
+        dashboard = new SmartDashboard();
+        dashboard.clearPersistent("Data");
         
     }
     public void clearTalon() {
@@ -60,7 +63,9 @@ public class TalonTest
     	kP = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
     	kI = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
     	kD = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-
+    	
+    	
+    	
     	System.out.println(temp);
     	try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/home/lvuser/tuning.csv"), "utf-8"));
@@ -164,6 +169,7 @@ public class TalonTest
         values += " Target=" + talon.getSetpoint();
         values += " Speed=" + talon.getSpeed();
 //        values += " Position=" + talon.getPosition();
+        SmartDashboard.putNumber("Data", talon.getClosedLoopError());
         {
         	String datadump = "";
         	datadump += TALON_ID + ", ";
