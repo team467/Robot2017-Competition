@@ -13,10 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class TalonTest
 {
-    public static final int TALON_ID = 1;
-    public static final double DEFAULT_Kp = 0.5;
-    public static final double DEFAULT_Ki = 0.0;
-    public static final double DEFAULT_Kd = 0.0;
+    public static final int TALON_ID = 4;
     private static double kP;
     private static double kI;
     private static double kD;
@@ -43,11 +40,8 @@ public class TalonTest
         else {
         	isReversed = true;
         }
-        kP = DEFAULT_Kp;
-        kI = DEFAULT_Ki;
-        kD = DEFAULT_Kd;
+        kP = 0; kI = 0; kD = 0;
         maxSpeed = 400;
-        F = 3.0001;
         dashboard = new SmartDashboard();
         dashboard.clearPersistent("Data");
         
@@ -63,7 +57,7 @@ public class TalonTest
     	kP = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
     	kI = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
     	kD = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-    	
+    	F = Double.parseDouble(SmartDashboard.getString("DB/String 4", "0.0"));
     	
     	
     	System.out.println(temp);
@@ -83,10 +77,10 @@ public class TalonTest
 			e.printStackTrace();
 		}
         talon.setPID(kP, kI, kD);
+        talon.setF(F);
         talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
         talon.configEncoderCodesPerRev(128);
         talon.changeControlMode(TalonControlMode.Speed);
-        talon.setF(F);
         if (isReversed){
         	talon.reverseSensor(true);
         }
@@ -203,7 +197,7 @@ public class TalonTest
     
     public void drive(double setting){
     	setting = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-        talon.set(setting * maxSpeed);
+        talon.set(setting);
     }
     
     
