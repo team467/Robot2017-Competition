@@ -26,8 +26,6 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
-        talontest = new TalonTest();
-        talontest.init();
     }
 
     /**
@@ -35,8 +33,11 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousInit() {
+        talontest = new TalonTest();
+        talontest.init();
         timer.reset();
         timer.start();
+        
     }
 
     /**
@@ -44,16 +45,16 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
+    	talontest.drive(0.7);
+        System.out.println(talontest.currentValuesCompressed(timer.get()));
+    	
         // Drive for 1 seconds
-        if (timer.get() < 0.5) {
-            talontest.drive(300); 
-        } 
-        if (timer.get() >= 0.5) {
-        	talontest.drive(300);
-        }
-        if (timer.get() <= 1) {
-        System.out.println(talontest.currentValuesCompressed());
-        }
+//        if (timer.get() >= 0.5) {
+//        	talontest.drive(400);
+//        }
+//        if (timer.get() <= 1) {
+//        System.out.println(talontest.currentValuesCompressed());
+//        }
     }
 
     /**
@@ -70,9 +71,9 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
-        myRobot.arcadeDrive(stick);
-        talontest.currentValues();
-        talontest.drive(0.7);
+        //myRobot.arcadeDrive(stick);
+        //talontest.currentValues();
+        //talontest.drive(0.7);
     }
 
     /**
