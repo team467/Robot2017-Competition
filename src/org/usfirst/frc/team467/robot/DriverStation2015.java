@@ -21,6 +21,7 @@ public class DriverStation2015
     private static int CALIBRATE_SLOW_BUTTON = 4;
     
     private static int UNWIND_BUTTON = 10;
+    private static int FIELD_ALIGN = 5;
     
     enum Speed 
     {
@@ -95,14 +96,18 @@ public class DriverStation2015
         if (getDriveJoystick().buttonDown(TURN_BUTTON))
         {
             drivemode = DriveMode.TURN;
-        }
-        
+        } 
         if (getDriveJoystick().buttonDown(UNWIND_BUTTON))
         {
             drivemode = DriveMode.UNWIND;
         }
-        if(getDriveJoystick().getPOV() != -1){
+        if(getDriveJoystick().getPOV() != -1)
+        {
         	drivemode = DriveMode.STRAFE;
+        }
+        if(getDriveJoystick().buttonDown(FIELD_ALIGN))
+        {
+        	drivemode = DriveMode.FIELD_ALIGN;
         }
 		return drivemode;
     }

@@ -25,6 +25,8 @@ public class Robot extends IterativeRobot
     private DriverStation2015 driverstation;
     private Shooter shooter;
     private Drive drive;
+    private Joystick467 stick;
+    private Gyrometer gyro;
 
     int session;
 
@@ -46,7 +48,8 @@ public class Robot extends IterativeRobot
         drive = Drive.getInstance();
         shooter = Shooter.getInstance();
         Calibration.init();
-
+        stick = new Joystick467(0);
+        gyro = Gyrometer.getInstance();
     }
 
     public void disabledInit()
@@ -131,17 +134,22 @@ public class Robot extends IterativeRobot
             case CRAB:
                 if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED)
                 {
-                    // Don't start driving until commanded speed greater than minimum
+//                     Don't start driving until commanded speed greater than minimum
                     drive.stop();
                 }
                 else
                 {
-                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-                    				driverstation.getDriveJoystick().getStickDistance());
+                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(), driverstation.getDriveJoystick().getStickDistance());
                 }
                 break;
+                
             case STRAFE:
             	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+            	break;
+            	
+            //TODO: put in parameter for gyro
+            case FIELD_ALIGN:
+            	drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(), driverstation.getDriveJoystick().getStickDistance(), gyro.getAngle());
             	break;
         }
     }

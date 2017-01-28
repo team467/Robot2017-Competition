@@ -18,6 +18,8 @@ public class Joystick467
     private boolean[] prevButtons = new boolean[12]; // array of previous button states, involved in edge detection.
     private double stickX = 0.0;
     private double stickY = 0.0;
+    private double xboxX = 0.0;
+    private double xboxY = 0.0;
     private int pov = 0;
     private double twist = 0.0;
     private boolean flap = false;
@@ -27,6 +29,8 @@ public class Joystick467
 
     private static final int AXIS_X = 0;
     private static final int AXIS_Y = 1;
+    private static final int AXIS_XBX = 4;
+    private static final int AXIS_XBY = 5;
     private static final int TWIST_AXIS = 2;
     private static final int FLAP_AXIS = 3;
     private static final int POV_INDEX = 0;
@@ -67,6 +71,8 @@ public class Joystick467
         flap = joystick.getRawAxis(FLAP_AXIS) < 0.0;
         stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
         stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
+        xboxY = accelerateJoystickInput(joystick.getRawAxis(AXIS_XBY));
+        xboxX = accelerateJoystickInput(joystick.getRawAxis(AXIS_XBX));
         twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
         pov = joystick.getPOV(POV_INDEX);
     }
@@ -214,5 +220,9 @@ public class Joystick467
         // Simply square the input to provide acceleration
         // ensuring that the sign of the input is preserved
         return (input * Math.abs(input));
+    }
+    
+    private static void xbSplit(){
+    	
     }
 }
