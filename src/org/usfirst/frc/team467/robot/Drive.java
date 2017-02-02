@@ -33,7 +33,7 @@ public class Drive extends RobotDrive
     
     //Timer object
     private Timer timer; 
-
+    
     // Angle to turn at when rotating in place - initialized in constructor
     // takes the arctan of width over length in radians
     // Length is the wide side
@@ -268,12 +268,73 @@ public class Drive extends RobotDrive
         fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
     }
     
-    public void fieldAlignDrive(double driveAngle, double speed, double robotAngle)
+    /**
+     * Field align drive
+     * 
+     * @param robotAngle
+     * 				angle of the robot from gyro
+     * @param driveAngle
+     * 				angle you want to drive from joystick
+     * @param speed
+     * 				magnitude of speed you want to drive from joystick
+     */
+    
+    //TODO: do conversion outside of method
+    public void fieldAlignDrive(double robotAngle, double driveAngle, double speed)
     {  
-        double angle = robotAngle - driveAngle;
-        WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
+    	double angle = robotAngle * Math.PI / 720; 
+        double angleDiff = driveAngle - angle;
+        WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
         fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-        fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);      
+        fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+        System.out.println("robotAngle:" + angle + " correctedAngle:" + corrected.angle + " driveAngle:" + driveAngle);
+    }
+    
+/** 
+ * strafeDrive
+ * @param POVangle
+ * 				angle of the POV joystick found on top of joystick
+ */
+    
+    public void strafeDrive(int POVangle)
+    {    	
+        double speed = SPEED_STRAFE;
+        double angle = POVangle*Math.PI / 180;
+        crabDrive(angle, speed);  
+    }
+    
+    /**
+     * xbSplit
+     * 
+     * @param yAngle
+     * 			Y angle of left joystick
+     * @param xAngle
+     * 			X angle of right joystick
+     */
+    
+//    public void xbSplit(double yAngle, double xAngle)
+//    {
+//    	double x = xAngle;
+//    	double y = yAngle;
+//    	double speed = Math.sqrt((x*x) + (y*y));
+//    	double angle = Math.atan(y/x);
+//    	WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
+//    	fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+////    	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+//    	System.out.println("correctedspeed:" + corrected.speed);
+//    }
+    
+    public void xbSplit(double yAngle, double xAngle, double driveSpeed)
+    {
+    	double x = xAngle;
+    	double y = yAngle;
+    	double speed = driveSpeed;
+//    	double speed = Math.sqrt((xMag*xMag) + (yMag*yMag));
+    	double angle = Math.atan(y/x);
+    	WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
+    	fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+//    	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+//    	System.out.println("correctedspeed:" + corrected.speed);
     }
 
     /**
@@ -300,22 +361,6 @@ public class Drive extends RobotDrive
         this.fourWheelDrive(0, 0, 0, 0);// no drive for you!
     }
 
-    /**
-     * Drive left or right at a fixed speed.
-     * 
-     * @param direction
-     * @param speed
-     */
-    
-    
-    public void strafeDrive(int POVangle)
-    {    	
-        double speed = SPEED_STRAFE;
-        double angle = POVangle*Math.PI / 180;
-        crabDrive(angle, speed);  
-    }
-    
-    
     /**
      * Individually controls a specific driving motor
      *

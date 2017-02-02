@@ -1,26 +1,55 @@
 package org.usfirst.frc.team467.robot;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import com.analog.adis16448.frc.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class Gyrometer {
 	
-	private static Gyrometer gyrometer = null;
+	private static ADIS16448_IMU gyro = null;
 	
-	AnalogGyro gyro = new AnalogGyro(0);
+	private static Gyrometer gyrometer = null;
 
-	public Gyrometer(){
-		AnalogGyro gyro = new AnalogGyro(0);
+    private final int BAUD_RATE = 57600;
+
+    private SerialPort sp = null;
+
+	private Gyrometer(int port)
+	    {
+	        try
+	        {
+	            sp = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB);
+	        }
+	        catch (Exception ex)
+	        {
+	            // eaten
+	        }
+	    }
+	 
+	 public static ADIS16448_IMU getInstance()
+	 {
+		 if(gyro == null)
+		 {
+			 gyro = new ADIS16448_IMU();
+		 }
+		 return gyro;
+	 }
+	 
+	public double getAngleX()
+	{
+		return gyro.getAngleX();
 	}
-	public static Gyrometer getInstance(){
-		if (gyrometer == null ){
-			gyrometer = new Gyrometer();
-		}
-		return gyrometer;
+	
+	public double getAngleY()
+	{
+		return gyro.getAngleY();
 	}
-	public double getAngle(){
-		return gyro.getAngle();
+	
+	public double getAngleZ()
+	{
+		return gyro.getAngleZ();
 	}
-	public void reset(){
+	
+	public void reset()
+	{
 		gyro.reset();
 	}
 }

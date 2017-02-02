@@ -7,8 +7,10 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
+import com.analog.adis16448.frc.ADIS16448_IMU;
 
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,8 +28,7 @@ public class Robot extends IterativeRobot
     private Shooter shooter;
     private Drive drive;
     private Joystick467 stick;
-    private Gyrometer gyro;
-
+    private ADIS16448_IMU gyro;
     int session;
 
     /**
@@ -50,6 +51,8 @@ public class Robot extends IterativeRobot
         Calibration.init();
         stick = new Joystick467(0);
         gyro = Gyrometer.getInstance();
+        
+        
     }
 
     public void disabledInit()
@@ -58,6 +61,9 @@ public class Robot extends IterativeRobot
 
     public void disabledPeriodic()
     {
+    	SmartDashboard.putData("IMU", gyro);
+//    	System.out.println("x:" + gyro.getAngleX() + "y:" + gyro.getAngleY() + "z:" + gyro.getAngleZ());
+//    	gyro.reset();
     }
 
     public void autonomousInit()
@@ -66,6 +72,8 @@ public class Robot extends IterativeRobot
 
     public void teleopInit()
     {
+    	gyro.reset();
+    	gyro.calibrate();
     }
 
     public void testInit()
@@ -99,6 +107,8 @@ public class Robot extends IterativeRobot
             // Drive Mode
             updateDrive();
         }
+        
+//    	System.out.println("x:" + gyro.getAngleX() + " y:" + gyro.getAngleY() + " z:" + gyro.getAngleZ());
     }
 
     /**
@@ -146,10 +156,14 @@ public class Robot extends IterativeRobot
             case STRAFE:
             	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
             	break;
-            	
-            //TODO: put in parameter for gyro
+            case XB_SPLIT:
+            	drive.xbSplit(driverstation.getDriveJoystick().getStickY(), 
+            			driverstation.getDriveJoystick().getStickRX(),
+            			driverstation.getDriveJoystick().getRStickDistance());
+            	break;
             case FIELD_ALIGN:
-            	drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(), driverstation.getDriveJoystick().getStickDistance(), gyro.getAngle());
+            	drive.fieldAlignDrive(gyro.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
+            			driverstation.getDriveJoystick().getStickDistance());
             	break;
         }
     }
