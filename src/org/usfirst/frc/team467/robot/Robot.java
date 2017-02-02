@@ -162,6 +162,7 @@ public class Robot extends IterativeRobot
             			driverstation.getDriveJoystick().getRStickDistance());
             	break;
             case FIELD_ALIGN:
+            	//angle Z is taken from the ADIS 16448 gyrometer because the axis are skewed
             	drive.fieldAlignDrive(gyro.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
             			driverstation.getDriveJoystick().getStickDistance());
             	break;

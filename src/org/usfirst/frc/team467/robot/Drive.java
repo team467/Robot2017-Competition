@@ -279,10 +279,20 @@ public class Drive extends RobotDrive
      * 				magnitude of speed you want to drive from joystick
      */
     
+    /**
+     * 
+     * @param robotAngle   angle the robot is at, taken from gyrometer. 
+     * 1 degree = 4 native units on the ADIS16448 IMU
+     * @param driveAngle   the angle you want the robot to drive, taken from the angle of the joystick
+     * this is passed in in radians
+     * @param speed  the speed you want the robot to go, taken from the distance the joystick travels
+     */
     //TODO: do conversion outside of method
     public void fieldAlignDrive(double robotAngle, double driveAngle, double speed)
     {  
-    	double angle = robotAngle * Math.PI / 720; 
+    	//convert the angle of the robot from native units to radians
+    	double angle = robotAngle * Math.PI / 720;
+    	//the angle that the wheels need to turn to
         double angleDiff = driveAngle - angle;
         WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
         fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
