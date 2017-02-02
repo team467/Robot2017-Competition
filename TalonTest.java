@@ -105,7 +105,7 @@ public class TalonTest
 //        talon.configPotentiometerTurns(turns);
 //        talon.ConfigRevLimitSwitchNormallyOpen(normallyOpen);
 //      System.out.println(configValues());
-        System.out.println(currentValuesCompressed(0.0));
+       // System.out.println(currentValuesCompressed(0.0));
     }
     public void enable() {
         talon.enable();
