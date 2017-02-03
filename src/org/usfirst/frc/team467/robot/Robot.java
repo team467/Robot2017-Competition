@@ -46,6 +46,8 @@ public class Robot extends IterativeRobot
         drive = Drive.getInstance();
         shooter = new Shooter();
         Calibration.init();
+        
+        LookUpTable table = LookUpTable.getInstance();
 
     }
 
