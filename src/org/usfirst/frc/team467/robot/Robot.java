@@ -9,7 +9,6 @@ package org.usfirst.frc.team467.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -17,134 +16,114 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot
-{
-    private static final double MIN_DRIVE_SPEED = 0.1;
+public class Robot extends IterativeRobot {
+	private static final double MIN_DRIVE_SPEED = 0.1;
 
-    // Robot objects
-    private DriverStation2015 driverstation;
-    private Shooter shooter;
-    private Drive drive;
+	// Robot objects
+	private DriverStation2015 driverstation;
+	private Shooter shooter;
+	private Drive drive;
 
-    int session;
+	int session;
 
-    /**
-     * Time in milliseconds
-     */
-    double time;
+	/**
+	 * Time in milliseconds
+	 */
+	double time;
 
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-    public void robotInit()
-    {
-        // Initialize logging framework.
+	/**
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
+	 */
+	public void robotInit() {
+		// Initialize logging framework.
 
-        // Make robot objects
-        driverstation = DriverStation2015.getInstance();
-        drive = Drive.getInstance();
-        shooter = Shooter.getInstance();
-        Calibration.init();
+		// Make robot objects
+		driverstation = DriverStation2015.getInstance();
+		drive = Drive.getInstance();
+		shooter = Shooter.getInstance();
+		Calibration.init();
 
-        LookUpTable table = LookUpTable.getInstance();
+		LookUpTable table = LookUpTable.getInstance();
 
-    }
+	}
 
-    public void disabledInit()
-    {
-    }
+	public void disabledInit() {
+	}
 
-    public void disabledPeriodic()
-    {
-    }
+	public void disabledPeriodic() {
+	}
 
-    public void autonomousInit()
-    {
-    }
+	public void autonomousInit() {
+	}
 
-    public void teleopInit()
-    {
-    }
+	public void teleopInit() {
+	}
 
-    public void testInit()
-    {
-    }
+	public void testInit() {
+	}
 
-    public void testPeriodic()
-    {
-    }
+	public void testPeriodic() {
+	}
 
-    public void autonomousPeriodic()
-    {
-        driverstation.readInputs();
-    }
+	public void autonomousPeriodic() {
+		driverstation.readInputs();
+	}
 
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic()
-    {
-        // Read driverstation inputs
-        driverstation.readInputs();
+	/**
+	 * This function is called periodically during operator control
+	 */
+	public void teleopPeriodic() {
+		// Read driverstation inputs
+		driverstation.readInputs();
 
-        if (driverstation.getCalibrate())
-        {
-            // Calibrate Mode
-            Calibration.updateCalibrate();
-        }
-        else
-        {
-            // Drive Mode
-            updateDrive();
-        }
-    }
+		if (driverstation.getCalibrate()) {
+			// Calibrate Mode
+			Calibration.updateCalibrate();
+		} else {
+			// Drive Mode
+			updateDrive();
+		}
+	}
 
-    /**
-     * called once per iteration to perform any necessary updates to the drive
-     * system.
-     */
-    private void updateDrive()
-    {
-        if(driverstation.getDriveJoystick().buttonPressed(4))
-        {
-        	shooter.increaseSpeed();
-        }
-        if(driverstation.getDriveJoystick().buttonPressed(3))
-        {
-        	shooter.decreaseSpeed();
-        }
-        shooter.shoot(true);
+	/**
+	 * called once per iteration to perform any necessary updates to the drive
+	 * system.
+	 */
+	private void updateDrive() {
+		if (driverstation.getDriveJoystick().buttonPressed(4)) {
+			shooter.increaseSpeed();
+		}
+		if (driverstation.getDriveJoystick().buttonPressed(3)) {
+			shooter.decreaseSpeed();
+		}
+		shooter.shoot(true);
 
-    	DriveMode driveMode = driverstation.getDriveMode();
-        switch (driveMode)
-        {
-            case UNWIND:
-                for (Steering wheelpod : Drive.getInstance().steering)
-                {
-                    wheelpod.setAbsoluteAngle(0);
-                }
-                break;
+		DriveMode driveMode = driverstation.getDriveMode();
+		switch (driveMode) {
+		case UNWIND:
+			for (Steering wheelpod : Drive.getInstance().steering) {
+				wheelpod.setAbsoluteAngle(0);
+			}
+			break;
 
-            case TURN:
-                drive.turnDrive(-driverstation.getDriveJoystick().getTwist()/2);
-                break;
+		case TURN:
+			drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+			break;
 
-            case CRAB:
-                if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED)
-                {
-                    // Don't start driving until commanded speed greater than minimum
-                    drive.stop();
-                }
-                else
-                {
-                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-                    				driverstation.getDriveJoystick().getStickDistance());
-                }
-                break;
-            case STRAFE:
-            	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
-            	break;
-        }
-    }
+		case CRAB:
+			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
+				// Don't start driving until commanded speed greater than
+				// minimum
+				drive.stop();
+			} else {
+				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
+						driverstation.getDriveJoystick().getStickDistance());
+			}
+			break;
+		case STRAFE:
+			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+			break;
+		}
+	}
 }
