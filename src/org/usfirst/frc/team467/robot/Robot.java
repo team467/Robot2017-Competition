@@ -7,6 +7,8 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import com.analog.adis16448.frc.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 
@@ -25,6 +27,8 @@ public class Robot extends IterativeRobot
     private DriverStation2015 driverstation;
     private Shooter shooter;
     private Drive drive;
+    private Joystick467 stick;
+    private ADIS16448_IMU gyro;
 
     int session;
 
@@ -44,9 +48,10 @@ public class Robot extends IterativeRobot
         // Make robot objects
         driverstation = DriverStation2015.getInstance();
         drive = Drive.getInstance();
-        shooter = new Shooter();
+        shooter = Shooter.getInstance();
         Calibration.init();
-        
+        stick = new Joystick467(0);
+        gyro = Gyrometer.getInstance();
         LookUpTable table = LookUpTable.getInstance();
 
     }
@@ -57,6 +62,9 @@ public class Robot extends IterativeRobot
 
     public void disabledPeriodic()
     {
+    	SmartDashboard.putData("IMU", gyro);
+//    	System.out.println("x:" + gyro.getAngleX() + "y:" + gyro.getAngleY() + "z:" + gyro.getAngleZ());
+//    	gyro.reset();
     }
 
     public void autonomousInit()
@@ -65,6 +73,8 @@ public class Robot extends IterativeRobot
 
     public void teleopInit()
     {
+    	gyro.reset();
+    	gyro.calibrate();
     }
 
     public void testInit()
@@ -85,8 +95,15 @@ public class Robot extends IterativeRobot
      */
     public void teleopPeriodic()
     {
+    	System.out.println(stick.getStickX());
+    	
         // Read driverstation inputs
         driverstation.readInputs();
+        
+        if(driverstation.getGyroReset())
+        {
+        	gyro.reset();
+        }
 
         if (driverstation.getCalibrate())
         {
@@ -98,6 +115,7 @@ public class Robot extends IterativeRobot
             // Drive Mode
             updateDrive();
         }
+//    	System.out.println("x:" + gyro.getAngleX() + " y:" + gyro.getAngleY() + " z:" + gyro.getAngleZ());
     }
 
     /**
@@ -144,6 +162,16 @@ public class Robot extends IterativeRobot
                 break;
             case STRAFE:
             	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+            	break;
+            case XB_SPLIT:
+            	drive.xbSplit(driverstation.getXBJoystick().getRightStickDistance(),
+            			driverstation.getDriveJoystick().getStickDistance());
+            	break;
+            
+            case FIELD_ALIGN:
+            	//angle Z is taken from the ADIS 16448 gyrometer
+            	drive.fieldAlignDrive(gyro.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
+            			driverstation.getDriveJoystick().getStickDistance());
             	break;
         }
     }

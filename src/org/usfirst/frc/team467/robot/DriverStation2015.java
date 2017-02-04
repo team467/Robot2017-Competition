@@ -5,9 +5,11 @@ public class DriverStation2015
     private static DriverStation2015 driverstation2015 = null;
 
     Joystick467 driverJoy = null;
-    //Instantiated this in main class instead of inside of getDriveMode
-    DriveMode drivemode;
     
+    //make object of new xbox joystick class
+    XBJoystick xbJoy = null;
+    
+    //Instantiated this in main class instead of inside of getDriveMode    
     // Mapping of functions to Joystick Buttons for normal operation
     private static int SLOW_BUTTON = Joystick467.TRIGGER;
     private static int TURN_BUTTON = 2;
@@ -67,7 +69,6 @@ public class DriverStation2015
     {
         return driverJoy;
     }
-
     /**
      * Get joystick instance used for calibration.
      *
@@ -78,6 +79,10 @@ public class DriverStation2015
         return driverJoy;
     }
 
+    public XBJoystick getXBJoystick()
+    {
+    	return xbJoy;
+    }
     // All button mappings are accessed through the functions below
 
     /**
@@ -91,7 +96,7 @@ public class DriverStation2015
     	//Instantiated outside of this class and in main class
     	//crab drive is default. if else, it is strafe.
     	//return the chosen drivemode
-       drivemode = DriveMode.CRAB;  // default is regular crab drive        
+       DriveMode drivemode = DriveMode.CRAB;  // default is regular crab drive        
         if (getDriveJoystick().buttonDown(TURN_BUTTON))
         {
             drivemode = DriveMode.TURN;
@@ -108,7 +113,8 @@ public class DriverStation2015
         {
         	drivemode = DriveMode.FIELD_ALIGN;
         }
-        if(getDriveJoystick().buttonDown(6))
+        //TODO: use with new xbox joystick class
+        if(getXBJoystick().getStickRX() != -1)
         {
         	drivemode = DriveMode.XB_SPLIT;
         }
