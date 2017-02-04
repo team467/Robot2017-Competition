@@ -4,75 +4,128 @@
 package org.usfirst.frc.team467.robot.PIDCalibration;
 
 /**
- * @author Bryan Duerk
- *
+ * Utility class for specifying a running average to reduce noise when examining
+ * errors or other values.
  */
 public class RunningAverage
 {
 
     double sum;
     double absoluteSum;
-    double[] inputs;
-    int position;
-    int maxCount;
+    double[] terms;
+    int positionOfOldestTerm;
+    int windowSize;
     int count;
 
     /**
+     * Creates a running average with the specified window size.
      *
+     * @param the
+     *            window to average over
      */
-    public RunningAverage(int maxCount)
+    public RunningAverage(int windowSize)
     {
-        this.maxCount = maxCount;
-        inputs = new double[maxCount];
+        this.windowSize = windowSize;
+        terms = new double[windowSize];
         clear();
     }
 
-    public void clear() {
-        for (int i=0; i < inputs.length; i++) {
-            inputs[i] = 0.0;
+    /**
+     * Clears the average terms
+     */
+    public void clear()
+    {
+        for (int i = 0; i < terms.length; i++)
+        {
+            terms[i] = 0.0;
         }
         sum = 0.0;
-        position = 0;
+        positionOfOldestTerm = 0;
         count = 0;
     }
 
-    public void input(double value) {
-        sum += value - inputs[position];
-        absoluteSum += (value * value) - (inputs[position] * inputs[position]);
-        inputs[position] = value;
-        position++;
-        if (position >= maxCount) {
-            position = 0;
+    /**
+     * Add a term to the running average. It will remove the oldest term from the average
+     * at the same time.
+     *
+     * @param term
+     *            the new term for the average
+     */
+    public void input(double term)
+    {
+        sum += term - terms[positionOfOldestTerm];
+        absoluteSum += (term * term) - (terms[positionOfOldestTerm] * terms[positionOfOldestTerm]);
+        terms[positionOfOldestTerm] = term;
+        positionOfOldestTerm++;
+        if (positionOfOldestTerm >= windowSize)
+        {
+            positionOfOldestTerm = 0;
         }
         count++;
     }
 
-    public double absoluteAverage(double value) {
-        input(value);
+    /**
+     * The absolute average takes the absolute value of terms before adding it to
+     * the running average.
+     *
+     * @param term
+     *            the new term for the absolute average
+     * @return the current absolute average
+     */
+    public double absoluteAverage(double term)
+    {
+        input(term);
         return absoluteAverage();
     }
 
-    public double absoluteAverage() {
+    /**
+     * The absolute average takes the absolute value of terms before adding it to
+     * the running average.
+     *
+     * @return the current absolute average
+     */
+    public double absoluteAverage()
+    {
         double average = 0.0;
-        if (count < maxCount) {
-            average =  Math.sqrt(absoluteSum) / count;
-        } else {
-            average =  Math.sqrt(absoluteSum) / maxCount;
+        if (count < windowSize)
+        {
+            average = Math.sqrt(absoluteSum) / count;
+        }
+        else
+        {
+            average = Math.sqrt(absoluteSum) / windowSize;
         }
         return average;
     }
 
-    public double average(double value) {
-        input(value);
+    /**
+     * Calculates an average over a running window of time.
+     *
+     * @param term
+     *            a term to add to the running average
+     * @return the current running average
+     */
+    public double average(double term)
+    {
+        input(term);
         return average();
     }
 
-    public double average() {
+    /**
+     * Calculates an average over a running window of time.
+     *
+     * @return the current running average
+     */
+    public double average()
+    {
         double average = 0.0;
-        if (count < maxCount) {
-            average =  sum / count;
-        } else {
-            average =  sum / maxCount;
+        if (count < windowSize)
+        {
+            average = sum / count;
+        }
+        else
+        {
+            average = sum / windowSize;
         }
         return average;
     }

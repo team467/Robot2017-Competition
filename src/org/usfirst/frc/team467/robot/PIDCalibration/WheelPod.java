@@ -11,44 +11,73 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * @author Bryan Duerk
- *
+ * The WheelPod class is used for manually finding the PID values using the SmartDashboard.
  */
 public class WheelPod
 {
-    public static final double P = 2.16;
-    public static final double I = 0.00864;
-    public static final double D = 135.0;
-    public static final double F = 3.0;
-    public static final int ALLOWABLE_CLOSED_LOOP_ERROR = 51;
+    // The default PID settings if not otherwise specified.
+    private static final double DEFAULT_P = 2.16;
+    private static final double DEFAULT_I = 0.00864;
+    private static final double DEFAULT_D = 135.0;
+    private static final double DEFAULT_F = 3.0;
+
+    /**
+     * The top speed for use in speed mode of this wheel pod. The overall robot max speed is
+     * set in the Robot Map.
+     */
+    public static final double TOP_SPEED = 300;
+
+    /**
+     * The circumference of the wheels for use in determining distance in position mode.
+     */
     public static final double CIRCUMFERENCE = 18.85;
 
-    public static final double TOP_SPEED = 400;
+    private static final int ALLOWABLE_CLOSED_LOOP_ERROR = 51;
+    private static final int MAX_ERROR_COUNT = 26;
 
+    private CANTalon motor;
+
+    // The current PID values
     private double p;
     private double i;
     private double d;
     private double f;
+
+    // The movement settings.
     private double speed;
     private int position;
+
     private boolean isPosition;
+    private Preferences prefs;
+    private Pod pod;
+    private String keyHeader;
+    private RunningAverage averageError;
 
-    private CANTalon motor;
-
-    Preferences prefs;
-    Pod pod;
-    String keyHeader;
-    String keyAbr;
-
-
-    private static final int MAX_ERROR_COUNT = 26;
-    RunningAverage averageError;
-
-    public WheelPod(Pod pod, double p, double i, double d, double f) {
+    /**
+     * Creates a wheel pod with external specified PID values.
+     *
+     * @param pod
+     *            the wheel pod identifier
+     * @param p
+     *            the proportional input
+     * @param i
+     *            the integral input
+     * @param d
+     *            the the derivative input
+     * @param f
+     *            the feed forward input
+     */
+    public WheelPod(Pod pod, double p, double i, double d, double f)
+    {
         averageError = new RunningAverage(MAX_ERROR_COUNT);
         this.pod = pod;
+        this.p = p;
+        this.i = i;
+        this.d = d;
+        this.f = f;
         motor = new CANTalon(pod.id);
-        if (pod.isReversed) {
+        if (pod.isReversed)
+        {
             reverse();
         }
         motor.setPID(p, i, d);
@@ -69,35 +98,64 @@ public class WheelPod
     }
 
     /**
+     * Creates a wheel pod with the PID values in the WPILib preferences.
+     * If there are no values in the preferences matching the wheel pod
+     * identifier, then it will use the default values.
      *
+     * @param pod
+     *            the wheel pod identifier
      */
     public WheelPod(Pod pod)
     {
+        this.pod = pod;
+        p = DEFAULT_P;
+        i = DEFAULT_I;
+        d = DEFAULT_D;
+        f = DEFAULT_F;
+        loadFromPreferences();
+    }
+
+    /*
+     * Loads the preferences from the WPILib preferences file.
+     * If there is no entry, it will set it to the default.
+     * If you tune using the SmartDashboard, it will save to preferences.
+     */
+    public void loadFromPreferences()
+    {
         prefs = Preferences.getInstance();
         keyHeader = "Pod-" + pod.name + "-PID-";
-        if (!prefs.containsKey(keyHeader + "P")) {
-            prefs.putDouble(keyHeader + "P", P);
+        if (!prefs.containsKey(keyHeader + "P"))
+        {
+            prefs.putDouble(keyHeader + "P", p);
         }
-        p = prefs.getDouble(keyHeader + "P", P);
-        if (!prefs.containsKey(keyHeader + "I")) {
-            prefs.putDouble(keyHeader + "I", I);
+        p = prefs.getDouble(keyHeader + "P", p);
+        if (!prefs.containsKey(keyHeader + "I"))
+        {
+            prefs.putDouble(keyHeader + "I", i);
         }
-        i = prefs.getDouble(keyHeader + "I", I);
-        if (!prefs.containsKey(keyHeader + "D")) {
-            prefs.putDouble(keyHeader + "D", D);
+        i = prefs.getDouble(keyHeader + "I", i);
+        if (!prefs.containsKey(keyHeader + "D"))
+        {
+            prefs.putDouble(keyHeader + "D", d);
         }
-        d = prefs.getDouble(keyHeader + "D", D);
-        if (!prefs.containsKey(keyHeader + "F")) {
-            prefs.putDouble(keyHeader + "F", F);
+        d = prefs.getDouble(keyHeader + "D", d);
+        if (!prefs.containsKey(keyHeader + "F"))
+        {
+            prefs.putDouble(keyHeader + "F", f);
         }
-        f = prefs.getDouble(keyHeader + "F", F);
+        f = prefs.getDouble(keyHeader + "F", f);
     }
 
     /**
-     * Distance in feet.
+     * Moves a distance if in position mode.
+     *
+     * @param targetDistance
+     *            the target distance in feet.
      */
-    public void moveDistance(double targetDistance) {
-        if (isPosition) {
+    public void moveDistance(double targetDistance)
+    {
+        if (isPosition)
+        {
             motor.changeControlMode(TalonControlMode.Position);
             double positionTicks = targetDistance / WheelPod.CIRCUMFERENCE * 512;
             System.out.println("Position Move: " + positionTicks);
@@ -105,16 +163,28 @@ public class WheelPod
         }
     }
 
-    public void reverse() {
+    /*
+     * Reverses the sensor and motor output if the wheel pod is on the side.
+     */
+    public void reverse()
+    {
         motor.reverseSensor(true);
         motor.reverseOutput(true);
     }
 
-    public void setPercentVoltageBusMode() {
+    /**
+     * Changes the control mode to percentage of voltage bus.
+     */
+    public void setPercentVoltageBusMode()
+    {
         motor.changeControlMode(TalonControlMode.PercentVbus);
     }
 
-    public void setPositionMode() {
+    /**
+     * Sets the Talon into position mode.
+     */
+    public void setPositionMode()
+    {
         isPosition = true;
         motor.changeControlMode(TalonControlMode.Position);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -125,7 +195,11 @@ public class WheelPod
         motor.setPosition(0);
     }
 
-    public void setSpeedMode() {
+    /**
+     * Sets the Talon into speed mode.
+     */
+    public void setSpeedMode()
+    {
         isPosition = false;
         motor.changeControlMode(TalonControlMode.Speed);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -136,11 +210,24 @@ public class WheelPod
         motor.setPosition(0);
     }
 
-    public CANTalon motor() {
+    /**
+     * Gets the motor controller.
+     *
+     * @return the motor controller
+     */
+    public CANTalon motor()
+    {
         return motor;
     }
 
-    public void update()
+    /**
+     * Checks the SmartDashboard for updated PID values, sets them, and then sets
+     * the speed or position setting depending on the current mode. This should be
+     * called from a periodic method in the Robot class.
+     *
+     * @return current error
+     */
+    public double updateValues()
     {
         double newP = SmartDashboard.getNumber(pod.abr + "-P", p);
         if (newP != p)
@@ -186,19 +273,33 @@ public class WheelPod
             System.out.println("Old Position: " + speed + " New Position: " + newPosition);
             this.position = newPosition;
         }
-        if (isPosition) {
+        if (isPosition)
+        {
             motor.set(this.position);
-        } else {
+        }
+        else
+        {
             motor.set(this.speed);
         }
+        return error();
     }
 
-    public double averageError(double error) {
+    /*
+     * Gets the running average error.
+     * @return the average error
+     */
+    public double averageError(double error)
+    {
         double average = this.averageError.average(error);
         SmartDashboard.putNumber(pod.abr + "-AveErr", average);
         return average;
     }
 
+    /**
+     * Gets the error value from the motor controller.
+     *
+     * @return the current error
+     */
     public double error()
     {
         double error = motor.getError();
