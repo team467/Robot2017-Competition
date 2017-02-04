@@ -54,7 +54,7 @@ public class WheelPod
         motor.setPID(p, i, d);
         motor.setF(f);
         isPosition = false;
-        motor.changeControlMode(TalonControlMode.Voltage);
+        motor.changeControlMode(TalonControlMode.PercentVbus);
 
         speed = SmartDashboard.getNumber("Speed", 0.0);
         position = (int) SmartDashboard.getNumber("Position", 0.0);
@@ -110,8 +110,8 @@ public class WheelPod
         motor.reverseOutput(true);
     }
 
-    public void setVoltageMode() {
-        motor.changeControlMode(TalonControlMode.Voltage);
+    public void setPercentVoltageBusMode() {
+        motor.changeControlMode(TalonControlMode.PercentVbus);
     }
 
     public void setPositionMode() {

@@ -74,7 +74,7 @@ public class Drive extends RobotDrive
     {
         super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 
-        controlMode = TalonControlMode.Voltage;
+        controlMode = TalonControlMode.PercentVbus;
         maxSpeed = 300;
 
         //make timer object
@@ -132,12 +132,12 @@ public class Drive extends RobotDrive
         backleft.setSpeedMode();
     }
 
-    public void setVoltageMode() {
-        controlMode = TalonControlMode.Voltage;
-        frontleft.setVoltageMode();
-        frontright.setVoltageMode();
-        backright.setVoltageMode();
-        backleft.setVoltageMode();
+    public void setPercentVoltageBusMode() {
+        controlMode = TalonControlMode.PercentVbus;
+        frontleft.setPercentVoltageBusMode();
+        frontright.setPercentVoltageBusMode();
+        backright.setPercentVoltageBusMode();
+        backleft.setPercentVoltageBusMode();
     }
 
     /**
@@ -195,7 +195,9 @@ public class Drive extends RobotDrive
                     m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * backRightSpeed * maxSpeed);
                     break;
                 case Voltage:
+                case PercentVbus:
                 default:
+//                    System.out.println(frontLeftSpeed);
                     m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
                     m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
                     m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
