@@ -42,6 +42,7 @@ public class Robot extends IterativeRobot {
 		drive = Drive.getInstance();
 		Calibration.init();
 
+		@SuppressWarnings("unused")  // Shashvat working on this. 
 		LookUpTable table = LookUpTable.getInstance();
 
 	}
@@ -108,12 +109,14 @@ public class Robot extends IterativeRobot {
 				drive.stop();
 			} else {
 				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-						driverstation.getDriveJoystick().getStickDistance());
+							    driverstation.getDriveJoystick().getStickDistance());
 			}
 			break;
+			
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
+			
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
 		}
