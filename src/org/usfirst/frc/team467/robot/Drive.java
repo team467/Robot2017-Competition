@@ -346,7 +346,8 @@ public class Drive extends RobotDrive {
 		// angle the motor makes with respect to the robot
 		correctedWheelAngle -= (Math.PI / 2);
 
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, correctedWheelAngle, percentOfMaxSpeed);
+		//robot is actually clockwise
+		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, -correctedWheelAngle, percentOfMaxSpeed);
 		return corrected;
 	}
 
