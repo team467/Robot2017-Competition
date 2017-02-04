@@ -124,6 +124,8 @@ public class Robot extends IterativeRobot {
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
+		default:
+			drive.stop(); // If no drive mode specified, don't drive!
 		}
 	}
 }
