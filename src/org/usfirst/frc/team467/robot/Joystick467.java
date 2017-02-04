@@ -31,8 +31,6 @@ public class Joystick467 {
 
 	private static final int AXIS_X = 0;
 	private static final int AXIS_Y = 1;
-	private static final int AXIS_RX = 4;
-	private static final int AXIS_RY = 5;
 	private static final int TWIST_AXIS = 2;
 	private static final int FLAP_AXIS = 3;
 	private static final int POV_INDEX = 0;
@@ -69,8 +67,6 @@ public class Joystick467 {
 		flap = joystick.getRawAxis(FLAP_AXIS) < 0.0;
 		stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
 		stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
-		stickRY = accelerateJoystickInput(joystick.getRawAxis(AXIS_RY));
-		stickRX = accelerateJoystickInput(joystick.getRawAxis(AXIS_RX));
 		twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
 		pov = joystick.getPOV(POV_INDEX);
 	}

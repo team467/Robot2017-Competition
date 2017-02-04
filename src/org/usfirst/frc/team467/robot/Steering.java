@@ -1,7 +1,5 @@
 package org.usfirst.frc.team467.robot;
 
-import com.ctre.CANTalon;
-
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
@@ -33,7 +31,7 @@ public class Steering {
 	private PIDController steeringPID;
 
 	// Steering motor
-	private CANTalon steeringMotor;
+	private Talon steeringMotor;
 
 	/**
 	 * Center point of this steering motor. This is the value read from the
@@ -69,7 +67,7 @@ public class Steering {
 	 */
 	Steering(PID pID, int motor, int sensor, double center) {
 		// Make steering motor
-		steeringMotor = new CANTalon(motor);
+		steeringMotor = new Talon(motor);
 
 		// Make steering sensor
 		steeringSensor = new AnalogInput(sensor);
@@ -129,7 +127,7 @@ public class Steering {
 	 *
 	 * @return
 	 */
-	public CANTalon getMotor() {
+	public Talon getMotor() {
 		return steeringMotor;
 	}
 
