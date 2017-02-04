@@ -51,8 +51,6 @@ public class Robot extends IterativeRobot
         Calibration.init();
         stick = new Joystick467(0);
         gyro = Gyrometer.getInstance();
-        
-        
     }
 
     public void disabledInit()
@@ -94,8 +92,13 @@ public class Robot extends IterativeRobot
      */
     public void teleopPeriodic()
     {
+    	System.out.println(stick.getStickX());
         // Read driverstation inputs
         driverstation.readInputs();
+        if(driverstation.getGyroReset())
+        {
+        	gyro.reset();
+        }
 
         if (driverstation.getCalibrate())
         {
@@ -157,10 +160,10 @@ public class Robot extends IterativeRobot
             	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
             	break;
             case XB_SPLIT:
-            	drive.xbSplit(driverstation.getDriveJoystick().getStickY(), 
-            			driverstation.getDriveJoystick().getStickRX(),
+            	drive.xbSplit(driverstation.getDriveJoystick().getStickDistance(), 
             			driverstation.getDriveJoystick().getRStickDistance());
             	break;
+            
             case FIELD_ALIGN:
             	//angle Z is taken from the ADIS 16448 gyrometer because the axis are skewed
             	drive.fieldAlignDrive(gyro.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),

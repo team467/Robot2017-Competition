@@ -313,38 +313,41 @@ public class Drive extends RobotDrive
         crabDrive(angle, speed);  
     }
     
+    
     /**
-     * xbSplit
-     * 
-     * @param yAngle
-     * 			Y angle of left joystick
-     * @param xAngle
-     * 			X angle of right joystick
+     * @param x   the x distance taken from the right joystick (RX)
+     * @param y   the y distance taken from the right joystick (RY)
+     * @param speed
      */
     
-//    public void xbSplit(double yAngle, double xAngle)
-//    {
-//    	double x = xAngle;
-//    	double y = yAngle;
-//    	double speed = Math.sqrt((x*x) + (y*y));
-//    	double angle = Math.atan(y/x);
-//    	WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
-//    	fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-////    	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-//    	System.out.println("correctedspeed:" + corrected.speed);
-//    }
-    
-    public void xbSplit(double yAngle, double xAngle, double driveSpeed)
+    public void xbSplit(double x, double y)
     {
-    	double x = xAngle;
-    	double y = yAngle;
-    	double speed = driveSpeed;
-//    	double speed = Math.sqrt((xMag*xMag) + (yMag*yMag));
     	double angle = Math.atan(y/x);
+    	double speed = Math.sqrt((x*x) + (y*y));
+    	crabDrive(angle, speed);
+    }
+    
+    /**
+     * 
+     * @param direction   direction is foward or backwards
+     * @param angle   angle to drive
+     * @param speed   drive speed
+     */
+    public void xbSplitStrafe(double direction, double angle, double speed)
+    {
+    	double y = direction;
+    	if (y > 0){
+    		y = 1;
+    	}
+    	if (y < 0){
+    		y = -1;
+    	}else{
+    		y = 0;
+    	}
     	WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
-    	fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-//    	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-//    	System.out.println("correctedspeed:" + corrected.speed);
+    	fourWheelDrive(y * corrected.speed, y * corrected.speed, y* corrected.speed, y * corrected.speed);
+    	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+    	
     }
 
     /**
