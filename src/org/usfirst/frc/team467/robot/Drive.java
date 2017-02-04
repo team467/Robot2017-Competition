@@ -74,7 +74,7 @@ public class Drive extends RobotDrive {
 		controlMode = TalonControlMode.PercentVbus;
 
 		// make timer object
-		Timer timer = new Timer();
+		timer = new Timer();
 
 		// make gyro object
 		// gyro = Gyrometer467.getInstance();
@@ -332,6 +332,7 @@ public class Drive extends RobotDrive {
 	 *            angle of the POV joystick found on top of joystick
 	 */
 
+	//TODO: filter out so the strafe is only left, right
 	public void strafeDrive(int POVangle) {
 		double speed = SPEED_STRAFE;
 		double angle = POVangle * Math.PI / 180;
@@ -346,11 +347,13 @@ public class Drive extends RobotDrive {
 	 * @param speed
 	 */
 
-	public void xbSplit(double x, double y) {
-		double angle = Math.atan(y / x);
-		double speed = Math.sqrt((x * x) + (y * y));
-		crabDrive(angle, speed);
+	public void xbSplit(double robotAngle, double driveAngle, double speed) {
+		//left joystick is field align
+		//right joystick is turn
+		fieldAlignDrive(robotAngle,driveAngle, speed);
+		turnDrive(speed);
 	}
+
 
 	/**
 	 *
@@ -361,22 +364,22 @@ public class Drive extends RobotDrive {
 	 * @param speed
 	 *            drive speed
 	 */
-	public void xbSplitStrafe(double direction, double angle, double speed) {
-		double y = direction;
-		if (y > 0) {
-			y = 1;
-		}
-		if (y < 0) {
-			y = -1;
-		} else {
-			y = 0;
-		}
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
-		fourWheelDrive(y * corrected.speed, y * corrected.speed, y * corrected.speed, y * corrected.speed);
-		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-
-	}
-
+//	public void xbSplitStrafe(double direction, double angle, double speed) {
+//		double y = direction;
+//		if (y > 0) {
+//			y = 1;
+//		}
+//		if (y < 0) {
+//			y = -1;
+//		} else {
+//			y = 0;
+//		}
+//		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
+//		fourWheelDrive(y * corrected.speed, y * corrected.speed, y * corrected.speed, y * corrected.speed);
+//		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+//
+//	}
+// commented out by Zeynep; working on an xbsplit idea
 	/**
 	 * Individually controls a specific steering motor
 	 *

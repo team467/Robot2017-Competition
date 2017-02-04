@@ -28,6 +28,7 @@ public class Robot extends IterativeRobot
     private Shooter shooter;
     private Drive drive;
     private Joystick467 stick;
+    private XBJoystick xbstick;
     private ADIS16448_IMU gyro;
 
     int session;
@@ -51,6 +52,7 @@ public class Robot extends IterativeRobot
         shooter = Shooter.getInstance();
         Calibration.init();
         stick = new Joystick467(0);
+        xbstick = new XBJoystick(0);
         gyro = Gyrometer.getInstance();
         LookUpTable table = LookUpTable.getInstance();
 
@@ -167,7 +169,6 @@ public class Robot extends IterativeRobot
             	drive.xbSplit(driverstation.getXBJoystick().getRightStickDistance(),
             			driverstation.getDriveJoystick().getStickDistance());
             	break;
-            
             case FIELD_ALIGN:
             	//angle Z is taken from the ADIS 16448 gyrometer
             	drive.fieldAlignDrive(gyro.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
