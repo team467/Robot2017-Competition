@@ -8,16 +8,14 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * @author Bryan Duerk
  *
  */
-public class WheelPod extends Subsystem
+public class WheelPod
 {
-    public static final String SUBSYSTEM = "WheelPod";
     public static final double P = 2.16;
     public static final double I = 0.00864;
     public static final double D = 135.0;
@@ -198,25 +196,68 @@ public class WheelPod extends Subsystem
         return error;
     }
 
+    private TuneStage tuneStage = TuneStage.INITIAL_FEED_FORWARD;
+    private boolean startTune = true;
+
     public void tune() {
-//        try
-//        {
-            System.out.println("Getting minimum feed forward.");
-            tuner.setInitialFeedForward();
-//            System.out.println("Going to plaid!");
-//            tuner.maxSpeed();
-//        }
-//        catch (InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-    }
+        switch (tuneStage) {
+            case INITIAL_FEED_FORWARD:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Getting minimum feed forward.");
+                    tuner.initInitialFeedForwardStage();
+                }
+                tuner.setInitialFeedForward();
+                if (tuner.isFinished) {
+                    tuneStage = TuneStage.NO_TUNING;
+//                    tuneStage = TuneStage.MAX_SPEED;
+                    startTune = true;
+                }
+                break;
 
-    @Override
-    protected void initDefaultCommand()
-    {
-        // TODO Auto-generated method stub
+            case MAX_SPEED:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Going to plaid!");
+                    tuner.initMaxSpeedStage();
+                }
+              tuner.maxSpeedStage();
+                if (tuner.isFinished) {
+                    tuneStage = TuneStage.NO_TUNING;
+//                    tuneStage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
+                    startTune = true;
+                }
+                break;
 
+            case ULTIMATE_PROPORTIONAL_TERM:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Finding ultimate proportional gain term.");
+                    tuner.initFindUltimateProportionalGainStage();
+                }
+                tuner.findUltimateProportionalGainStage();
+                if (tuner.isFinished) {
+                    tuneStage = TuneStage.FEED_FORWARD_CURVE;
+                    startTune = true;
+                }
+                break;
+
+            case FEED_FORWARD_CURVE:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Finding feed forward curve.");
+                    tuner.initFindFeedForwardCurveStage();
+                }
+//                tuner.findFeedForwardCurveStage();
+                if (tuner.isFinished) {
+                    tuneStage = TuneStage.NO_TUNING;
+                    startTune = true;
+                }
+                break;
+
+            default:
+                startTune = false;
+        }
     }
 
 }

@@ -69,6 +69,7 @@ public class RunningAverage
 
     public double average() {
         double average = 0.0;
+//        System.out.println("SUM: " + sum + " COUNT: " + count);
         if (count < maxCount) {
             average =  sum / count;
         } else {
