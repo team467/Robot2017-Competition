@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.usfirst.frc.team467.robot.PIDCalibration;
+package org.usfirst.frc.team467.robot.AutoCalibration;
 
 /**
  *

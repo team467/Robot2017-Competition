@@ -1,9 +1,11 @@
 /**
  *
  */
-package org.usfirst.frc.team467.robot.PIDCalibration;
+package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import java.util.ArrayList;
+
+import org.usfirst.frc.team467.robot.PIDCalibration.RunningAverage;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -363,6 +365,70 @@ public class AutotunePID
             target++;
         }
 
+    }
+
+    private TuneStage tuneStage = TuneStage.INITIAL_FEED_FORWARD;
+    private boolean startTune = true;
+
+    public void tune() {
+        switch (tuneStage) {
+            case INITIAL_FEED_FORWARD:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Getting minimum feed forward.");
+                    initInitialFeedForwardStage();
+                }
+                setInitialFeedForward();
+                if (isFinished) {
+                    tuneStage = TuneStage.NO_TUNING;
+//                    tuneStage = TuneStage.MAX_SPEED;
+                    startTune = true;
+                }
+                break;
+
+            case MAX_SPEED:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Going to plaid!");
+                    initMaxSpeedStage();
+                }
+              maxSpeedStage();
+                if (isFinished) {
+                    tuneStage = TuneStage.NO_TUNING;
+//                    tuneStage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
+                    startTune = true;
+                }
+                break;
+
+            case ULTIMATE_PROPORTIONAL_TERM:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Finding ultimate proportional gain term.");
+                    initFindUltimateProportionalGainStage();
+                }
+                findUltimateProportionalGainStage();
+                if (isFinished) {
+                    tuneStage = TuneStage.FEED_FORWARD_CURVE;
+                    startTune = true;
+                }
+                break;
+
+            case FEED_FORWARD_CURVE:
+                if (startTune) {
+                    startTune = false;
+                    System.out.println("Finding feed forward curve.");
+                    initFindFeedForwardCurveStage();
+                }
+//                findFeedForwardCurveStage();
+                if (isFinished) {
+                    tuneStage = TuneStage.NO_TUNING;
+                    startTune = true;
+                }
+                break;
+
+            default:
+                startTune = false;
+        }
     }
 
 }

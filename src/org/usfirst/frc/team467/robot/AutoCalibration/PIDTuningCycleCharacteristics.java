@@ -1,7 +1,9 @@
-package org.usfirst.frc.team467.robot.PIDCalibration;
+package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import org.usfirst.frc.team467.robot.PIDCalibration.RunningAverage;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

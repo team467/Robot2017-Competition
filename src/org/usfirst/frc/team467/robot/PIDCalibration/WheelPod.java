@@ -33,8 +33,6 @@ public class WheelPod
     private int position;
     private boolean isPosition;
 
-    private AutotunePID tuner;
-
     CANTalon motor;
     Preferences prefs;
     Pod pod;
@@ -86,7 +84,6 @@ public class WheelPod
         motor.setReverseSoftLimit(-11);
         motor.setPosition(0);
         isPosition = false;
-        tuner = new AutotunePID(motor, pod.isReversed, true);
 
         speed = SmartDashboard.getNumber("Speed", 0.0);
         position = (int) SmartDashboard.getNumber("Position", 0.0);
@@ -194,70 +191,6 @@ public class WheelPod
         averageError(error);
         SmartDashboard.putNumber(pod.abr + "-Error", error);
         return error;
-    }
-
-    private TuneStage tuneStage = TuneStage.INITIAL_FEED_FORWARD;
-    private boolean startTune = true;
-
-    public void tune() {
-        switch (tuneStage) {
-            case INITIAL_FEED_FORWARD:
-                if (startTune) {
-                    startTune = false;
-                    System.out.println("Getting minimum feed forward.");
-                    tuner.initInitialFeedForwardStage();
-                }
-                tuner.setInitialFeedForward();
-                if (tuner.isFinished) {
-                    tuneStage = TuneStage.NO_TUNING;
-//                    tuneStage = TuneStage.MAX_SPEED;
-                    startTune = true;
-                }
-                break;
-
-            case MAX_SPEED:
-                if (startTune) {
-                    startTune = false;
-                    System.out.println("Going to plaid!");
-                    tuner.initMaxSpeedStage();
-                }
-              tuner.maxSpeedStage();
-                if (tuner.isFinished) {
-                    tuneStage = TuneStage.NO_TUNING;
-//                    tuneStage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
-                    startTune = true;
-                }
-                break;
-
-            case ULTIMATE_PROPORTIONAL_TERM:
-                if (startTune) {
-                    startTune = false;
-                    System.out.println("Finding ultimate proportional gain term.");
-                    tuner.initFindUltimateProportionalGainStage();
-                }
-                tuner.findUltimateProportionalGainStage();
-                if (tuner.isFinished) {
-                    tuneStage = TuneStage.FEED_FORWARD_CURVE;
-                    startTune = true;
-                }
-                break;
-
-            case FEED_FORWARD_CURVE:
-                if (startTune) {
-                    startTune = false;
-                    System.out.println("Finding feed forward curve.");
-                    tuner.initFindFeedForwardCurveStage();
-                }
-//                tuner.findFeedForwardCurveStage();
-                if (tuner.isFinished) {
-                    tuneStage = TuneStage.NO_TUNING;
-                    startTune = true;
-                }
-                break;
-
-            default:
-                startTune = false;
-        }
     }
 
 }
