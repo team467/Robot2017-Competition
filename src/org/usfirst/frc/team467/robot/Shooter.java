@@ -4,14 +4,22 @@ import edu.wpi.first.wpilibj.Talon;
 public class Shooter {
 	Talon talon;
     DriverStation2015 driverstation;
+    private static Shooter shooter = null;
     
     double speed;
     
-	public Shooter(){
+	private Shooter(){
 		talon = new Talon(4);
 		driverstation = DriverStation2015.getInstance();
 		speed = 0.0;
 		talon.set(speed);
+	}
+	
+	public static Shooter getInstance(){
+		if (shooter == null){
+			shooter = new Shooter();
+		}
+		return shooter;
 	}
 		
 	public void increaseSpeed(){

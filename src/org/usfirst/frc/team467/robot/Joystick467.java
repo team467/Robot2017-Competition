@@ -18,6 +18,8 @@ public class Joystick467
     private boolean[] prevButtons = new boolean[12]; // array of previous button states, involved in edge detection.
     private double stickX = 0.0;
     private double stickY = 0.0;
+    private double stickRX = 0.0;
+    private double stickRY = 0.0;
     private int pov = 0;
     private double twist = 0.0;
     private boolean flap = false;
@@ -27,6 +29,8 @@ public class Joystick467
 
     private static final int AXIS_X = 0;
     private static final int AXIS_Y = 1;
+    private static final int AXIS_RX = 4;
+    private static final int AXIS_RY = 5;
     private static final int TWIST_AXIS = 2;
     private static final int FLAP_AXIS = 3;
     private static final int POV_INDEX = 0;
@@ -67,6 +71,8 @@ public class Joystick467
         flap = joystick.getRawAxis(FLAP_AXIS) < 0.0;
         stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
         stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
+        stickRY = accelerateJoystickInput(joystick.getRawAxis(AXIS_RY));
+        stickRX = accelerateJoystickInput(joystick.getRawAxis(AXIS_RX));
         twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
         pov = joystick.getPOV(POV_INDEX);
     }
@@ -127,6 +133,16 @@ public class Joystick467
         return stickY;
     }
 
+    public double getStickRX()
+    {
+    	return stickRX;
+    }
+    
+    public double getStickRY()
+    {
+    	return stickRY;
+    }
+    
     /**
      * 
      * @return the angle of the POV in degrees, or -1 if the POV is not pressed.
@@ -158,7 +174,12 @@ public class Joystick467
      */
     public double getStickDistance()
     {
-        return Math.sqrt(stickX * stickX + stickY * stickY);
+        return Math.sqrt((stickX * stickX) + (stickY * stickY));
+    }
+    
+    public double getRStickDistance()
+    {
+    	return Math.sqrt((stickRX * stickRX) + (stickRY * stickRY));
     }
 
     public boolean isInDeadzone()
@@ -196,6 +217,29 @@ public class Joystick467
 
         return (stickAngle);
     }
+    
+    public double getRStickAngle()
+    {
+    	if(isInDeadzone())
+    	{
+    		return 0.0;
+    	}
+    	
+    	if(stickRY == 0.0)
+    	{
+    		//In Y deadzon avoid divide by zero error
+    		return (stickRX > 0.0) ? Math.PI / 2 : -Math.PI / 2;
+    	}
+    	
+    	double stickAngle = Math.atan(stickRX / -stickRY);
+    	
+    	if (stickRY > 0)
+    	{
+    		stickAngle += (stickX > 0) ? Math.PI : -Math.PI;
+    	}
+    	
+    	return (stickAngle);
+    }
 
     /**
      * Implement a dead zone for Joystick centering - and a non-linear
@@ -215,4 +259,5 @@ public class Joystick467
         // ensuring that the sign of the input is preserved
         return (input * Math.abs(input));
     }
+   
 }

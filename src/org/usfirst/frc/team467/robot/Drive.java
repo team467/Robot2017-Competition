@@ -6,7 +6,10 @@ package org.usfirst.frc.team467.robot;
 
 import com.ctre.CANTalon;
 
-import edu.wpi.first.wpilibj.*;
+//import com.analog.adis16448.frc.ADIS16448_IMU;
+
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * 
@@ -21,7 +24,16 @@ public class Drive extends RobotDrive
 
     // Data storage object
     private DataStorage data;
-
+    
+    //Joystick 467 object;
+    private Joystick467 joystick;
+    
+    //Gyro object
+ //   private Gyrometer467 gyro;
+    
+    //Timer object
+    private Timer timer; 
+    
     // Angle to turn at when rotating in place - initialized in constructor
     // takes the arctan of width over length in radians
     // Length is the wide side
@@ -48,6 +60,15 @@ public class Drive extends RobotDrive
     {
         super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 
+        //make timer object 
+    	Timer timer = new Timer();
+
+        //make gyro object
+       // gyro = Gyrometer467.getInstance();
+        		
+        //make joystick object 
+        joystick = new Joystick467(0);
+        
         // Make objects
         data = DataStorage.getInstance();
 
@@ -246,6 +267,88 @@ public class Drive extends RobotDrive
         fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
         fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
     }
+    
+    /**
+     * Field align drive
+     * 
+     * @param robotAngle
+     * 				angle of the robot from gyro
+     * @param driveAngle
+     * 				angle you want to drive from joystick
+     * @param speed
+     * 				magnitude of speed you want to drive from joystick
+     */
+    
+    /**
+     * 
+     * @param robotAngle   angle the robot is at, taken from gyrometer. 
+     * 1 degree = 4 native units on the ADIS16448 IMU
+     * @param driveAngle   the angle you want the robot to drive, taken from the angle of the joystick
+     * this is passed in in radians
+     * @param speed  the speed you want the robot to go, taken from the distance the joystick travels
+     */
+    //TODO: do conversion outside of method
+    public void fieldAlignDrive(double robotAngle, double driveAngle, double speed)
+    {  
+    	//convert the angle of the robot from native units to radians
+    	double angle = robotAngle * Math.PI / 720;
+    	//the angle that the wheels need to turn to
+        double angleDiff = driveAngle - angle;
+        WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
+        fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+        fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+        System.out.println("robotAngle:" + angle + " correctedAngle:" + corrected.angle + " driveAngle:" + driveAngle);
+    }
+    
+/** 
+ * strafeDrive
+ * @param POVangle
+ * 				angle of the POV joystick found on top of joystick
+ */
+    
+    public void strafeDrive(int POVangle)
+    {    	
+        double speed = SPEED_STRAFE;
+        double angle = POVangle*Math.PI / 180;
+        crabDrive(angle, speed);  
+    }
+    
+    
+    /**
+     * @param x   the x distance taken from the right joystick (RX)
+     * @param y   the y distance taken from the right joystick (RY)
+     * @param speed
+     */
+    
+    public void xbSplit(double x, double y)
+    {
+    	double angle = Math.atan(y/x);
+    	double speed = Math.sqrt((x*x) + (y*y));
+    	crabDrive(angle, speed);
+    }
+    
+    /**
+     * 
+     * @param direction   direction is foward or backwards
+     * @param angle   angle to drive
+     * @param speed   drive speed
+     */
+    public void xbSplitStrafe(double direction, double angle, double speed)
+    {
+    	double y = direction;
+    	if (y > 0){
+    		y = 1;
+    	}
+    	if (y < 0){
+    		y = -1;
+    	}else{
+    		y = 0;
+    	}
+    	WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
+    	fourWheelDrive(y * corrected.speed, y * corrected.speed, y* corrected.speed, y * corrected.speed);
+    	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+    	
+    }
 
     /**
      * Individually controls a specific steering motor
@@ -271,22 +374,6 @@ public class Drive extends RobotDrive
         this.fourWheelDrive(0, 0, 0, 0);// no drive for you!
     }
 
-    /**
-     * Drive left or right at a fixed speed.
-     * 
-     * @param direction
-     * @param speed
-     */
-    
-    
-    public void strafeDrive(int POVangle)
-    {    	
-        double speed = SPEED_STRAFE;
-        double angle = POVangle*Math.PI / 180;
-        crabDrive(angle, speed);  
-    }
-    
-    
     /**
      * Individually controls a specific driving motor
      *
