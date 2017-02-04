@@ -101,4 +101,12 @@ public class RobotMap {
 			new PID(-0.013, 0.0, 0.0), // Back Left PID values
 			new PID(-0.015, 0.0, 0.0), // Back Right PID values
 	};
+
+	public static final PIDF[] SpeedPIDFvalues = {
+			new PIDF(0.50, 0.0036, 18.00, 2.35), // Front Left PID values
+			new PIDF(1.35, 0.0027, 168.75, 1.90), // Front Right PID values
+			new PIDF(1.35, 0.0020, 168.75, 2.00), // Back Left PID values
+			new PIDF(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
+	};
+
 }
