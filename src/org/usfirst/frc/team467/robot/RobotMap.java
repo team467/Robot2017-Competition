@@ -107,11 +107,11 @@ public class RobotMap
     public static final double STEERING_RANGE = 4095;
 
     // PID array
-    public static final Steering_PID[] PIDvalues =
+    public static final PID[] PIDvalues =
     {
-        new Steering_PID(-0.013, 0.0, 0.0), // Front Left PID values
-        new Steering_PID(-0.013, 0.0, 0.0), // Front Right PID values
-        new Steering_PID(-0.013, 0.0, 0.0), // Back Left PID values
-        new Steering_PID(-0.015, 0.0, 0.0), // Back Right PID values
+        new PID(-0.013, 0.0, 0.0), // Front Left PID values
+        new PID(-0.013, 0.0, 0.0), // Front Right PID values
+        new PID(-0.013, 0.0, 0.0), // Back Left PID values
+        new PID(-0.015, 0.0, 0.0), // Back Right PID values
     };
 }

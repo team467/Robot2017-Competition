@@ -62,7 +62,7 @@ public class Steering
     /**
      * Constructor for steering subsystem
      *
-     * @param steering_PID
+     * @param pID
      *            - From the PIDvalues array
      * @param motor
      *            - motor channel
@@ -71,7 +71,7 @@ public class Steering
      * @param center
      *            - sensor reading when wheels point forward
      */
-    Steering(Steering_PID steering_PID, int motor, int sensor, double center)
+    Steering(PID pID, int motor, int sensor, double center)
     {
         // Make steering motor
         steeringMotor = new CANTalon(motor);
@@ -83,7 +83,7 @@ public class Steering
         steeringCenter = center;
 
         // Make PID Controller
-        steeringPID = new PIDController(steering_PID.p, steering_PID.i, steering_PID.d, new SteeringPIDSource(), steeringMotor);
+        steeringPID = new PIDController(pID.p, pID.i, pID.d, new SteeringPIDSource(), steeringMotor);
 
         // Set PID Controller settings
         steeringPID.setInputRange(0.0, RobotMap.STEERING_RANGE);
