@@ -31,7 +31,6 @@ public class Drive extends RobotDrive
 
     // Drive control mode
     private TalonControlMode controlMode;
-    private double maxSpeed;
 
     // Steering objects
     public Steering[] steering;
@@ -75,7 +74,6 @@ public class Drive extends RobotDrive
         super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 
         controlMode = TalonControlMode.PercentVbus;
-        maxSpeed = 300;
 
         //make timer object
     	Timer timer = new Timer();
@@ -189,10 +187,10 @@ public class Drive extends RobotDrive
         {
             switch (controlMode) {
                 case Speed:
-                    m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * frontLeftSpeed * maxSpeed);
-                    m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * frontRightSpeed * maxSpeed);
-                    m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * backLeftSpeed * maxSpeed);
-                    m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * backRightSpeed * maxSpeed);
+                    m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * frontLeftSpeed * RobotMap.MAX_SPEED);
+                    m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * frontRightSpeed * RobotMap.MAX_SPEED);
+                    m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * backLeftSpeed * RobotMap.MAX_SPEED);
+                    m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * backRightSpeed * RobotMap.MAX_SPEED);
                     break;
                 case Voltage:
                 case PercentVbus:
