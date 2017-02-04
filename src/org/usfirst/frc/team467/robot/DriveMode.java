@@ -7,5 +7,6 @@ public enum DriveMode {
 	STRAFE, // Strafe drive: robot drives sideways
 	FIELD_ALIGN, // Drive field align
 	XB_SPLIT, // left joystick is front, back, right joystick is left, right
-	XB_SPLIT_STRAFE
+	XB_SPLIT_STRAFE,
+	VECTOR_DRIVE
 }

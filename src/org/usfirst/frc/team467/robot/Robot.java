@@ -44,6 +44,8 @@ public class Robot extends IterativeRobot {
 		shooter = Shooter.getInstance();
 		Calibration.init();
 
+		/* Ignore Warning - Shashvat
+		   Will cause the initial computation of the look up table */ 
 		LookUpTable table = LookUpTable.getInstance();
 
 	}
