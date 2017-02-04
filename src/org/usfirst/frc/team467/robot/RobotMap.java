@@ -15,6 +15,12 @@ package org.usfirst.frc.team467.robot;
  */
 public class RobotMap
 {
+    // Global robot constants
+    /**
+     * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
+     */
+    public static final double MAX_SPEED = 300.0;
+
     //
     // Array IDs
     //

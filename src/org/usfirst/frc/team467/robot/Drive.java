@@ -4,7 +4,11 @@
  */
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.PIDCalibration.Pod;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
+
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
 
 //import com.analog.adis16448.frc.ADIS16448_IMU;
 
@@ -12,28 +16,37 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * 
+ *
  */
 public class Drive extends RobotDrive
 {
     // Single instance of this class
     private static Drive instance = null;
 
+    // WheelPods for setting modes
+    private static WheelPod frontleft;
+    private static WheelPod backleft;
+    private static WheelPod frontright;
+    private static WheelPod backright;
+
+    // Drive control mode
+    private TalonControlMode controlMode;
+
     // Steering objects
     public Steering[] steering;
 
     // Data storage object
     private DataStorage data;
-    
+
     //Joystick 467 object;
     private Joystick467 joystick;
-    
+
     //Gyro object
  //   private Gyrometer467 gyro;
-    
+
     //Timer object
-    private Timer timer; 
-    
+    private Timer timer;
+
     // Angle to turn at when rotating in place - initialized in constructor
     // takes the arctan of width over length in radians
     // Length is the wide side
@@ -60,15 +73,17 @@ public class Drive extends RobotDrive
     {
         super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 
-        //make timer object 
+        controlMode = TalonControlMode.PercentVbus;
+
+        //make timer object
     	Timer timer = new Timer();
 
         //make gyro object
        // gyro = Gyrometer467.getInstance();
-        		
-        //make joystick object 
+
+        //make joystick object
         joystick = new Joystick467(0);
-        
+
         // Make objects
         data = DataStorage.getInstance();
 
@@ -89,7 +104,7 @@ public class Drive extends RobotDrive
 
     /**
      * Gets the single instance of this class.
-     * 
+     *
      * @return The single instance.
      */
     public static Drive getInstance()
@@ -97,13 +112,30 @@ public class Drive extends RobotDrive
         if (instance == null)
         {
             // First usage - create Drive object
-            CANTalon frontleft = new CANTalon(RobotMap.FRONT_LEFT_MOTOR_CHANNEL);
-            CANTalon backleft = new CANTalon(RobotMap.BACK_LEFT_MOTOR_CHANNEL);
-            CANTalon frontright = new CANTalon(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL);
-            CANTalon backright = new CANTalon(RobotMap.BACK_RIGHT_MOTOR_CHANNEL);
-            instance = new Drive(frontleft, backleft, frontright, backright);
+            frontleft = new WheelPod(Pod.idToPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL), 0.50, 0.0036,  18.00, 2.35);
+            backleft = new WheelPod(Pod.idToPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL), 1.35, 0.0027, 168.75, 1.90);
+            frontright = new WheelPod(Pod.idToPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL), 1.35, 0.0020, 168.75, 2.00);
+            backright = new WheelPod(Pod.idToPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL), 1.35, 0.0027, 168.75, 2.00);
+
+            instance = new Drive(frontleft.motor(), backleft.motor(), frontright.motor(), backright.motor());
         }
         return instance;
+    }
+
+    public void setSpeedMode() {
+        controlMode = TalonControlMode.Speed;
+        frontleft.setSpeedMode();
+        frontright.setSpeedMode();
+        backright.setSpeedMode();
+        backleft.setSpeedMode();
+    }
+
+    public void setPercentVoltageBusMode() {
+        controlMode = TalonControlMode.PercentVbus;
+        frontleft.setPercentVoltageBusMode();
+        frontright.setPercentVoltageBusMode();
+        backright.setPercentVoltageBusMode();
+        backleft.setPercentVoltageBusMode();
     }
 
     /**
@@ -144,20 +176,32 @@ public class Drive extends RobotDrive
         {
             throw new NullPointerException("Null motor provided");
         }
-        
+
         final double MAX_DRIVE_ANGLE = Math.PI / 25;
-        
+
         // Don't drive until wheels are close to the commanded steering angle
         if (steering[RobotMap.FRONT_LEFT] .getAngleDelta() < MAX_DRIVE_ANGLE ||
             steering[RobotMap.FRONT_RIGHT].getAngleDelta() < MAX_DRIVE_ANGLE ||
             steering[RobotMap.BACK_LEFT]  .getAngleDelta() < MAX_DRIVE_ANGLE ||
             steering[RobotMap.BACK_RIGHT] .getAngleDelta() < MAX_DRIVE_ANGLE)
         {
-            m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
-            m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
-            m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
-            m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
-        } 
+            switch (controlMode) {
+                case Speed:
+                    m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * frontLeftSpeed * RobotMap.MAX_SPEED);
+                    m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * frontRightSpeed * RobotMap.MAX_SPEED);
+                    m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * backLeftSpeed * RobotMap.MAX_SPEED);
+                    m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * backRightSpeed * RobotMap.MAX_SPEED);
+                    break;
+                case Voltage:
+                case PercentVbus:
+                default:
+//                    System.out.println(frontLeftSpeed);
+                    m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
+                    m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
+                    m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
+                    m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
+            }
+        }
         else
         {
             m_frontLeftMotor.set(0);
@@ -190,10 +234,10 @@ public class Drive extends RobotDrive
     /**
      * Set angles in "turn in place" position
      * Wrap around will check whether the closest angle is facing forward or backward
-     * 
+     *
      * Front Left- / \ - Front Right<br>
      * Back Left - \ / - Back Right
-     * 
+     *
      * @param speed
      */
     public void turnDrive(double speed)
@@ -201,12 +245,12 @@ public class Drive extends RobotDrive
         WheelCorrection frontLeft = wrapAroundCorrect(RobotMap.FRONT_LEFT, TURN_IN_PLACE_ANGLE, -speed);
         WheelCorrection frontRight = wrapAroundCorrect(RobotMap.FRONT_RIGHT, -TURN_IN_PLACE_ANGLE, speed);
         WheelCorrection backLeft = wrapAroundCorrect(RobotMap.BACK_LEFT, -TURN_IN_PLACE_ANGLE, -speed);
-        WheelCorrection backRight = wrapAroundCorrect(RobotMap.BACK_RIGHT, TURN_IN_PLACE_ANGLE, speed);               
-        
+        WheelCorrection backRight = wrapAroundCorrect(RobotMap.BACK_RIGHT, TURN_IN_PLACE_ANGLE, speed);
+
         this.fourWheelSteer(frontLeft.angle, frontRight.angle, backLeft.angle, backRight.angle);
         this.fourWheelDrive(frontLeft.speed, frontRight.speed, backLeft.speed, backRight.speed);
     }
-    
+
     // Previous speeds for the four wheels
     private double lastSpeed[] = new double[]{0.0,0.0,0.0,0.0};
 
@@ -267,10 +311,10 @@ public class Drive extends RobotDrive
         fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
         fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
     }
-    
+
     /**
      * Field align drive
-     * 
+     *
      * @param robotAngle
      * 				angle of the robot from gyro
      * @param driveAngle
@@ -278,10 +322,10 @@ public class Drive extends RobotDrive
      * @param speed
      * 				magnitude of speed you want to drive from joystick
      */
-    
+
     /**
-     * 
-     * @param robotAngle   angle the robot is at, taken from gyrometer. 
+     *
+     * @param robotAngle   angle the robot is at, taken from gyrometer.
      * 1 degree = 4 native units on the ADIS16448 IMU
      * @param driveAngle   the angle you want the robot to drive, taken from the angle of the joystick
      * this is passed in in radians
@@ -289,7 +333,7 @@ public class Drive extends RobotDrive
      */
     //TODO: do conversion outside of method
     public void fieldAlignDrive(double robotAngle, double driveAngle, double speed)
-    {  
+    {
     	//convert the angle of the robot from native units to radians
     	double angle = robotAngle * Math.PI / 720;
     	//the angle that the wheels need to turn to
@@ -299,36 +343,36 @@ public class Drive extends RobotDrive
         fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
         System.out.println("robotAngle:" + angle + " correctedAngle:" + corrected.angle + " driveAngle:" + driveAngle);
     }
-    
-/** 
+
+/**
  * strafeDrive
  * @param POVangle
  * 				angle of the POV joystick found on top of joystick
  */
-    
+
     public void strafeDrive(int POVangle)
-    {    	
+    {
         double speed = SPEED_STRAFE;
         double angle = POVangle*Math.PI / 180;
-        crabDrive(angle, speed);  
+        crabDrive(angle, speed);
     }
-    
-    
+
+
     /**
      * @param x   the x distance taken from the right joystick (RX)
      * @param y   the y distance taken from the right joystick (RY)
      * @param speed
      */
-    
+
     public void xbSplit(double x, double y)
     {
     	double angle = Math.atan(y/x);
     	double speed = Math.sqrt((x*x) + (y*y));
     	crabDrive(angle, speed);
     }
-    
+
     /**
-     * 
+     *
      * @param direction   direction is foward or backwards
      * @param angle   angle to drive
      * @param speed   drive speed
@@ -347,7 +391,7 @@ public class Drive extends RobotDrive
     	WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
     	fourWheelDrive(y * corrected.speed, y * corrected.speed, y* corrected.speed, y * corrected.speed);
     	fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-    	
+
     }
 
     /**
@@ -430,7 +474,7 @@ public class Drive extends RobotDrive
 
     /**
      * Only used for steering
-     * 
+     *
      * @param steeringIndex
      *            - which wheel pod
      * @param targetAngle
