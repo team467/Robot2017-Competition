@@ -6,10 +6,9 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
+import com.analog.adis16448.frc.ADIS16448_IMU;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
-
-//import com.analog.adis16448.frc.ADIS16448_IMU;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 
@@ -28,6 +27,9 @@ public class Drive extends RobotDrive {
 
 	// Drive control mode
 	private TalonControlMode controlMode;
+
+	// Gyroscope
+	private ADIS16448_IMU gyro;
 
 	// Steering objects
 	public Steering[] steering;
@@ -59,10 +61,12 @@ public class Drive extends RobotDrive {
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 
+		// Set default control mode to percentage of voltage bus.
 		controlMode = TalonControlMode.PercentVbus;
 
 		// Make objects
 		data = DataStorage.getInstance();
+		gyro = Gyrometer.getInstance();
 
 		// Make steering array
 		steering = new Steering[4];
@@ -87,10 +91,11 @@ public class Drive extends RobotDrive {
 	public static Drive getInstance() {
 		if (instance == null) {
 			// First usage - create Drive object
-            frontleft = new WheelPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_LEFT]);
-            backleft = new WheelPod(RobotMap.BACK_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_LEFT]);
-            frontright = new WheelPod(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_RIGHT]);
-            backright = new WheelPod(RobotMap.BACK_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_RIGHT]);
+			frontleft = new WheelPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_LEFT]);
+			backleft = new WheelPod(RobotMap.BACK_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_LEFT]);
+			frontright = new WheelPod(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL,
+					RobotMap.SpeedPIDFvalues[RobotMap.FRONT_RIGHT]);
+			backright = new WheelPod(RobotMap.BACK_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_RIGHT]);
 
 			instance = new Drive(frontleft.motor(), backleft.motor(), frontright.motor(), backright.motor());
 		}
@@ -149,6 +154,15 @@ public class Drive extends RobotDrive {
 		}
 
 		final double MAX_DRIVE_ANGLE = Math.PI / 25;
+
+//		frontleft.motor().reverseSensor(true);
+//		backright.motor().reverseSensor(true);
+//		backright.motor().reverseOutput(true);
+
+//		System.out.println("Front Left Speed: " + frontleft.motor().getSpeed());
+//		System.out.println("Front Right Speed: " + frontright.motor().getSpeed());
+//		System.out.println("Back Left Speed: " + backleft.motor().getSpeed());
+//		System.out.println("Back Right Speed: " + backright.motor().getSpeed());
 
 		// Don't drive until wheels are close to the commanded steering angle
 		if (steering[RobotMap.FRONT_LEFT].getAngleDelta() < MAX_DRIVE_ANGLE
@@ -273,16 +287,6 @@ public class Drive extends RobotDrive {
 	 * Field align drive
 	 *
 	 * @param robotAngle
-	 *            angle of the robot from gyro
-	 * @param driveAngle
-	 *            angle you want to drive from joystick
-	 * @param speed
-	 *            magnitude of speed you want to drive from joystick
-	 */
-
-	/**
-	 *
-	 * @param robotAngle
 	 *            angle the robot is at, taken from gyrometer. 1 degree = 4
 	 *            native units on the ADIS16448 IMU
 	 * @param driveAngle
@@ -293,153 +297,122 @@ public class Drive extends RobotDrive {
 	 *            the joystick travels
 	 */
 	// TODO: do conversion outside of method
-	public void fieldAlignDrive(double robotAngle, double driveAngle, double speed) {
+	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
-		double angle = robotAngle * Math.PI / 720;
+		double angle = gyro.getAngleZ() * Math.PI / 720;
 		// the angle that the wheels need to turn to
 		double angleDiff = driveAngle - angle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-		System.out.println("robotAngle:" + angle + " correctedAngle:" + corrected.angle + " driveAngle:" + driveAngle);
+		System.out.println("gyroAngle" + gyro.getAngle() + " robotAngle:" + angle + " correctedAngle:" + corrected.angle
+				+ " driveAngle:" + driveAngle);
 	}
-	
+
+	/* see vector drive */
+	private WheelCorrection vectorDriveHelper(double xRequestedVelocity, double yRequestedVelocity,
+			double requestedTurnRate, double currentWheelAngle) {
+		// distance from the center of the robot to the wheelpods in inches
+		final double radius = 18.29;
+
+		// radius of the wheel in inches
+		final double wheelradius = 3;
+
+		// front right wheel pod
+		double correctedXVelocity = xRequestedVelocity - requestedTurnRate * radius * LookUpTable.getSin(currentWheelAngle);
+		double correctedYVelocity = yRequestedVelocity + requestedTurnRate * radius * LookUpTable.getCos(currentWheelAngle);
+
+		// Magnitude of the speed in INCHES / second
+		double correctedVelocity = Math.sqrt(correctedXVelocity * correctedXVelocity + correctedYVelocity * correctedYVelocity);
+		double rpm = correctedVelocity * 60 / (2 * Math.PI * wheelradius);
+		double percentOfMaxSpeed = rpm / RobotMap.MAX_SPEED;
+
+		// angle the fr vector makes with the x axis
+		double correctedWheelAngle = Math.PI / 2;
+		if (correctedXVelocity == 0) {
+			if (correctedYVelocity > 0) {
+				correctedWheelAngle = Math.PI / 2;
+			}
+			else if (correctedYVelocity < 0) {
+				correctedWheelAngle = -Math.PI / 2;
+			}
+		} else {
+			correctedWheelAngle = LookUpTable.getArcTan(correctedYVelocity / correctedXVelocity);
+		}
+		// might have to add PI degrees
+		if (correctedYVelocity < 0) {
+			correctedWheelAngle += Math.PI;
+		}
+		// angle the motor makes with respect to the robot
+		correctedWheelAngle -= (Math.PI / 2);
+
+		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, correctedWheelAngle, percentOfMaxSpeed);
+		return corrected;
+	}
+
 	/**
 	 *
 	 * ASSUMES the robot is in speed mode
-	 * @param robotAngle
-	 *            angle the robot is at, taken from gyrometer. 1 degree = 4
-	 *            native units on the ADIS16448 IMU
-	 * @param xVel
+	 *
+	 * @param requestedXVelocity
 	 *            the desired x velocity in inches / second
-	 * @param yVel
+	 * @param requestedYVelocity
 	 *            the desired x velocity in inches / second
-	 * @param angVel
+	 * @param requestedTurnRate
 	 *            the desired angular velocoity in radians / second
-	 *            
+	 *
 	 */
 	// TODO: do conversion outside of method
-	public void vectorDrive(double robotAngle, double xVel, double yVel, double angVel) {
+	public void vectorDrive(double requestedXVelocity, double requestedYVelocity, double requestedTurnRate) {
+		// turns xVel AND yVel into inches / second
+		requestedXVelocity *= 44.42;
+		requestedYVelocity *= 44.42;
+		// angular velocity multiplier
+		requestedTurnRate *= 0.5;
+
 		// convert the angle of the robot from native units to radians
-		double angle = robotAngle * Math.PI / 720;
+		double angle = gyro.getAngleZ() * Math.PI / 720;
 		// the angle that the robot has turned
-		
-		//distance from the center of the robot to the wheelpods in inches
-		final double radius = 18.29;
-		
-		//radius of the wheel in inches
-		final double wheelradius = 3;
-		
-		//angle from x-axis of ROBOT to the frontright wheelpod (in radians)
+
+		// angle from x-axis of ROBOT to the frontright wheelpod (in radians)
 		final double alpha = 1.039;
-		
-		//angle from x axis of FIELD to the respective wheel pod
+
+		// angle from x axis of FIELD to the respective wheel pod
 		double frAngle, flAngle, blAngle, brAngle;
 		frAngle = angle + alpha;
 		flAngle = angle + Math.PI - alpha;
 		blAngle = angle + Math.PI + alpha;
 		brAngle = angle - alpha;
-		
-		//speed of respective wheelpods (% of MaxSpeed)
+
+		// speed of respective wheelpods (% of MaxSpeed)
 		double frSpd, flSpd, brSpd, blSpd;
-		//the steering angle the wheelpods will be set to
+		// the steering angle the wheelpods will be set to
 		double frSteering, flSteering, blSteering, brSteering;
-		{
-			//front right wheel pod
-			double frXVel = xVel - angVel*radius*LookUpTable.getSin(frAngle);
-			double frYVel = yVel + angVel*radius*LookUpTable.getCos(frAngle);
-			
-			//maginitude of the speed in INCHES / second
-			double frVel = Math.sqrt(frXVel * frXVel + frYVel * frYVel);
-			double frVelInRPM = frVel * 60 / (2 * Math.PI * wheelradius);
-			double frVelPercentage = frVelInRPM / RobotMap.MAX_SPEED;
-			
-			//angle the fr vector makes with the x axis
-			double frVectorAngle = LookUpTable.getArcTan(frYVel / frXVel);
-			//might have to add PI degrees
-			if (frYVel < 0){
-				frVectorAngle += Math.PI;
-			}
-			//angle the motor makes with respect to the robot
-			frVectorAngle -= (Math.PI / 2);
-			
-			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, frVectorAngle, frVelPercentage);
-			frSteering = corrected.angle;
-			frSpd = corrected.speed;
-		}
-		{
-			//front left wheel pod
-			double flXVel = xVel - angVel*radius*LookUpTable.getSin(flAngle);
-			double flYVel = yVel + angVel*radius*LookUpTable.getCos(flAngle);
-			
-			//maginitude of the speed in INCHES / second
-			double flVel = Math.sqrt(flXVel * flXVel + flYVel * flYVel);
-			double flVelInRPM = flVel * 60 / (2 * Math.PI * wheelradius);
-			double flVelPercentage = flVelInRPM / RobotMap.MAX_SPEED;
-			
-			//angle the fl vector makes with the x axis
-			double flVectorAngle = LookUpTable.getArcTan(flYVel / flXVel);
-			//might have to add PI degrees
-			if (flYVel < 0){
-				flVectorAngle += Math.PI;
-			}
-			//angle the motor makes with respect to the robot
-			flVectorAngle -= (Math.PI / 2);
-			
-			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, flVectorAngle, flVelPercentage);
-			flSteering = corrected.angle;
-			flSpd = corrected.speed;
-		}
-		{
-			//backleft left wheel pod
-			double blXVel = xVel - angVel*radius*LookUpTable.getSin(blAngle);
-			double blYVel = yVel + angVel*radius*LookUpTable.getCos(blAngle);
-			
-			//maginitude of the speed in INCHES / second
-			double blVel = Math.sqrt(blXVel * blXVel + blYVel * blYVel);
-			double blVelInRPM = blVel * 60 / (2 * Math.PI * wheelradius);
-			double blVelPercentage = blVelInRPM / RobotMap.MAX_SPEED;
-			
-			//angle the bl vector makes with the x axis
-			double blVectorAngle = LookUpTable.getArcTan(blYVel / blXVel);
-			//might have to add PI radians since arcTan(-a / -n) = arcTan(a / n)
-			if (blYVel < 0){
-				blVectorAngle += Math.PI;
-			}
-			//angle the motor makes with respect to the robot
-			blVectorAngle -= (Math.PI / 2);
-			
-			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, blVectorAngle, blVelPercentage);
-			blSteering = corrected.angle;
-			blSpd = corrected.speed;
-		}
-		{
-			//backright wheel pod
-			double brXVel = xVel - angVel*radius*LookUpTable.getSin(brAngle);
-			double brYVel = yVel + angVel*radius*LookUpTable.getCos(brAngle);
-			
-			//maginitude of the speed in INCHES / second
-			double brVel = Math.sqrt(brXVel * brXVel + brYVel * brYVel);
-			double brVelInRPM = brVel * 60 / (2 * Math.PI * wheelradius);
-			double brVelPercentage = brVelInRPM / RobotMap.MAX_SPEED;
-			
-			//angle the br vector makes with the x axis
-			double brVectorAngle = LookUpTable.getArcTan(brYVel / brXVel);
-			//might have to add PI radians
-			if (brYVel < 0){
-				brVectorAngle += Math.PI;
-			}
-			//angle the motor makes with respect to the robot
-			brVectorAngle -= (Math.PI / 2);
-			
-			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, brVectorAngle, brVelPercentage);
-			brSteering = corrected.angle;
-			brSpd = corrected.speed;
-		}
-		
+		WheelCorrection corrected;
+
+		// front right wheel pod
+		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, frAngle);
+		frSteering = corrected.angle;
+		frSpd = corrected.speed;
+
+		// front left wheel pod
+		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, flAngle);
+		flSteering = corrected.angle;
+		flSpd = corrected.speed;
+
+		// backleft left wheel pod
+		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, blAngle);
+		blSteering = corrected.angle;
+		blSpd = corrected.speed;
+
+		// backright wheel pod
+		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, brAngle);
+		brSteering = corrected.angle;
+		brSpd = corrected.speed;
+
 		fourWheelSteer(flSteering, frSteering, blSteering, brSteering);
 		fourWheelDrive(flSpd, frSpd, blSpd, brSpd);
-		
+
 	}
 
 	/**

@@ -17,6 +17,7 @@ public class DriverStation2015 {
 
 	private static int UNWIND_BUTTON = 10;
 	private static int FIELD_ALIGN = 5;
+	private static int VECTOR = 6;
 
 	enum Speed {
 		SLOW, FAST
@@ -24,7 +25,7 @@ public class DriverStation2015 {
 
 	/**
 	 * Singleton instance of the object.
-	 * 
+	 *
 	 * @return
 	 */
 	public static DriverStation2015 getInstance() {
@@ -71,7 +72,7 @@ public class DriverStation2015 {
 	/**
 	 * returns the current drive mode. Modes lower in the function will override
 	 * those higher up. only 1 mode can be active at any time
-	 * 
+	 *
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
@@ -89,14 +90,17 @@ public class DriverStation2015 {
 		if (getDriveJoystick().buttonDown(FIELD_ALIGN)) {
 			drivemode = DriveMode.FIELD_ALIGN;
 		}
-		if (getDriveJoystick().buttonDown(6)) {
+		if (getDriveJoystick().buttonDown(VECTOR)) {
+			drivemode = DriveMode.VECTOR;
+		}
+		if (getDriveJoystick().buttonDown(4)) {
 			drivemode = DriveMode.XB_SPLIT;
 		}
 		return drivemode;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true if button required to enable slow driving mode are pressed
 	 */
 	public boolean getSlow() {
@@ -104,7 +108,7 @@ public class DriverStation2015 {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true if button required to enable turbo driving mode are pressed
 	 */
 	public boolean getTurbo() {
@@ -116,7 +120,7 @@ public class DriverStation2015 {
 	// here can overlap with those used for the regular drive modes
 
 	/**
-	 * 
+	 *
 	 * @return true if calibration mode selected
 	 */
 	public boolean getCalibrate() {
@@ -128,7 +132,7 @@ public class DriverStation2015 {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true if button to confirm calibration selection is pressed
 	 */
 	public boolean getCalibrateConfirmSelection() {
@@ -136,7 +140,7 @@ public class DriverStation2015 {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true if button to enable calibration slow turn mode is pressed
 	 */
 	public boolean getCalibrateSlowTurn() {
