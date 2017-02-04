@@ -4,16 +4,12 @@ public class DriverStation2015 {
 	private static DriverStation2015 driverstation2015 = null;
 
 	Joystick467 driverJoy = null;
-	// Instantiated this in main class instead of inside of getDriveMode
-	DriveMode drivemode;
 
 	// Mapping of functions to Joystick Buttons for normal operation
 	private static int SLOW_BUTTON = Joystick467.TRIGGER;
 	private static int TURN_BUTTON = 2;
 	private static int TURBO_BUTTON = 7;
 	private static int GYRO_RESET_BUTTON = 8;
-	private static int SHOOTER_UP = 4;
-	private static int SHOOTER_DOWN = 3;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = Joystick467.TRIGGER;
@@ -79,10 +75,8 @@ public class DriverStation2015 {
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
-		// Instantiated outside of this class and in main class
-		// crab drive is default. if else, it is strafe.
-		// return the chosen drivemode
-		drivemode = DriveMode.CRAB; // default is regular crab drive
+
+		DriveMode drivemode = DriveMode.CRAB; // default is regular crab drive
 		if (getDriveJoystick().buttonDown(TURN_BUTTON)) {
 			drivemode = DriveMode.TURN;
 		}

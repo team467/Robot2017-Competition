@@ -13,7 +13,6 @@ import com.ctre.CANTalon.TalonControlMode;
 //import com.analog.adis16448.frc.ADIS16448_IMU;
 
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -37,15 +36,6 @@ public class Drive extends RobotDrive {
 	// Data storage object
 	private DataStorage data;
 
-	// Joystick 467 object;
-	private Joystick467 joystick;
-
-	// Gyro object
-	// private Gyrometer467 gyro;
-
-	// Timer object
-	private Timer timer;
-
 	// Angle to turn at when rotating in place - initialized in constructor
 	// takes the arctan of width over length in radians
 	// Length is the wide side
@@ -65,22 +55,12 @@ public class Drive extends RobotDrive {
 
 	// Speed to use for Strafe and Revolve Drive
 	private static final double SPEED_STRAFE = 0.6;
-	// TODO: some stuff
 
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 
 		controlMode = TalonControlMode.PercentVbus;
-
-		// make timer object
-		Timer timer = new Timer();
-
-		// make gyro object
-		// gyro = Gyrometer467.getInstance();
-
-		// make joystick object
-		joystick = new Joystick467(0);
 
 		// Make objects
 		data = DataStorage.getInstance();
