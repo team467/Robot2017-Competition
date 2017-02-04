@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
@@ -31,7 +33,7 @@ public class Steering
     private PIDController steeringPID;
 
     // Steering motor
-    private Talon steeringMotor;
+    private CANTalon steeringMotor;
 
     /**
      * Center point of this steering motor. This is the value read from the sensor
@@ -60,7 +62,7 @@ public class Steering
     /**
      * Constructor for steering subsystem
      *
-     * @param pid
+     * @param steering_PID
      *            - From the PIDvalues array
      * @param motor
      *            - motor channel
@@ -69,10 +71,10 @@ public class Steering
      * @param center
      *            - sensor reading when wheels point forward
      */
-    Steering(PID pid, int motor, int sensor, double center)
+    Steering(Steering_PID steering_PID, int motor, int sensor, double center)
     {
         // Make steering motor
-        steeringMotor = new Talon(motor);
+        steeringMotor = new CANTalon(motor);
 
         // Make steering sensor
         steeringSensor = new AnalogInput(sensor);
@@ -81,7 +83,7 @@ public class Steering
         steeringCenter = center;
 
         // Make PID Controller
-        steeringPID = new PIDController(pid.p, pid.i, pid.d, new SteeringPIDSource(), steeringMotor);
+        steeringPID = new PIDController(steering_PID.p, steering_PID.i, steering_PID.d, new SteeringPIDSource(), steeringMotor);
 
         // Set PID Controller settings
         steeringPID.setInputRange(0.0, RobotMap.STEERING_RANGE);
@@ -136,7 +138,7 @@ public class Steering
      *
      * @return
      */
-    public Talon getMotor()
+    public CANTalon getMotor()
     {
         return steeringMotor;
     }

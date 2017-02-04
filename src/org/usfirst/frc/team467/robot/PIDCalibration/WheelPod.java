@@ -33,7 +33,8 @@ public class WheelPod
     private int position;
     private boolean isPosition;
 
-    CANTalon motor;
+    private CANTalon motor;
+
     Preferences prefs;
     Pod pod;
     String keyHeader;
@@ -43,16 +44,37 @@ public class WheelPod
     private static final int MAX_ERROR_COUNT = 26;
     RunningAverage averageError;
 
+    public WheelPod(Pod pod, double p, double i, double d, double f) {
+        averageError = new RunningAverage(MAX_ERROR_COUNT);
+        this.pod = pod;
+        motor = new CANTalon(pod.id);
+        if (pod.isReversed) {
+            reverse();
+        }
+        motor.setPID(p, i, d);
+        motor.setF(f);
+        isPosition = false;
+        motor.changeControlMode(TalonControlMode.Voltage);
+
+        speed = SmartDashboard.getNumber("Speed", 0.0);
+        position = (int) SmartDashboard.getNumber("Position", 0.0);
+        SmartDashboard.putNumber(pod.abr + "-P", p);
+        SmartDashboard.putNumber(pod.abr + "-I", i);
+        SmartDashboard.putNumber(pod.abr + "-D", d);
+        SmartDashboard.putNumber(pod.abr + "-F", f);
+        SmartDashboard.putNumber("Speed", speed);
+        SmartDashboard.putNumber("Position", position);
+        SmartDashboard.putNumber(pod.abr + "-Error", 0.0);
+        SmartDashboard.putNumber(pod.abr + "-ID", pod.id);
+    }
+
     /**
      *
      */
     public WheelPod(Pod pod)
     {
-        averageError = new RunningAverage(MAX_ERROR_COUNT);
-        this.pod = pod;
         prefs = Preferences.getInstance();
         keyHeader = "Pod-" + pod.name + "-PID-";
-
         if (!prefs.containsKey(keyHeader + "P")) {
             prefs.putDouble(keyHeader + "P", P);
         }
@@ -69,32 +91,6 @@ public class WheelPod
             prefs.putDouble(keyHeader + "F", F);
         }
         f = prefs.getDouble(keyHeader + "F", F);
-        motor = new CANTalon(pod.id);
-        if (pod.isReversed) {
-            reverse();
-        }
-        motor.enable();
-        motor.setPID(p, i, d);
-        motor.setF(f);
-        motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
-        motor.changeControlMode(TalonControlMode.Speed);
-        motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        motor.configEncoderCodesPerRev(256);
-        motor.setForwardSoftLimit(11);
-        motor.setReverseSoftLimit(-11);
-        motor.setPosition(0);
-        isPosition = false;
-
-        speed = SmartDashboard.getNumber("Speed", 0.0);
-        position = (int) SmartDashboard.getNumber("Position", 0.0);
-        SmartDashboard.putNumber(pod.abr + "-P", p);
-        SmartDashboard.putNumber(pod.abr + "-I", i);
-        SmartDashboard.putNumber(pod.abr + "-D", d);
-        SmartDashboard.putNumber(pod.abr + "-F", f);
-        SmartDashboard.putNumber("Speed", speed);
-        SmartDashboard.putNumber("Position", position);
-        SmartDashboard.putNumber(pod.abr + "-Error", 0.0);
-        SmartDashboard.putNumber(pod.abr + "-ID", pod.id);
     }
 
     /**
@@ -114,16 +110,34 @@ public class WheelPod
         motor.reverseOutput(true);
     }
 
+    public void setVoltageMode() {
+        motor.changeControlMode(TalonControlMode.Voltage);
+    }
+
     public void setPositionMode() {
         isPosition = true;
         motor.changeControlMode(TalonControlMode.Position);
+        motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        motor.configEncoderCodesPerRev(256);
         motor.setAllowableClosedLoopErr(0);
+        motor.setForwardSoftLimit(11);
+        motor.setReverseSoftLimit(-11);
+        motor.setPosition(0);
     }
 
     public void setSpeedMode() {
         isPosition = false;
         motor.changeControlMode(TalonControlMode.Speed);
+        motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        motor.configEncoderCodesPerRev(256);
         motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+        motor.setForwardSoftLimit(11);
+        motor.setReverseSoftLimit(-11);
+        motor.setPosition(0);
+    }
+
+    public CANTalon motor() {
+        return motor;
     }
 
     public void update()

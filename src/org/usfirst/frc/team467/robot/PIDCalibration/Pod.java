@@ -11,8 +11,8 @@ public enum Pod
 {
     FRONT_RIGHT(1, "FrontRight", "FR", true),
     FRONT_LEFT(2, "FrontLeft", "FL", false),
-    REAR_LEFT(3, "RearLeft", "RL", false),
-    REAR_RIGHT(4, "RearRight", "RR", true);
+    REAR_LEFT(3, "BackLeft", "RL", false),
+    REAR_RIGHT(4, "BackRight", "RR", true);
 
     public final int id;
     public final String name;
