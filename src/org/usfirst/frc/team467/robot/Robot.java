@@ -7,7 +7,10 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import com.analog.adis16448.frc.ADIS16448_IMU;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,6 +25,9 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2015 driverstation;
 	private Drive drive;
+	private CameraStream cam;
+	private VisionProcessing vision;
+	private ADIS16448_IMU gyro;
 
 	int session;
 
@@ -45,16 +51,23 @@ public class Robot extends IterativeRobot {
 		/* Ignore Warning - Shashvat
 		   Will cause the initial computation of the look up table */
 		LookUpTable table = LookUpTable.getInstance();
-
+		
+		cam = CameraStream.getInstance();
+		vision = VisionProcessing.getInstance();
+		gyro = Gyrometer.getInstance();
 	}
 
 	public void disabledInit() {
 	}
 
 	public void disabledPeriodic() {
+		double gyroAngle = gyro.getAngleZ() / 4;
+		SmartDashboard.putNumber("gyro", gyroAngle);
+		vision.update();
 	}
 
 	public void autonomousInit() {
+		
 	}
 
 	public void teleopInit() {
@@ -67,7 +80,12 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		double gyroAngle = gyro.getAngleZ() / 4;
+		SmartDashboard.putNumber("gyro", gyroAngle);
+		vision.update();
 		driverstation.readInputs();
+		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+		drive.crabDrive(driveAngle, 0.0);
 	}
 
 	/**
