@@ -1,0 +1,17 @@
+/**
+ *
+ */
+package org.usfirst.frc.team467.robot.AutoCalibration;
+
+/**
+ *
+ */
+public enum TuningRule
+{
+    ZIEGLER_NICHOLS_P_STANDARD,
+    ZIEGLER_NICHOLS_PI_STANDARD,
+    ZIEGLER_NICHOLS_PID_STANDARD,
+    PESSEN_INTEGRAL_RULE,
+    ZIEGLER_NICHOLS_PID_SOME_OVERSHOOT,
+    ZIEGLER_NICHOLS_PID_NO_OVERSHOOT,
+}
