@@ -47,10 +47,8 @@ public class LookUpTable {
 	/* input in radians */
 	public static double getSin(double a) {
 		int angle = (int) Math.round(RadsToDegrees(a));
-		while (angle >= 360) {
-			angle -= 360;
-		}
-		while (angle < 0) {
+		angle %= 360;
+		if (angle < 0) {
 			angle += 360;
 		}
 		return sinVals[angle];
@@ -78,6 +76,25 @@ public class LookUpTable {
 		}
 		double degreesangle = (low + high) / 2 - 90;
 		return DegreesToRads(degreesangle);
+	}
+	
+	public static double getArcTan2(double y, double x) {
+		double angle = Math.PI / 2;
+        if (x == 0){
+        	if (y > 0){
+        		angle = Math.PI;
+        	}
+        	if (y < 0){
+        		angle = -Math.PI;
+        	}
+        }
+        else{
+        	angle = LookUpTable.getArcTan(y / x) + Math.PI;
+        }
+        if (x < 0){
+        	angle += Math.PI;
+        }
+        return angle;
 	}
 
 }

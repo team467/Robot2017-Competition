@@ -108,5 +108,14 @@ public class RobotMap {
 			new PIDF(1.35, 0.0020, 168.75, 2.00), // Back Left PID values
 			new PIDF(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
 	};
+	
+	/* distance from the center of the robot to the wheelpod in inches */
+	public static final double wheelpodRadius = 18.29;
+	/* diameter of wheelpod in inches */
+	public static final double wheeldiameter = 6;
+	
+	/* multiplier for vector drive */
+	public static final double vectorDriveAngularVelocityMultiplier = 0.5;
+	public static final double vectorDriveVelocityMultiplier = 44.42;
 
 }

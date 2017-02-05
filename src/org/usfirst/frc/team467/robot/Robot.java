@@ -128,8 +128,10 @@ public class Robot extends IterativeRobot {
 
 		case VECTOR:
 			drive.setSpeedMode();
-			drive.vectorDrive(driverstation.getDriveJoystick().getStickX(), driverstation.getDriveJoystick().getStickY(),
-					driverstation.getDriveJoystick().getTwist());
+			//drive.vectorDrive(driverstation.getDriveJoystick().getStickX(), driverstation.getDriveJoystick().getStickY(),
+			//		driverstation.getDriveJoystick().getTwist());
+			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
 			break;
 
 		default:
