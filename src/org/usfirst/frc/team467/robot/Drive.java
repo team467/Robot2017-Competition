@@ -55,6 +55,13 @@ public class Drive extends RobotDrive {
 	// Speed to use for Strafe and Revolve Drive
 	private static final double SPEED_STRAFE = 0.6;
 
+	public void printError() {
+		System.out.println(frontleft.motor().getError()
+				+ " " + frontright.motor().getError()
+				+ " " + backleft.motor().getError()
+				+ " " + backright.motor().getError());
+	}
+
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
@@ -147,6 +154,8 @@ public class Drive extends RobotDrive {
 				|| m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
 		}
+
+		printError();
 
 		final double MAX_DRIVE_ANGLE = Math.PI / 25;
 
@@ -303,7 +312,7 @@ public class Drive extends RobotDrive {
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
 		System.out.println("robotAngle:" + angle + " correctedAngle:" + corrected.angle + " driveAngle:" + driveAngle);
 	}
-	
+
 	/**
 	 *
 	 * ASSUMES the robot is in speed mode
@@ -316,30 +325,30 @@ public class Drive extends RobotDrive {
 	 *            the desired x velocity in inches / second
 	 * @param angVel
 	 *            the desired angular velocoity in radians / second
-	 *            
+	 *
 	 */
 	// TODO: do conversion outside of method
 	public void vectorDrive(double robotAngle, double xVel, double yVel, double angVel) {
 		// convert the angle of the robot from native units to radians
 		double angle = robotAngle * Math.PI / 720;
 		// the angle that the robot has turned
-		
+
 		//distance from the center of the robot to the wheelpods in inches
 		final double radius = 18.29;
-		
+
 		//radius of the wheel in inches
 		final double wheelradius = 3;
-		
+
 		//angle from x-axis of ROBOT to the frontright wheelpod (in radians)
 		final double alpha = 1.039;
-		
+
 		//angle from x axis of FIELD to the respective wheel pod
 		double frAngle, flAngle, blAngle, brAngle;
 		frAngle = angle + alpha;
 		flAngle = angle + Math.PI - alpha;
 		blAngle = angle + Math.PI + alpha;
 		brAngle = angle - alpha;
-		
+
 		//speed of respective wheelpods (% of MaxSpeed)
 		double frSpd, flSpd, brSpd, blSpd;
 		//the steering angle the wheelpods will be set to
@@ -348,12 +357,12 @@ public class Drive extends RobotDrive {
 			//front right wheel pod
 			double frXVel = xVel - angVel*radius*LookUpTable.getSin(frAngle);
 			double frYVel = yVel + angVel*radius*LookUpTable.getCos(frAngle);
-			
+
 			//maginitude of the speed in INCHES / second
 			double frVel = Math.sqrt(frXVel * frXVel + frYVel * frYVel);
 			double frVelInRPM = frVel * 60 / (2 * Math.PI * wheelradius);
 			double frVelPercentage = frVelInRPM / RobotMap.MAX_SPEED;
-			
+
 			//angle the fr vector makes with the x axis
 			double frVectorAngle = LookUpTable.getArcTan(frYVel / frXVel);
 			//might have to add PI degrees
@@ -362,7 +371,7 @@ public class Drive extends RobotDrive {
 			}
 			//angle the motor makes with respect to the robot
 			frVectorAngle -= (Math.PI / 2);
-			
+
 			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, frVectorAngle, frVelPercentage);
 			frSteering = corrected.angle;
 			frSpd = corrected.speed;
@@ -371,12 +380,12 @@ public class Drive extends RobotDrive {
 			//front left wheel pod
 			double flXVel = xVel - angVel*radius*LookUpTable.getSin(flAngle);
 			double flYVel = yVel + angVel*radius*LookUpTable.getCos(flAngle);
-			
+
 			//maginitude of the speed in INCHES / second
 			double flVel = Math.sqrt(flXVel * flXVel + flYVel * flYVel);
 			double flVelInRPM = flVel * 60 / (2 * Math.PI * wheelradius);
 			double flVelPercentage = flVelInRPM / RobotMap.MAX_SPEED;
-			
+
 			//angle the fl vector makes with the x axis
 			double flVectorAngle = LookUpTable.getArcTan(flYVel / flXVel);
 			//might have to add PI degrees
@@ -385,7 +394,7 @@ public class Drive extends RobotDrive {
 			}
 			//angle the motor makes with respect to the robot
 			flVectorAngle -= (Math.PI / 2);
-			
+
 			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, flVectorAngle, flVelPercentage);
 			flSteering = corrected.angle;
 			flSpd = corrected.speed;
@@ -394,12 +403,12 @@ public class Drive extends RobotDrive {
 			//backleft left wheel pod
 			double blXVel = xVel - angVel*radius*LookUpTable.getSin(blAngle);
 			double blYVel = yVel + angVel*radius*LookUpTable.getCos(blAngle);
-			
+
 			//maginitude of the speed in INCHES / second
 			double blVel = Math.sqrt(blXVel * blXVel + blYVel * blYVel);
 			double blVelInRPM = blVel * 60 / (2 * Math.PI * wheelradius);
 			double blVelPercentage = blVelInRPM / RobotMap.MAX_SPEED;
-			
+
 			//angle the bl vector makes with the x axis
 			double blVectorAngle = LookUpTable.getArcTan(blYVel / blXVel);
 			//might have to add PI radians since arcTan(-a / -n) = arcTan(a / n)
@@ -408,7 +417,7 @@ public class Drive extends RobotDrive {
 			}
 			//angle the motor makes with respect to the robot
 			blVectorAngle -= (Math.PI / 2);
-			
+
 			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, blVectorAngle, blVelPercentage);
 			blSteering = corrected.angle;
 			blSpd = corrected.speed;
@@ -417,12 +426,12 @@ public class Drive extends RobotDrive {
 			//backright wheel pod
 			double brXVel = xVel - angVel*radius*LookUpTable.getSin(brAngle);
 			double brYVel = yVel + angVel*radius*LookUpTable.getCos(brAngle);
-			
+
 			//maginitude of the speed in INCHES / second
 			double brVel = Math.sqrt(brXVel * brXVel + brYVel * brYVel);
 			double brVelInRPM = brVel * 60 / (2 * Math.PI * wheelradius);
 			double brVelPercentage = brVelInRPM / RobotMap.MAX_SPEED;
-			
+
 			//angle the br vector makes with the x axis
 			double brVectorAngle = LookUpTable.getArcTan(brYVel / brXVel);
 			//might have to add PI radians
@@ -431,15 +440,15 @@ public class Drive extends RobotDrive {
 			}
 			//angle the motor makes with respect to the robot
 			brVectorAngle -= (Math.PI / 2);
-			
+
 			WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, brVectorAngle, brVelPercentage);
 			brSteering = corrected.angle;
 			brSpd = corrected.speed;
 		}
-		
+
 		fourWheelSteer(flSteering, frSteering, blSteering, brSteering);
 		fourWheelDrive(flSpd, frSpd, blSpd, brSpd);
-		
+
 	}
 
 	/**

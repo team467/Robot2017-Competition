@@ -7,6 +7,11 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.AutoCalibration.InitialFeedForwardTuner;
+import org.usfirst.frc.team467.robot.AutoCalibration.Tuner;
+
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -22,6 +27,8 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2015 driverstation;
 	private Drive drive;
+
+	private Tuner autotuner;
 
 	int session;
 
@@ -42,10 +49,6 @@ public class Robot extends IterativeRobot {
 		drive = Drive.getInstance();
 		Calibration.init();
 
-		/* Ignore Warning - Shashvat
-		   Will cause the initial computation of the look up table */ 
-		LookUpTable table = LookUpTable.getInstance();
-
 	}
 
 	public void disabledInit() {
@@ -54,20 +57,28 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 	}
 
-	public void autonomousInit() {
+	public void teleopInit() {
+		drive.setSpeedMode();
 	}
 
-	public void teleopInit() {
-	}
+	boolean isTuningComplete;
 
 	public void testInit() {
 	}
 
 	public void testPeriodic() {
+
+	}
+
+	public void autonomousInit() {
+		autotuner = new InitialFeedForwardTuner(new CANTalon(2), true);
+		isTuningComplete = false;
 	}
 
 	public void autonomousPeriodic() {
-		driverstation.readInputs();
+		if (!isTuningComplete) {
+			isTuningComplete = autotuner.process();
+		}
 	}
 
 	/**
@@ -113,11 +124,11 @@ public class Robot extends IterativeRobot {
 							    driverstation.getDriveJoystick().getStickDistance());
 			}
 			break;
-			
+
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
-			
+
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
 		}
