@@ -15,7 +15,6 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 
     private double Ku;
     private double Tu;
-    private boolean isFindingVelocityPID;
     private ArrayList<Double> cycleDiff;
     private boolean goingUp;
     private double lastPeak;
@@ -27,14 +26,8 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	 * @param talon
 	 * @param reverseDirection
 	 */
-	public UltimateProportionalGainTuner(CANTalon talon, boolean reverseDirection, boolean isFindingVelocityPID) {
-		super(talon, reverseDirection);
-        if (isFindingVelocityPID) {
-            talon.setProfile(VELOCITY_PID_PROFILE);
-        } else {
-            talon.setProfile(POSITION_PID_PROFILE);
-        }
-        this.isFindingVelocityPID = isFindingVelocityPID;
+	public UltimateProportionalGainTuner(CANTalon talon, boolean reverseDirection, boolean findVelocityPID) {
+		super(talon, reverseDirection, findVelocityPID);
     	cycleDiff = new ArrayList<Double>();
     	cycleTimes = new ArrayList<Long>();
     	System.out.println("Starting autotune stage for ultimate proportional gain.");
@@ -44,10 +37,8 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	currentValue = 0.1;
     	previousValue = 0.1;
     	increaseFactor = 1;
-    	talon.setPID(0.0, 0.0, 0.0);
-    	talon.setF(4);
-    	Ku = 0;
-    	Tu = 0;
+    	talon.setPID(currentValue, 0.0, 0.0);
+    	talon.setF(2.2);
     	cycleDiff.clear();
     	cycleTimes.clear();
     	count = 0;
@@ -73,7 +64,7 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	return increaseCount;
     }
 
-    private double averaageCycleDiff() {
+    private double averageCycleDiff() {
     	double sumPeaks = 0.0;
     	for (double peak : cycleDiff) {
     		sumPeaks += peak;
@@ -117,6 +108,7 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	@Override
 	public boolean process() {
     	double speed = talon.getSpeed();
+//    	System.out.println(speed + " - " + talon.getSetpoint() + " = " + talon.getError());
     	long time = System.currentTimeMillis();
     	if (count == 0) {
     		cycleTimes.clear();
@@ -130,16 +122,17 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     		int peakIncreaseCount = peakIncreaseCount();
     		int cycleTimeIncreaseCount = cycleTimeIncreaseCount();
     		double averageCycleTime = averageCycleTime();
-    		System.out.println("P: " + currentValue + " Error: " + talon.getError()
-    				+ " Ave Peaks: " + averaageCycleDiff() + " Peaks increasing: " + peakIncreaseCount
+    		System.out.println("P: " + currentValue + " Error: " + talon.getError() + " Speed: " + speed
+    				+ " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount
     				+ " Ave Cycle Times: " + averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount);
-    		if (Math.abs(cycleTimeIncreaseCount) <= DEFAULT_ALLOWABLE_ERROR && averageCycleTime > 0.0) {
+    		if (Math.abs(peakIncreaseCount) == 0 && Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && averageCycleTime > 0.0) {
+//        		if (Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && averageCycleTime > 0.0) {
     			System.out.println("Cycle times are stable");
-//    			Ku = currentValue;
-//    			Tu = averageCycleTime();
-//    			return true;
+    			Ku = currentValue;
+    			Tu = averageCycleTime();
+    			return true;
     		}
-    		if (peakIncreaseCount > DEFAULT_ALLOWABLE_ERROR) {
+    		if (peakIncreaseCount > 0) {
     			// Getting worse -- unstable
     			decreaseValue();
     		} else {

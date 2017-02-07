@@ -9,6 +9,7 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.AutoCalibration.InitialFeedForwardTuner;
 import org.usfirst.frc.team467.robot.AutoCalibration.Tuner;
+import org.usfirst.frc.team467.robot.AutoCalibration.UltimateProportionalGainTuner;
 
 import com.ctre.CANTalon;
 
@@ -30,6 +31,8 @@ public class Robot extends IterativeRobot {
 
 	private Tuner autotuner;
 
+	private CANTalon talons[];
+
 	int session;
 
 	/**
@@ -46,8 +49,8 @@ public class Robot extends IterativeRobot {
 
 		// Make robot objects
 		driverstation = DriverStation2015.getInstance();
-		drive = Drive.getInstance();
-		Calibration.init();
+//		drive = Drive.getInstance();
+//		Calibration.init();
 
 	}
 
@@ -71,14 +74,27 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-		autotuner = new InitialFeedForwardTuner(new CANTalon(2), true);
+		talons = new CANTalon[5];
+		talons[0] = null;
+		talons[1] = new CANTalon(1);
+		talons[2] = new CANTalon(2);
+		talons[3] = new CANTalon(3);
+		talons[4] = new CANTalon(4);
+//		autotuner = new InitialFeedForwardTuner(talons[2], true, true);
+		autotuner = new UltimateProportionalGainTuner(talons[2], true, true);
 		isTuningComplete = false;
 	}
 
 	public void autonomousPeriodic() {
+		talons[1].set(0);
+//		talons[2].set(0);
 		if (!isTuningComplete) {
 			isTuningComplete = autotuner.process();
+		} else {
+			talons[2].set(0);
 		}
+		talons[3].set(0);
+		talons[4].set(0);
 	}
 
 	/**

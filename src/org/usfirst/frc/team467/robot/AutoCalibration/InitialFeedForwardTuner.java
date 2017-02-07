@@ -22,8 +22,8 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	 * @param talon
 	 * @param reverseDirection
 	 */
-	public InitialFeedForwardTuner(CANTalon talon, boolean reverseDirection) {
-		super(talon, reverseDirection);
+	public InitialFeedForwardTuner(CANTalon talon, boolean reverseDirection, boolean findVelocityPID) {
+		super(talon, reverseDirection, findVelocityPID);
         System.out.println("Initializing initial feed forward stage.");
         clear();
         feedForward = 0.0;
@@ -41,7 +41,9 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	@Override
 	public boolean process() {
     	double speed = talon.getSpeed();
+    	double position = talon.getPosition();
     	double error = talon.getError();
+    	System.out.println(speed + " - " + talon.getSetpoint() + " = " + error);
     	if (count == 0) {
     		errors.clear();
         	talon.setF(currentValue);
@@ -51,7 +53,8 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     		count = 0;
     		talon.set(0);
     		double averageError = averageError();
-    		System.out.println("Feed Forward: " + currentValue + " Speed: " + speed
+    		System.out.println("Feed Forward: " + currentValue
+    				+ " Speed: " + speed + " Position: " + position
     				+ " Average Error: " + averageError + " Last Error: " + lastAverageError);
     		if (Math.abs(averageError) > Math.abs(lastAverageError)) {
     			// Getting worse -- unstable

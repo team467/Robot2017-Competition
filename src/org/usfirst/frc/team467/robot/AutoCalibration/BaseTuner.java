@@ -9,6 +9,8 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.PIDSourceType;
+
 /**
  *
  */
@@ -18,12 +20,12 @@ public abstract class BaseTuner implements Tuner {
     protected static final int POSITION_PID_PROFILE = 1;
 
     public static final int ENCODER_CODES_PER_REVOLUTION = 256;
-    protected static final int SETPOINT = 100;
+    protected static final double SETPOINT = 100;
 
     protected static final double DEFAULT_ALLOWABLE_ERROR = 2.0;
     protected static final double ALLOWABLE_CYCLE_TIME_ERROR = 0.5;
 
-    protected static final int HOLD_PERIOD = 300;
+    protected static final int HOLD_PERIOD = 600;
 
     protected double currentValue;
     protected double previousValue;
@@ -31,17 +33,24 @@ public abstract class BaseTuner implements Tuner {
 
     protected CANTalon talon;
     protected int count;
+    protected boolean findVelocityPID;
 
     protected PID pid;
 
     /**
 	 *
 	 */
-	public BaseTuner(CANTalon talon, boolean reverseDirection) {
+	public BaseTuner(CANTalon talon, boolean reverseDirection, boolean findVelocityPID) {
         if (reverseDirection) {
             talon.reverseOutput(true);
             talon.reverseSensor(true);
         }
+        if (findVelocityPID) {
+            talon.setProfile(VELOCITY_PID_PROFILE);
+        } else {
+            talon.setProfile(POSITION_PID_PROFILE);
+        }
+        this.findVelocityPID = findVelocityPID;
         this.talon = talon;
         pid(0,0,0,0);
         clear();
@@ -58,10 +67,15 @@ public abstract class BaseTuner implements Tuner {
 	}
 
     protected void clear() {
-        talon.changeControlMode(TalonControlMode.Speed);
+    	if (findVelocityPID) {
+            talon.changeControlMode(TalonControlMode.Speed);
+    	} else {
+            talon.changeControlMode(TalonControlMode.Position);
+    	}
+    	talon.setPIDSourceType(PIDSourceType.kRate);
         talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
         talon.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
-        talon.configEncoderCodesPerRev(256);
+        talon.ClearIaccum();
         talon.setAllowableClosedLoopErr(0);
         talon.setForwardSoftLimit(0);
         talon.setReverseSoftLimit(0);

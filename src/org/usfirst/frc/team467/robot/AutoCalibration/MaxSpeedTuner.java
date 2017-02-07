@@ -21,7 +21,7 @@ public class MaxSpeedTuner extends BaseTuner implements Tuner {
 	 *
 	 */
 	public MaxSpeedTuner(CANTalon talon, boolean reverseDirection) {
-		super(talon, reverseDirection);
+		super(talon, reverseDirection, true);
 		System.out.println("Starting max speed stage.");
 		clear();
 		maxForwardSpeed = 0;
