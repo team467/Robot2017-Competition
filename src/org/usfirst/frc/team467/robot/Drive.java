@@ -106,18 +106,18 @@ public class Drive extends RobotDrive {
 
 	public void setSpeedMode() {
 		controlMode = TalonControlMode.Speed;
-		frontleft.setSpeedMode();
-		frontright.setSpeedMode();
-		backright.setSpeedMode();
-		backleft.setSpeedMode();
+		frontleft.speedMode();
+		frontright.speedMode();
+		backright.speedMode();
+		backleft.speedMode();
 	}
 
 	public void setPercentVoltageBusMode() {
 		controlMode = TalonControlMode.PercentVbus;
-		frontleft.setPercentVoltageBusMode();
-		frontright.setPercentVoltageBusMode();
-		backright.setPercentVoltageBusMode();
-		backleft.setPercentVoltageBusMode();
+		frontleft.percentVoltageBusMode();
+		frontright.percentVoltageBusMode();
+		backright.percentVoltageBusMode();
+		backleft.percentVoltageBusMode();
 	}
 
 	/**
