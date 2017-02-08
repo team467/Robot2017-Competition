@@ -5,7 +5,7 @@ package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import java.util.ArrayList;
 
-import com.ctre.CANTalon;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 /**
  *
@@ -26,8 +26,8 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	 * @param talon
 	 * @param reverseDirection
 	 */
-	public UltimateProportionalGainTuner(CANTalon talon, boolean reverseDirection, boolean findVelocityPID) {
-		super(talon, reverseDirection, findVelocityPID);
+	public UltimateProportionalGainTuner(WheelPod wheelPod, boolean findVelocityPID) {
+		super(wheelPod, findVelocityPID);
     	cycleDiff = new ArrayList<Double>();
     	cycleTimes = new ArrayList<Long>();
     	System.out.println("Starting autotune stage for ultimate proportional gain.");
@@ -37,8 +37,8 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	currentValue = 0.1;
     	previousValue = 0.1;
     	increaseFactor = 1;
-    	talon.setPID(currentValue, 0.0, 0.0);
-    	talon.setF(2.2);
+    	wheelPod.pid(currentValue, 0.0, 0.0);
+    	wheelPod.f(2.2);
     	cycleDiff.clear();
     	cycleTimes.clear();
     	count = 0;
@@ -107,22 +107,22 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 
 	@Override
 	public boolean process() {
-    	double speed = talon.getSpeed();
+    	double speed = wheelPod.readSensor();
 //    	System.out.println(speed + " - " + talon.getSetpoint() + " = " + talon.getError());
     	long time = System.currentTimeMillis();
     	if (count == 0) {
     		cycleTimes.clear();
     		cycleDiff.clear();
-        	talon.setP(currentValue);
-        	talon.set(SETPOINT);
+        	wheelPod.p(currentValue);
+        	wheelPod.set(SETPOINT);
         	count++;
     	} else if (count >= HOLD_PERIOD ) {
     		count = 0;
-    		talon.set(0);
+    		wheelPod.set(0);
     		int peakIncreaseCount = peakIncreaseCount();
     		int cycleTimeIncreaseCount = cycleTimeIncreaseCount();
     		double averageCycleTime = averageCycleTime();
-    		System.out.println("P: " + currentValue + " Error: " + talon.getError() + " Speed: " + speed
+    		System.out.println("P: " + currentValue + " Error: " + wheelPod.error() + " Speed: " + speed
     				+ " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount
     				+ " Ave Cycle Times: " + averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount);
     		if (Math.abs(peakIncreaseCount) == 0 && Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && averageCycleTime > 0.0) {
@@ -139,7 +139,7 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     			increaseValue();
     		}
     	} else {
-        	talon.set(SETPOINT);
+    		wheelPod.set(SETPOINT);
     		if (goingUp) {
     			if (speed  < lastSpeed) {
     				// Found peek

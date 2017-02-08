@@ -3,7 +3,7 @@
  */
 package org.usfirst.frc.team467.robot.AutoCalibration;
 
-import com.ctre.CANTalon;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 /**
  *
@@ -20,8 +20,8 @@ public class MaxSpeedTuner extends BaseTuner implements Tuner {
 	/**
 	 *
 	 */
-	public MaxSpeedTuner(CANTalon talon, boolean reverseDirection) {
-		super(talon, reverseDirection, true);
+	public MaxSpeedTuner(WheelPod wheelPod) {
+		super(wheelPod, true);
 		System.out.println("Starting max speed stage.");
 		clear();
 		maxForwardSpeed = 0;
@@ -39,22 +39,22 @@ public class MaxSpeedTuner extends BaseTuner implements Tuner {
 	public boolean process() {
 		if (count < HOLD_PERIOD) {
 			if (goingForward) {
-				talon.set(MAX_TEST_SPEED);
+				set(MAX_TEST_SPEED);
 			} else {
-				talon.set(-1 * MAX_TEST_SPEED);
+				set(-1 * MAX_TEST_SPEED);
 			}
 			count++;
 		} else {
 			if (goingForward) {
-				this.maxForwardSpeed = Math.abs(talon.getSpeed());
+				this.maxForwardSpeed = Math.abs(readSensor());
 				goingForward = false;
 			} else {
-				this.maxBackwardSpeed = Math.abs(talon.getSpeed());
+				this.maxBackwardSpeed = Math.abs(readSensor());
 			}
 			count = 0;
-			talon.set(0);
+			set(0.0);
 		}
-		talon.set(0.0);
+		set(0.0);
 		if (maxForwardSpeed < maxBackwardSpeed) {
 			maxOverallSpeed = Math.abs(maxForwardSpeed);
 		} else {

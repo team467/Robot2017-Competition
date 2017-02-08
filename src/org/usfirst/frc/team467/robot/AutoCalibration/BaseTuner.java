@@ -4,20 +4,12 @@
 package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import org.usfirst.frc.team467.robot.PID;
-
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
-
-import edu.wpi.first.wpilibj.PIDSourceType;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 /**
  *
  */
 public abstract class BaseTuner implements Tuner {
-
-	protected static final int VELOCITY_PID_PROFILE = 0;
-    protected static final int POSITION_PID_PROFILE = 1;
 
     public static final int ENCODER_CODES_PER_REVOLUTION = 256;
     protected static final double SETPOINT = 100;
@@ -31,7 +23,8 @@ public abstract class BaseTuner implements Tuner {
     protected double previousValue;
     protected double increaseFactor;
 
-    protected CANTalon talon;
+    private boolean isTalonPID;
+    protected WheelPod wheelPod;
     protected int count;
     protected boolean findVelocityPID;
 
@@ -40,50 +33,36 @@ public abstract class BaseTuner implements Tuner {
     /**
 	 *
 	 */
-	public BaseTuner(CANTalon talon, boolean reverseDirection, boolean findVelocityPID) {
-        if (reverseDirection) {
-            talon.reverseOutput(true);
-            talon.reverseSensor(true);
-        }
-        if (findVelocityPID) {
-            talon.setProfile(VELOCITY_PID_PROFILE);
-        } else {
-            talon.setProfile(POSITION_PID_PROFILE);
-        }
+	public BaseTuner(WheelPod wheelPod, boolean findVelocityPID) {
+		isTalonPID = true;
         this.findVelocityPID = findVelocityPID;
-        this.talon = talon;
-        pid(0,0,0,0);
-        clear();
+        this.wheelPod = wheelPod;
+        wheelPod.clear();
+	}
+
+	protected void set(double setpoint) {
+		if (isTalonPID) {
+			wheelPod.set(setpoint);
+		}
+	}
+
+	protected void clear() {
+		if (isTalonPID) {
+			wheelPod.clear();
+		}
+	}
+
+	protected double readSensor() {
+		double reading = Double.NaN;
+		if (isTalonPID) {
+			return wheelPod.readSensor();
+		}
+		return reading;
 	}
 
 	protected void pid(double p, double i, double d, double f) {
-		pid = new PID(p, i, d, f);
-		talon.setPID(p, i, d);
-		talon.setF(f);
+		wheelPod.pidf(p, i, d, f);
 	}
-
-	public PID pid() {
-		return pid;
-	}
-
-    protected void clear() {
-    	if (findVelocityPID) {
-            talon.changeControlMode(TalonControlMode.Speed);
-    	} else {
-            talon.changeControlMode(TalonControlMode.Position);
-    	}
-    	talon.setPIDSourceType(PIDSourceType.kRate);
-        talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        talon.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
-        talon.ClearIaccum();
-        talon.setAllowableClosedLoopErr(0);
-        talon.setForwardSoftLimit(0);
-        talon.setReverseSoftLimit(0);
-        talon.setPosition(0);
-        talon.setEncPosition(0);
-        talon.enableBrakeMode(true);
-        count = 0;
-    }
 
     protected double increaseValue() {
         previousValue = currentValue;

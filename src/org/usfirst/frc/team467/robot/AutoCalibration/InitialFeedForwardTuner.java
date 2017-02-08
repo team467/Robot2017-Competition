@@ -5,7 +5,7 @@ package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import java.util.ArrayList;
 
-import com.ctre.CANTalon;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 /**
  *
@@ -22,16 +22,16 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	 * @param talon
 	 * @param reverseDirection
 	 */
-	public InitialFeedForwardTuner(CANTalon talon, boolean reverseDirection, boolean findVelocityPID) {
-		super(talon, reverseDirection, findVelocityPID);
+	public InitialFeedForwardTuner(WheelPod wheelPod, boolean findVelocityPID) {
+		super(wheelPod, findVelocityPID);
         System.out.println("Initializing initial feed forward stage.");
         clear();
         feedForward = 0.0;
         currentValue = 1;
         increaseFactor = 1;
         lastAverageError = Double.MAX_VALUE;
-        talon.setPID(0,0,0);
-        talon.set(SETPOINT);
+        wheelPod.pid(0,0,0);
+        wheelPod.set(SETPOINT);
     	errors = new ArrayList<Double>();
 	}
 
@@ -40,21 +40,20 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	 */
 	@Override
 	public boolean process() {
-    	double speed = talon.getSpeed();
-    	double position = talon.getPosition();
-    	double error = talon.getError();
-    	System.out.println(speed + " - " + talon.getSetpoint() + " = " + error);
+    	double reading = wheelPod.readSensor();
+    	double error = wheelPod.error();
+    	System.out.println(reading + " - " + SETPOINT + " = " + error);
     	if (count == 0) {
     		errors.clear();
-        	talon.setF(currentValue);
-        	talon.set(SETPOINT);
+    		wheelPod.f(currentValue);
+    		wheelPod.set(SETPOINT);
         	count++;
     	} else if (count >= HOLD_PERIOD ) {
     		count = 0;
-    		talon.set(0);
+    		wheelPod.set(0);
     		double averageError = averageError();
     		System.out.println("Feed Forward: " + currentValue
-    				+ " Speed: " + speed + " Position: " + position
+    				+ " Speed or Position: " + wheelPod
     				+ " Average Error: " + averageError + " Last Error: " + lastAverageError);
     		if (Math.abs(averageError) > Math.abs(lastAverageError)) {
     			// Getting worse -- unstable
@@ -69,7 +68,7 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     			return true;
     		}
     	} else {
-        	talon.set(SETPOINT);
+    		wheelPod.set(SETPOINT);
         	errors.add(error);
     		count++;
     	}

@@ -10,6 +10,7 @@ package org.usfirst.frc.team467.robot;
 import org.usfirst.frc.team467.robot.AutoCalibration.InitialFeedForwardTuner;
 import org.usfirst.frc.team467.robot.AutoCalibration.Tuner;
 import org.usfirst.frc.team467.robot.AutoCalibration.UltimateProportionalGainTuner;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 import com.ctre.CANTalon;
 
@@ -31,7 +32,7 @@ public class Robot extends IterativeRobot {
 
 	private Tuner autotuner;
 
-	private CANTalon talons[];
+	private WheelPod wheelPods[];
 
 	int session;
 
@@ -74,27 +75,24 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-		talons = new CANTalon[5];
-		talons[0] = null;
-		talons[1] = new CANTalon(1);
-		talons[2] = new CANTalon(2);
-		talons[3] = new CANTalon(3);
-		talons[4] = new CANTalon(4);
-//		autotuner = new InitialFeedForwardTuner(talons[2], true, true);
-		autotuner = new UltimateProportionalGainTuner(talons[2], true, true);
+		wheelPods = new WheelPod[4];
+		for (int i = 0; i < 4; i++) {
+			wheelPods[i] = new WheelPod(i, new PIDF(0,0,0,0));
+		}
+//		autotuner = new InitialFeedForwardTuner(wheelPods[2], true);
+		autotuner = new UltimateProportionalGainTuner(wheelPods[2], true);
 		isTuningComplete = false;
 	}
 
 	public void autonomousPeriodic() {
-		talons[1].set(0);
-//		talons[2].set(0);
+		wheelPods[0].set(0);
 		if (!isTuningComplete) {
 			isTuningComplete = autotuner.process();
 		} else {
-			talons[2].set(0);
+			wheelPods[1].set(0);
 		}
-		talons[3].set(0);
-		talons[4].set(0);
+		wheelPods[2].set(0);
+		wheelPods[3].set(0);
 	}
 
 	/**

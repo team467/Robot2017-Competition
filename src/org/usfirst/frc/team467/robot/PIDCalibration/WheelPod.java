@@ -9,6 +9,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,6 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * SmartDashboard.
  */
 public class WheelPod {
+
+	private static final int VELOCITY_PID_PROFILE = 0;
+    private static final int POSITION_PID_PROFILE = 1;
+
+    private static final int ENCODER_CODES_PER_REVOLUTION = 256;
+
 	// The default PID settings if not otherwise specified.
 	private static final double DEFAULT_P = 2.16;
 	private static final double DEFAULT_I = 0.00864;
@@ -83,6 +90,7 @@ public class WheelPod {
 	 *            the feed forward input
 	 */
 	public WheelPod(Pod pod, double p, double i, double d, double f) {
+		this();
 		averageError = new RunningAverage(MAX_ERROR_COUNT);
 		this.pod = pod;
 		this.p = p;
@@ -92,8 +100,6 @@ public class WheelPod {
 		motor = new CANTalon(pod.id);
 		motor.setPID(p, i, d);
 		motor.setF(f);
-		isPosition = false;
-		motor.changeControlMode(TalonControlMode.PercentVbus);
 
 		speed = SmartDashboard.getNumber("Speed", 0.0);
 		position = (int) SmartDashboard.getNumber("Position", 0.0);
@@ -107,6 +113,12 @@ public class WheelPod {
 		SmartDashboard.putNumber(pod.abr + "-ID", pod.id);
 	}
 
+	private WheelPod() {
+		isPosition = false;
+		setTalonParameters();
+		motor.changeControlMode(TalonControlMode.PercentVbus);
+	}
+
 	/**
 	 * Creates a wheel pod with the PID values in the WPILib preferences. If
 	 * there are no values in the preferences matching the wheel pod identifier,
@@ -116,12 +128,63 @@ public class WheelPod {
 	 *            the wheel pod identifier
 	 */
 	public WheelPod(Pod pod) {
+		this();
 		this.pod = pod;
 		p = DEFAULT_P;
 		i = DEFAULT_I;
 		d = DEFAULT_D;
 		f = DEFAULT_F;
 		loadFromPreferences();
+	}
+
+    public void clear() {
+    	motor.clearStickyFaults();
+    	motor.clearMotionProfileTrajectories();
+    	motor.ClearIaccum();
+    }
+
+    private void setTalonParameters() {
+    	motor.setPIDSourceType(PIDSourceType.kRate);
+    	motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+    	motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
+    	motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+    	motor.setPosition(0);
+    	motor.setEncPosition(0);
+    	motor.enableBrakeMode(true);
+    }
+
+	public void pi(double p, double i) {
+		motor.setP(p);
+		motor.setI(i);
+	}
+
+	public void pid(double p, double i, double d) {
+		motor.setP(p);
+		motor.setI(i);
+		motor.setD(d);
+	}
+
+	public void pidf(double p, double i, double d, double f) {
+		motor.setP(p);
+		motor.setI(i);
+		motor.setD(d);
+		motor.setF(f);
+	}
+
+	public void p(double p) {
+		motor.setF(p);
+	}
+
+	public void i(double i) {
+		motor.setF(i);
+	}
+
+	public void d(double d) {
+		motor.setF(d);
+	}
+
+	public void f(double f) {
+		motor.setF(f);
 	}
 
 	/*
@@ -176,36 +239,44 @@ public class WheelPod {
 	/**
 	 * Changes the control mode to percentage of voltage bus.
 	 */
-	public void setPercentVoltageBusMode() {
+	public void percentVoltageBusMode() {
 		motor.changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	/**
 	 * Sets the Talon into position mode.
 	 */
-	public void setPositionMode() {
+	public void positionMode() {
 		isPosition = true;
+		motor.setProfile(POSITION_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Position);
 		motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		motor.configEncoderCodesPerRev(256);
 		motor.setAllowableClosedLoopErr(0);
-		motor.setForwardSoftLimit(11);
-		motor.setReverseSoftLimit(-11);
 		motor.setPosition(0);
 	}
 
 	/**
 	 * Sets the Talon into speed mode.
 	 */
-	public void setSpeedMode() {
+	public void speedMode() {
 		isPosition = false;
+		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Speed);
-		motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		motor.configEncoderCodesPerRev(256);
 		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
-		motor.setForwardSoftLimit(11);
-		motor.setReverseSoftLimit(-11);
-		motor.setPosition(0);
+	}
+
+	public void set(double setpoint) {
+		motor.set(setpoint);
+	}
+
+	public double readSensor() {
+		double reading = motor.getEncVelocity();
+		if (isPosition) {
+			reading =  motor.getPosition();
+		} else {
+			reading = motor.getSpeed();
+		}
+		return reading;
 	}
 
 	/**
