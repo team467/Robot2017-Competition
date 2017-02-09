@@ -10,6 +10,7 @@ import com.analog.adis16448.frc.ADIS16448_IMU;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 
 /**
@@ -30,6 +31,9 @@ public class Drive extends RobotDrive {
 
 	// Gyroscope
 	private ADIS16448_IMU gyro;
+	
+	private double[] aimingPIDs = {1.0, 0.0, 0.0, 0.0};
+	private PIDController aiming;
 
 	// Steering objects
 	public Steering[] steering;
@@ -67,6 +71,15 @@ public class Drive extends RobotDrive {
 		// Make objects
 		data = DataStorage.getInstance();
 		gyro = Gyrometer.getInstance();
+		
+		aiming = new PIDController(aimingPIDs[0], aimingPIDs[1], aimingPIDs[2], aimingPIDs[3], gyro,
+				(output) -> {
+					turnDrive(output);
+				});
+		aiming.setInputRange(0, 360*4);		// 4 Gyro units per degree
+		aiming.setContinuous();				// 0º and 360º are the same point
+		aiming.setOutputRange(-1.0, 1.0);	// Max Speed in either direction
+		aiming.setPercentTolerance(1.0/360);// 1 degree tolerance
 
 		// Make steering array
 		steering = new Steering[4];
@@ -231,6 +244,18 @@ public class Drive extends RobotDrive {
 
 		this.fourWheelSteer(frontLeft.angle, frontRight.angle, backLeft.angle, backRight.angle);
 		this.fourWheelDrive(frontLeft.speed, frontRight.speed, backLeft.speed, backRight.speed);
+	}
+	
+	/**
+	 * Turns to specified angle according to gyro
+	 * @param angle in degrees
+	 * 
+	 * @return True when pointing at the angle
+	 */
+	public boolean turnToAngle(double angle)
+	{
+		aiming.setSetpoint(angle * 4); // 4 gyro units per degree
+		return aiming.onTarget();
 	}
 
 	// Previous speeds for the four wheels

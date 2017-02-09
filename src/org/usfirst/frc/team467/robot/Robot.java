@@ -85,7 +85,12 @@ public class Robot extends IterativeRobot {
 		vision.update();
 		driverstation.readInputs();
 		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
-		drive.crabDrive(driveAngle, 0.0);
+//		drive.crabDrive(driveAngle, 0.0);
+		boolean onTarget = drive.turnToAngle(30.0); // Face 30º according to gyro
+		if (onTarget)
+		{
+			System.out.println("TARGET ACQUIRED");
+		}
 	}
 
 	/**
