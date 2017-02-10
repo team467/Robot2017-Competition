@@ -113,9 +113,6 @@ public class RobotMap {
 	public static final double wheelpodRadius = 18.29;
 	/* diameter of wheelpod in inches */
 	public static final double wheeldiameter = 6;
-	
-	/* multiplier for vector drive */
-	public static final double vectorDriveAngularVelocityMultiplier = 0.5;
-	public static final double vectorDriveVelocityMultiplier = 44.42;
+
 
 }

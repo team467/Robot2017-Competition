@@ -40,7 +40,7 @@ public class Vector
     {
         this.x = x;
         this.y = y;
-        angle = LookUpTable.getArcTan2(y, x);
+        angle = LookUpTable.getArcTan2hacked(y, x);
         speed = Math.sqrt(x*x + y*y);
     }
     

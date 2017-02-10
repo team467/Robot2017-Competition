@@ -78,7 +78,7 @@ public class LookUpTable {
 		return DegreesToRads(degreesangle);
 	}
 	
-	public static double getArcTan2(double y, double x) {
+	public static double getArcTan2hacked(double y, double x) {
 		double angle = Math.PI / 2;
         if (x == 0){
         	if (y > 0){
