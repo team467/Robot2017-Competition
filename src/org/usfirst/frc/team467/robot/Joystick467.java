@@ -46,7 +46,7 @@ public class Joystick467 {
 
 	/**
 	 * Returns the raw joystick object inside Joystick467
-	 * 
+	 *
 	 * @return
 	 */
 	public Joystick getJoystick() {
@@ -105,7 +105,7 @@ public class Joystick467 {
 	/**
 	 * Gets the X position of the stick. Left to right ranges from -1.0 to 1.0,
 	 * with 0.0 in the middle. This value is accelerated.
-	 * 
+	 *
 	 * @return
 	 */
 	public double getStickX() {
@@ -115,7 +115,7 @@ public class Joystick467 {
 	/**
 	 * Gets the Y position of the stick. Up to down ranges from -1.0 to 1.0,
 	 * with 0.0 in the middle. This value is accelerated.
-	 * 
+	 *
 	 * @return
 	 */
 	public double getStickY() {
@@ -131,7 +131,7 @@ public class Joystick467 {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the angle of the POV in degrees, or -1 if the POV is not pressed.
 	 */
 	public int getPOV() {
@@ -139,8 +139,8 @@ public class Joystick467 {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @return
 	 */
 	public boolean getFlap() {

@@ -43,7 +43,7 @@ public class Robot extends IterativeRobot {
 		Calibration.init();
 
 		/* Ignore Warning - Shashvat
-		   Will cause the initial computation of the look up table */ 
+		   Will cause the initial computation of the look up table */
 		LookUpTable table = LookUpTable.getInstance();
 
 	}
@@ -91,6 +91,9 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
+
+		drive.setSpeedMode();
+
 		DriveMode driveMode = driverstation.getDriveMode();
 		switch (driveMode) {
 		case UNWIND:
@@ -113,11 +116,24 @@ public class Robot extends IterativeRobot {
 							    driverstation.getDriveJoystick().getStickDistance());
 			}
 			break;
-			
+
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
-			
+
+		case FIELD_ALIGN:
+			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
+						    driverstation.getDriveJoystick().getStickDistance());
+			break;
+
+		case VECTOR:
+			drive.setSpeedMode();
+			//drive.vectorDrive(driverstation.getDriveJoystick().getStickX(), driverstation.getDriveJoystick().getStickY(),
+			//		driverstation.getDriveJoystick().getTwist());
+			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
+			break;
+
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
 		}
