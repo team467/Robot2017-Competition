@@ -9,7 +9,6 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -199,6 +198,15 @@ public class WheelPod {
 		motor.setF(f);
 	}
 
+	public String pidfValueString() {
+		String values = "";
+		values += "P = " + motor.getP() + " ";
+		values += "I = " + motor.getI() + " ";
+		values += "D = " + motor.getD() + " ";
+		values += "F = " + motor.getF() + " ";
+		return values;
+	}
+
 	public void velocityMaxStableProportionalTerm(double velocityMaxStableProportionalTerm) {
 		this.velocityMaxStableProportionalTerm = velocityMaxStableProportionalTerm;
 	}
@@ -258,7 +266,7 @@ public class WheelPod {
 		}
 		prefs.putDouble(keyHeader + "MaxForwardSpeed", velocityMaxForwardSpeed);
 		prefs.putDouble(keyHeader + "MaxBackwardSpeed", velocityMaxBackwardSpeed);
-		prefs.putDouble(keyHeader + "VelocityMaxBackwardSpeed", velocityMaxStableProportionalTerm);
+		prefs.putDouble(keyHeader + "VelocityMaxStableProportionalTerm", velocityMaxStableProportionalTerm);
 		prefs.putDouble(keyHeader + "VelocityMaxStableCycleTime", velocityMaxStableCycleTime);
 	}
 
@@ -297,6 +305,11 @@ public class WheelPod {
 	public boolean checkSensor() {
 		boolean sensorWorking = false;
 		motor.set(100);
+		try {
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		if (motor.getControlMode() == TalonControlMode.Speed) {
 			if ((motor.getSpeed() != 0) && motor.getError() != 0) {
 				sensorWorking = true;
@@ -309,6 +322,8 @@ public class WheelPod {
 		motor.set(0);
 		if (!sensorWorking) {
 			System.out.println(name() + " sensors are not working!");
+		} else {
+			System.out.println(name() + " sensors working!");
 		}
 		return sensorWorking;
 	}
@@ -343,7 +358,7 @@ public class WheelPod {
 		isPosition = false;
 		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Speed);
-    	motor.setPIDSourceType(PIDSourceType.kRate);
+		motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
 		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
 	}
 
