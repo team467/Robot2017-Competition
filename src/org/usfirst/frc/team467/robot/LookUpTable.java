@@ -78,6 +78,26 @@ public class LookUpTable {
 		return DegreesToRads(degreesangle);
 	}
 	
+	public static double getArcTan2(double y, double x){
+		double angle = 0.0;
+		if (x > 0){
+			angle = getArcTan(y / x);
+		}
+		else if (x < 0 && y >= 0){
+			angle = getArcTan(y / x) + Math.PI;
+		}
+		else if (x < 0 && y < 0){
+			angle = getArcTan(y / x) - Math.PI;
+		}
+		else if (x == 0 && y > 0){
+			angle = Math.PI / 2;
+		}
+		else if (x == 0 && y < 0){
+			angle = -Math.PI / 2;
+		}
+		return angle;
+	}
+	
 	public static double getArcTan2hacked(double y, double x) {
 		double angle = Math.PI / 2;
         if (x == 0){
@@ -89,6 +109,8 @@ public class LookUpTable {
         	}
         }
         else{
+        	//hacked portion is the + Math.PI
+        	//but it works and causes the robot to move correctly
         	angle = LookUpTable.getArcTan(y / x) + Math.PI;
         }
         if (x < 0){

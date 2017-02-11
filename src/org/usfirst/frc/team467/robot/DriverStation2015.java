@@ -10,14 +10,15 @@ public class DriverStation2015 {
 	private static int TURN_BUTTON = 2;
 	private static int TURBO_BUTTON = 7;
 	private static int GYRO_RESET_BUTTON = 8;
+	private static int UNWIND_BUTTON = 10;
+	private static int FIELD_ALIGN_BUTTON = 5;
+	private static int VECTOR_DRIVE_BUTTON = 6;
+	private static int XB_SPLIT_BUTTON = 4;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = Joystick467.TRIGGER;
 	private static int CALIBRATE_SLOW_BUTTON = 4;
 
-	private static int UNWIND_BUTTON = 10;
-	private static int FIELD_ALIGN = 5;
-	private static int VECTOR = 6;
 
 	enum Speed {
 		SLOW, FAST
@@ -87,13 +88,13 @@ public class DriverStation2015 {
 		if (getDriveJoystick().getPOV() != -1) {
 			drivemode = DriveMode.STRAFE;
 		}
-		if (getDriveJoystick().buttonDown(FIELD_ALIGN)) {
+		if (getDriveJoystick().buttonDown(FIELD_ALIGN_BUTTON)) {
 			drivemode = DriveMode.FIELD_ALIGN;
 		}
-		if (getDriveJoystick().buttonDown(VECTOR)) {
+		if (getDriveJoystick().buttonDown(VECTOR_DRIVE_BUTTON)) {
 			drivemode = DriveMode.VECTOR;
 		}
-		if (getDriveJoystick().buttonDown(4)) {
+		if (getDriveJoystick().buttonDown(XB_SPLIT_BUTTON)) {
 			drivemode = DriveMode.XB_SPLIT;
 		}
 		return drivemode;
