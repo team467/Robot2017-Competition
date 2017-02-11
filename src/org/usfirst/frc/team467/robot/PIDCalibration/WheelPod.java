@@ -294,6 +294,25 @@ public class WheelPod {
 		return false;
 	}
 
+	public boolean checkSensor() {
+		boolean sensorWorking = false;
+		motor.set(100);
+		if (motor.getControlMode() == TalonControlMode.Speed) {
+			if ((motor.getSpeed() != 0) && motor.getError() != 0) {
+				sensorWorking = true;
+			}
+		} else if (motor.getControlMode() == TalonControlMode.Position) {
+			if ((motor.getPosition() != 0) && motor.getError() != 0) {
+				sensorWorking = true;
+			}
+		}
+		motor.set(0);
+		if (!sensorWorking) {
+			System.out.println(name() + " sensors are not working!");
+		}
+		return sensorWorking;
+	}
+
 	/**
 	 * Changes the control mode to percentage of voltage bus.
 	 */
