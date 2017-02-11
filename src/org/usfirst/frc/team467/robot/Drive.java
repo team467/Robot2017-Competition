@@ -317,9 +317,6 @@ public class Drive extends RobotDrive {
 	/**
 	 * Field align drive
 	 *
-	 * @param robotAngle
-	 *            angle the robot is at, taken from gyrometer. 1 degree = 4
-	 *            native units on the ADIS16448 IMU
 	 * @param driveAngle
 	 *            the angle you want the robot to drive, taken from the angle of
 	 *            the joystick this is passed in in radians
@@ -330,121 +327,82 @@ public class Drive extends RobotDrive {
 	// TODO: do conversion outside of method
 	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
-		double angle = gyro.getAngleZ() * Math.PI / 720;
+		double gyroAngle = gyro.getAngleZ() * Math.PI / 720;
 		// the angle that the wheels need to turn to
-		double angleDiff = driveAngle - angle;
+		double angleDiff = driveAngle - gyroAngle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-		System.out.println("gyroAngle" + gyro.getAngle() + " robotAngle:" + angle + " correctedAngle:" + corrected.angle
+		System.out.println("gyroAngle" + gyro.getAngle() + " robotAngle:" + gyroAngle + " correctedAngle:" + corrected.angle
 				+ " driveAngle:" + driveAngle);
 	}
 
-	/* see vector drive */
-	private WheelCorrection vectorDriveHelper(double xRequestedVelocity, double yRequestedVelocity,
-			double requestedTurnRate, double currentWheelAngle) {
-		// distance from the center of the robot to the wheelpods in inches
-		final double radius = 18.29;
-
-		// radius of the wheel in inches
-		final double wheelradius = 3;
-
-		// front right wheel pod
-		double correctedXVelocity = xRequestedVelocity - requestedTurnRate * radius * LookUpTable.getSin(currentWheelAngle);
-		double correctedYVelocity = yRequestedVelocity + requestedTurnRate * radius * LookUpTable.getCos(currentWheelAngle);
-
-		// Magnitude of the speed in INCHES / second
-		double correctedVelocity = Math.sqrt(correctedXVelocity * correctedXVelocity + correctedYVelocity * correctedYVelocity);
-		double rpm = correctedVelocity * 60 / (2 * Math.PI * wheelradius);
-		double percentOfMaxSpeed = rpm / RobotMap.MAX_SPEED;
-
-		// angle the fr vector makes with the x axis
-		double correctedWheelAngle = Math.PI / 2;
-		if (correctedXVelocity == 0) {
-			if (correctedYVelocity > 0) {
-				correctedWheelAngle = Math.PI / 2;
-			}
-			else if (correctedYVelocity < 0) {
-				correctedWheelAngle = -Math.PI / 2;
-			}
-		} else {
-			correctedWheelAngle = LookUpTable.getArcTan(correctedYVelocity / correctedXVelocity);
-		}
-		// might have to add PI degrees
-		if (correctedYVelocity < 0) {
-			correctedWheelAngle += Math.PI;
-		}
-		// angle the motor makes with respect to the robot
-		correctedWheelAngle -= (Math.PI / 2);
-
-		//robot is actually clockwise
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, -correctedWheelAngle, percentOfMaxSpeed);
-		return corrected;
-	}
 
 	/**
+	 * Vector drive
 	 *
-	 * ASSUMES the robot is in speed mode
-	 *
-	 * @param requestedXVelocity
-	 *            the desired x velocity in inches / second
-	 * @param requestedYVelocity
-	 *            the desired x velocity in inches / second
-	 * @param requestedTurnRate
-	 *            the desired angular velocoity in radians / second
-	 *
+	 * @param driveAngle
+	 *            the angle you want the robot to drive, taken from the angle of
+	 *            the joystick this is passed in in radians
+	 * @param speed
+	 *            the speed you want the robot to go, taken from the distance
+	 *            the joystick travels
+	 * @param turnSpeed
+	 * 			  the speed that the robot should turn at
+	 *            takes a vakue between -1 and 1
 	 */
 	// TODO: do conversion outside of method
-	public void vectorDrive(double requestedXVelocity, double requestedYVelocity, double requestedTurnRate) {
-		// turns xVel AND yVel into inches / second
-		requestedXVelocity *= 44.42;
-		requestedYVelocity *= 44.42;
-		// angular velocity multiplier
-		requestedTurnRate *= 0.5;
-
-		// convert the angle of the robot from native units to radians
-		double angle = gyro.getAngleZ() * Math.PI / 720;
-		// the angle that the robot has turned
-
-		// angle from x-axis of ROBOT to the frontright wheelpod (in radians)
-		final double alpha = 1.039;
-
-		// angle from x axis of FIELD to the respective wheel pod
-		double frAngle, flAngle, blAngle, brAngle;
-		frAngle = angle + alpha;
-		flAngle = angle + Math.PI - alpha;
-		blAngle = angle + Math.PI + alpha;
-		brAngle = angle - alpha;
-
-		// speed of respective wheelpods (% of MaxSpeed)
-		double frSpd, flSpd, brSpd, blSpd;
-		// the steering angle the wheelpods will be set to
-		double frSteering, flSteering, blSteering, brSteering;
-		WheelCorrection corrected;
-
-		// front right wheel pod
-		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, frAngle);
-		frSteering = corrected.angle;
-		frSpd = corrected.speed;
-
-		// front left wheel pod
-		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, flAngle);
-		flSteering = corrected.angle;
-		flSpd = corrected.speed;
-
-		// backleft left wheel pod
-		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, blAngle);
-		blSteering = corrected.angle;
-		blSpd = corrected.speed;
-
-		// backright wheel pod
-		corrected = vectorDriveHelper(requestedXVelocity, requestedYVelocity, requestedTurnRate, brAngle);
-		brSteering = corrected.angle;
-		brSpd = corrected.speed;
-
+	public void vectorDrive(double driveAngle, double speed, double turnSpeed){
+		driveAngle *= -1;
+		//get counterclockwise angle
+		double gyroAngle = -gyro.getAngleZ()  * Math.PI / 720;
+		double angleDiff = driveAngle - gyroAngle;
+		
+		//vector component of the moving part of the motion
+		Vector straightVector = Vector.makeSpeedAngle(speed, angleDiff);
+		
+		//add the turning vector component
+		//maybe multiply the turn component by a constant factor if robot is not tunring enough
+		final Vector FR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, TURN_IN_PLACE_ANGLE));
+		final Vector FL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, -TURN_IN_PLACE_ANGLE));
+        final Vector BL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, TURN_IN_PLACE_ANGLE));
+        final Vector BR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, -TURN_IN_PLACE_ANGLE));
+        
+        //final speeds of the 4 wheel pods
+        double flSpd, frSpd, blSpd, brSpd;
+        //final steering angles of the 4 wheel pods
+        double flSteering, frSteering, blSteering, brSteering;
+        
+        WheelCorrection corrected;
+        
+        //front left motor
+        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FL.getAngle(), FL.getSpeed());
+        flSteering = corrected.angle; flSpd = corrected.speed;
+        
+        //front right motor
+        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FR.getAngle(), FR.getSpeed());
+        frSteering = corrected.angle; frSpd = corrected.speed;
+        
+        //back left motor
+        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BL.getAngle(), BL.getSpeed());
+        blSteering = corrected.angle; blSpd = corrected.speed;
+        
+        //back right motor
+        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BR.getAngle(), BR.getSpeed());
+        brSteering = corrected.angle; brSpd = corrected.speed;
+        
+        //if some speed is > 1, divide correspondingly to have max speed = 1
+		double maximumSpd = Math.max(Math.max(Math.abs(brSpd),  Math.abs(blSpd)), Math.max(Math.abs(frSpd),  Math.abs(flSpd)));
+		if (maximumSpd > 1){
+			frSpd /= maximumSpd;
+			flSpd /= maximumSpd;
+			brSpd /= maximumSpd;
+			blSpd /= maximumSpd;
+		}
+		
+		//drive wheelpods
 		fourWheelSteer(flSteering, frSteering, blSteering, brSteering);
 		fourWheelDrive(flSpd, frSpd, blSpd, brSpd);
-
 	}
 
 	/**
