@@ -13,7 +13,6 @@ import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 
     private ArrayList<Double> errors;
-    private double feedForward;
     private double lastAverageError;
     private double FEED_FORWARD_ALLOWABLE_ERROR = 5.0;
 
@@ -26,7 +25,6 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 		super(wheelPod, findVelocityPID);
         System.out.println("Initializing initial feed forward stage.");
         clear();
-        feedForward = 0.0;
         currentValue = 0.1;
         increaseFactor = 1;
         lastAverageError = Double.MAX_VALUE;
@@ -35,10 +33,6 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     	} else {
     		wheelPod.positionMode();
     	}
-//        wheelPod.pid(1.1103,0,0); // 2.222 Error -11.4
-    	pid(2.203,0,0); // 2.222 Error -11.4
-//        wheelPod.pid(0,0,0);
-        set(setpoint);
     	errors = new ArrayList<Double>();
 	}
 
@@ -47,9 +41,8 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	 */
 	@Override
 	public boolean process() {
-    	double reading = wheelPod.readSensor();
+    	wheelPod.readSensor(); // TODO: Remove when all works
     	double error = wheelPod.error();
-//    	System.out.println(reading + " - " + SETPOINT + " = " + error);
     	if (count == 0) {
     		errors.clear();
     		f(currentValue);
@@ -69,9 +62,9 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     			increaseValue();
     		}
     		lastAverageError = averageError;
-    		if (Math.abs(averageError()) < FEED_FORWARD_ALLOWABLE_ERROR) {
-    			feedForward = currentValue;
-    	        System.out.println("Initial feed forward set to " + feedForward);
+    		if ((Math.abs(averageError()) < FEED_FORWARD_ALLOWABLE_ERROR)
+    				|| (factorDecreaseCount > MAX_FACTOR_DECREASE_COUNT)) {
+    			feedForward(currentValue);
     	        wheelPod.percentVoltageBusMode();
     			return true;
     		}

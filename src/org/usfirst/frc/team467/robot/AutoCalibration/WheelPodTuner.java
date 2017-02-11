@@ -1,15 +1,18 @@
 /**
- * 
+ *
  */
 package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 /**
- * @author duerkb
  *
  */
 public class WheelPodTuner extends BaseTuner implements Tuner {
+
+	private Tuner tuner;
+	private TuneStage stage;
+	private boolean tuneInProgress;
 
 	/**
 	 * @param wheelPod
@@ -17,15 +20,65 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 	 */
 	public WheelPodTuner(WheelPod wheelPod, boolean findVelocityPID) {
 		super(wheelPod, findVelocityPID);
-		// TODO Auto-generated constructor stub
+		wheelPod.pidf(0.0, 0.0, 0.0, 0.0);
+		stage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
+		tuneInProgress = false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.AutoCalibration.BaseTuner#process()
+
+	/**
+	 *
 	 */
 	@Override
 	public boolean process() {
-		// TODO Auto-generated method stub
+		switch (stage) {
+
+		case ULTIMATE_PROPORTIONAL_TERM:
+			if (!tuneInProgress) {
+				tuner = new UltimateProportionalGainTuner(wheelPod, findVelocityPID);
+				tuneInProgress = true;
+			} else {
+				if (tuner.process()) {
+					stage = TuneStage.INITIAL_FEED_FORWARD;
+					tuneInProgress = false;
+					break;
+				}
+			}
+			break;
+
+		case INITIAL_FEED_FORWARD:
+			if (!tuneInProgress) {
+				tuner = new InitialFeedForwardTuner(wheelPod, findVelocityPID);
+				tuneInProgress = true;
+			} else {
+				if (tuner.process()) {
+					stage = TuneStage.MAX_SPEED;
+					tuneInProgress = false;
+					break;
+				}
+			}
+			break;
+
+		case MAX_SPEED:
+			if (!tuneInProgress) {
+				if (findVelocityPID) {
+					tuner = new MaxSpeedTuner(wheelPod);
+					tuneInProgress = true;
+				} else {
+					stage = TuneStage.NO_TUNING;
+					break;
+				}
+			}
+			break;
+
+		case NO_TUNING:
+
+			break;
+		case FEED_FORWARD_CURVE:
+		default:
+			return true;
+		}
+
 		return false;
 	}
 

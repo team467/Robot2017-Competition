@@ -20,6 +20,8 @@ public abstract class BaseTuner implements Tuner {
 
     protected static final int HOLD_PERIOD = 600;
 
+    protected static final int MAX_FACTOR_DECREASE_COUNT = 10;
+
     protected double currentValue;
     protected double previousValue;
     protected double increaseFactor;
@@ -32,6 +34,8 @@ public abstract class BaseTuner implements Tuner {
     protected PID pid;
 
     protected double setpoint;
+
+    protected int factorDecreaseCount;
 
     /**
 	 *
@@ -47,6 +51,8 @@ public abstract class BaseTuner implements Tuner {
         }
         this.wheelPod = wheelPod;
         wheelPod.clear();
+        wheelPod.checkReversed();
+        factorDecreaseCount = 0;
 	}
 
 	protected void set(double currentSetpoint) {
@@ -93,10 +99,49 @@ public abstract class BaseTuner implements Tuner {
 		}
 	}
 
+	protected void feedForward(double feedForward) {
+        System.out.println("Initial feed forward set to " + feedForward);
+		if (isTalonPID) {
+			wheelPod.f(feedForward);
+			wheelPod.saveToPreferences();
+		}
+	}
+
+	protected void velocityMaxStableProportionalTerm(double velocityMaxStableProportionalTerm) {
+		if (isTalonPID) {
+			wheelPod.velocityMaxStableProportionalTerm(velocityMaxStableProportionalTerm);
+			wheelPod.saveToPreferences();
+		}
+	}
+
+	protected void velocityMaxStableCycleTime(double velocityMaxStableCycleTime) {
+		if (isTalonPID) {
+			wheelPod.velocityMaxStableCycleTime(velocityMaxStableCycleTime);
+			wheelPod.saveToPreferences();
+		}
+	}
+
+	protected void velocityMaxForwardSpeed(double velocityMaxForwardSpeed) {
+		System.out.println("Max Forward Speed: " + velocityMaxForwardSpeed);
+		if (isTalonPID) {
+			wheelPod.velocityMaxForwardSpeed(velocityMaxForwardSpeed);
+			wheelPod.saveToPreferences();
+		}
+	}
+
+	protected void velocityMaxBackwardSpeed(double velocityMaxBackwardSpeed) {
+		System.out.println("Max Backward Speed: " + velocityMaxBackwardSpeed);
+		if (isTalonPID) {
+			wheelPod.velocityMaxBackwardSpeed(velocityMaxBackwardSpeed);
+			wheelPod.saveToPreferences();
+		}
+	}
+
     protected double increaseValue() {
         previousValue = currentValue;
         currentValue += increaseFactor;
         System.out.println("Increased to " + currentValue);
+        factorDecreaseCount--;
         return currentValue;
     }
 
@@ -104,6 +149,7 @@ public abstract class BaseTuner implements Tuner {
         increaseFactor /= 2.0;
         currentValue = previousValue + increaseFactor;
         System.out.println("Decreased to " + currentValue);
+        factorDecreaseCount++;
         return currentValue;
     }
 

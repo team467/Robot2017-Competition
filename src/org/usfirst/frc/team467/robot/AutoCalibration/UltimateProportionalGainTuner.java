@@ -12,9 +12,6 @@ import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
  */
 public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 
-
-    private double Ku;
-    private double Tu;
     private ArrayList<Double> cycleDiff;
     private boolean goingUp;
     private double lastPeak;
@@ -34,13 +31,10 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	cycleTimes = new ArrayList<Long>();
     	System.out.println("Starting autotune stage for ultimate proportional gain.");
     	clear();
-        Ku = 0.0;
-        Tu = 0.0;
     	currentValue = 0.1;
     	previousValue = currentValue;
-    	increaseFactor = 0.01;
-    	pid(currentValue, 0, 0);
-    	f(0);
+    	increaseFactor = 1;
+    	p(currentValue);
     	if (findVelocityPID) {
         	wheelPod.speedMode();
     	} else {
@@ -153,10 +147,18 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     				&& Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
     				&& numberCycles > 2 && speed > 0) {
     			System.out.println("Cycle times are stable");
-    			Ku = currentValue;
-    			Tu = averageCycleTime();
+    			velocityMaxStableProportionalTerm(currentValue);
+    			velocityMaxStableCycleTime(averageCycleTime());
     			wheelPod.percentVoltageBusMode();
     			return true;
+    		} else {
+    			if (factorDecreaseCount > MAX_FACTOR_DECREASE_COUNT) {
+        			System.out.println("Not stable, but enough movement");
+        			velocityMaxStableProportionalTerm(currentValue);
+        			velocityMaxStableCycleTime(averageCycleTime());
+        			wheelPod.percentVoltageBusMode();
+        			return true;
+    			}
     		}
     		if (peakIncreaseCount > 0 ) {
     			// Getting worse -- unstable

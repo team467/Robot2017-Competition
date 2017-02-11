@@ -53,6 +53,12 @@ public class WheelPod {
 	private double d;
 	private double f;
 
+	// Wheel Limit Parameters - Velocity
+	private double velocityMaxStableProportionalTerm;
+	private double velocityMaxStableCycleTime;
+	private double velocityMaxForwardSpeed;
+	private double velocityMaxBackwardSpeed;
+
 	// The movement settings.
 	private double speed;
 	private int position;
@@ -97,6 +103,10 @@ public class WheelPod {
 		this.i = i;
 		this.d = d;
 		this.f = f;
+		velocityMaxStableProportionalTerm = 0.0;
+		velocityMaxStableCycleTime = 0.0;
+		velocityMaxForwardSpeed = 0.0;
+		velocityMaxBackwardSpeed = 0.0;
 		motor = new CANTalon(pod.id);
 		setTalonParameters();
 		motor.changeControlMode(TalonControlMode.PercentVbus);
@@ -130,6 +140,10 @@ public class WheelPod {
 		i = DEFAULT_I;
 		d = DEFAULT_D;
 		f = DEFAULT_F;
+		velocityMaxStableProportionalTerm = 0.0;
+		velocityMaxStableCycleTime = 0.0;
+		velocityMaxForwardSpeed = 0.0;
+		velocityMaxBackwardSpeed = 0.0;
 		motor = new CANTalon(pod.id);
 		loadFromPreferences();
 		setTalonParameters();
@@ -143,10 +157,6 @@ public class WheelPod {
     }
 
     private void setTalonParameters() {
-		if (pod.isReversed) {
-			motor.reverseOutput(true);
-			motor.reverseSensor(true);
-		}
     	motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 //    	motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
 //    	motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
@@ -189,6 +199,23 @@ public class WheelPod {
 		motor.setF(f);
 	}
 
+	public void velocityMaxStableProportionalTerm(double velocityMaxStableProportionalTerm) {
+		this.velocityMaxStableProportionalTerm = velocityMaxStableProportionalTerm;
+	}
+
+	public void velocityMaxStableCycleTime(double velocityMaxStableCycleTime) {
+		this.velocityMaxStableCycleTime = velocityMaxStableCycleTime;
+	}
+
+
+	public void velocityMaxForwardSpeed(double velocityMaxForwardSpeed) {
+		this.velocityMaxForwardSpeed = velocityMaxForwardSpeed;
+	}
+
+	public void velocityMaxBackwardSpeed(double velocityMaxBackwardSpeed) {
+		this.velocityMaxBackwardSpeed = velocityMaxBackwardSpeed;
+	}
+
 	/*
 	 * Loads the preferences from the WPILib preferences file. If there is no
 	 * entry, it will set it to the default. If you tune using the
@@ -215,6 +242,26 @@ public class WheelPod {
 		f = prefs.getDouble(keyHeader + "F", f);
 	}
 
+	public void saveToPreferences() {
+		prefs = Preferences.getInstance();
+		keyHeader = "Pod-" + pod.name + "-PID-";
+		if (motor.getControlMode() == TalonControlMode.Speed) {
+			prefs.putDouble(keyHeader + "Velocity-P", p);
+			prefs.putDouble(keyHeader + "Velocity-I", i);
+			prefs.putDouble(keyHeader + "Velocity-D", d);
+			prefs.putDouble(keyHeader + "Velocity-F", f);
+		} else {
+			prefs.putDouble(keyHeader + "Position-P", p);
+			prefs.putDouble(keyHeader + "Position-I", i);
+			prefs.putDouble(keyHeader + "Position-D", d);
+			prefs.putDouble(keyHeader + "Position-F", f);
+		}
+		prefs.putDouble(keyHeader + "MaxForwardSpeed", velocityMaxForwardSpeed);
+		prefs.putDouble(keyHeader + "MaxBackwardSpeed", velocityMaxBackwardSpeed);
+		prefs.putDouble(keyHeader + "VelocityMaxBackwardSpeed", velocityMaxStableProportionalTerm);
+		prefs.putDouble(keyHeader + "VelocityMaxStableCycleTime", velocityMaxStableCycleTime);
+	}
+
 	/**
 	 * Moves a distance if in position mode.
 	 *
@@ -236,6 +283,15 @@ public class WheelPod {
 	public void reverse() {
 		motor.reverseSensor(true);
 		motor.reverseOutput(true);
+	}
+
+	public boolean checkReversed() {
+		if (pod.isReversed) {
+			motor.reverseOutput(true);
+			motor.reverseSensor(true);
+			return true;
+		}
+		return false;
 	}
 
 	/**
