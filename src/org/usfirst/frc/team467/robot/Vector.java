@@ -1,6 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
-
+/*
+ * Vector class almost specifically for vector drive
+ * vector class made by Nathan long ago
+ * updated to use LookUpTable
+ * 
+ * */
 public class Vector
 {
     private double angle;
