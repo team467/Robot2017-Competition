@@ -18,7 +18,7 @@ public class DataStorage {
 
 	/**
 	 * Returns the single instance of this class
-	 *
+	 * 
 	 * @return
 	 */
 	public static DataStorage getInstance() {
@@ -36,7 +36,7 @@ public class DataStorage {
 	/**
 	 * Returns the int at the given key. If this table does not have a value for
 	 * that position, then the given backup value will be returned.
-	 *
+	 * 
 	 * @param key
 	 *            The key.
 	 * @param backup
@@ -50,7 +50,7 @@ public class DataStorage {
 	/**
 	 * Returns the double at the given key. If this table does not have a value
 	 * for that position, then the given backup value will be returned.
-	 *
+	 * 
 	 * @param key
 	 *            The key.
 	 * @param backup
@@ -64,7 +64,7 @@ public class DataStorage {
 	/**
 	 * Returns the boolean at the given key. If this table does not have a value
 	 * for that position, then the given backup value will be returned.
-	 *
+	 * 
 	 * @param key
 	 *            The key.
 	 * @param backup
@@ -78,7 +78,7 @@ public class DataStorage {
 	/**
 	 * Returns the string at the given key. If this table does not have a value
 	 * for that position, then the given backup value will be returned.
-	 *
+	 * 
 	 * @param key
 	 *            The key.
 	 * @param backup
@@ -92,7 +92,7 @@ public class DataStorage {
 	/**
 	 * Returns the float at the given key. If this table does not have a value
 	 * for that position, then the given backup value will be returned.
-	 *
+	 * 
 	 * @param key
 	 *            The key.
 	 * @param backup
@@ -106,7 +106,7 @@ public class DataStorage {
 	/**
 	 * Returns the long at the given key. If this table does not have a value
 	 * for that position, then the given backup value will be returned.
-	 *
+	 * 
 	 * @param key
 	 *            The key.
 	 * @param backup
@@ -119,7 +119,7 @@ public class DataStorage {
 
 	/**
 	 * Put the given int in the preferences table with the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param value
@@ -131,7 +131,7 @@ public class DataStorage {
 
 	/**
 	 * Put the given double in the preferences table with the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param value
@@ -143,7 +143,7 @@ public class DataStorage {
 
 	/**
 	 * Put the given boolean in the preferences table with the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param value
@@ -155,7 +155,7 @@ public class DataStorage {
 
 	/**
 	 * Put the given string in the preferences table with the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param value
@@ -167,7 +167,7 @@ public class DataStorage {
 
 	/**
 	 * Put the given float in the preferences table with the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param value
@@ -179,7 +179,7 @@ public class DataStorage {
 
 	/**
 	 * Put the given long in the preferences table with the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param value
@@ -194,7 +194,7 @@ public class DataStorage {
 	 * This doesn't actually store the values as an array, but rather
 	 * individually matches a key to each one based on the given key and stores
 	 * each integer as it's own value.
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param values
@@ -212,7 +212,7 @@ public class DataStorage {
 	 * This doesn't actually store the values as an array, but rather
 	 * individually matches a key to each one based on the given key and stores
 	 * each double as it's own value.
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param values
@@ -227,7 +227,7 @@ public class DataStorage {
 
 	/**
 	 * Read an array of integers at the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param backup
@@ -244,7 +244,7 @@ public class DataStorage {
 
 	/**
 	 * Read an array of doubles at the given key
-	 *
+	 * 
 	 * @param key
 	 *            The key
 	 * @param backup
@@ -257,6 +257,13 @@ public class DataStorage {
 			values[i] = data.getDouble(key + i, backup[i]);
 		}
 		return values;
+	}
+
+	/**
+	 * Save the table of preferences to the cRIO
+	 */
+	public void save() {
+		data.save();
 	}
 
 	/**

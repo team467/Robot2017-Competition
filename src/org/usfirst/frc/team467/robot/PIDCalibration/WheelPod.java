@@ -90,6 +90,9 @@ public class WheelPod {
 		this.d = d;
 		this.f = f;
 		motor = new CANTalon(pod.id);
+		if (pod.isReversed) {
+			reverse();
+		}
 		motor.setPID(p, i, d);
 		motor.setF(f);
 		isPosition = false;

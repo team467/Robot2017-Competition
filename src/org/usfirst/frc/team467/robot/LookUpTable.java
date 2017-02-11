@@ -48,7 +48,7 @@ public class LookUpTable {
 	public static double getSin(double a) {
 		int angle = (int) Math.round(RadsToDegrees(a));
 		angle %= 360;
-		if (angle < 0) {
+		if (angle < 0){
 			angle += 360;
 		}
 		return sinVals[angle];

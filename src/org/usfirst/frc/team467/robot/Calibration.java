@@ -57,6 +57,7 @@ public class Calibration {
 
 			// Write data to robot
 			data.putDouble(RobotMap.STEERING_KEYS[motorId], currentAngle);
+			data.save();
 
 			// Set new steering center
 			drive.setSteeringCenter(motorId, currentAngle);
@@ -74,7 +75,7 @@ public class Calibration {
 	 * @return int val of which wheel to select
 	 */
 	private static int getWheelStick(int prevSelectedWheel) {
-		Joystick467 joystick = DriverStation2015.getInstance().getCalibrationJoystick();
+		MainJoystick467 joystick = DriverStation2015.getInstance().getCalibrationJoystick();
 		double stickAngle = joystick.getStickAngle();
 
 		// Select motor being calibrated
