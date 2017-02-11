@@ -15,12 +15,12 @@ public abstract class BaseTuner implements Tuner {
     protected static final double VELOCITY_SETPOINT = 100;
     protected static final double POSITION_SETPOINT = 5;
 
-    protected static final double DEFAULT_ALLOWABLE_ERROR = 2.0;
+    protected static final double DEFAULT_ALLOWABLE_ERROR = 1.0;
     protected static final double ALLOWABLE_CYCLE_TIME_ERROR = 0.5;
 
     protected static final int HOLD_PERIOD = 600;
 
-    protected static final int MAX_FACTOR_DECREASE_COUNT = 10;
+    protected static final int MAX_FACTOR_DECREASE_COUNT = 4;
 
     protected double currentValue;
     protected double previousValue;
@@ -140,15 +140,15 @@ public abstract class BaseTuner implements Tuner {
     protected double increaseValue() {
         previousValue = currentValue;
         currentValue += increaseFactor;
-        System.out.println("Increased to " + currentValue);
+//        System.out.println("Increased to " + currentValue);
         factorDecreaseCount--;
         return currentValue;
     }
 
     protected double decreaseValue() {
-        increaseFactor /= 2.0;
+        increaseFactor /= 10.0;
         currentValue = previousValue + increaseFactor;
-        System.out.println("Decreased to " + currentValue);
+//        System.out.println("Decreased to " + currentValue);
         factorDecreaseCount++;
         return currentValue;
     }
