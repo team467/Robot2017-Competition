@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  *
  */
-public class Joystick467
+public class Joystick467 implements MainJoystick467
 {
     private Joystick joystick;
-    private boolean[] buttons = new boolean[12];     // array of current button states
+    public boolean[] buttons = new boolean[12];     // array of current button states
     private boolean[] prevButtons = new boolean[12]; // array of previous button states, involved in edge detection.
     private double stickX = 0.0;
     private double stickY = 0.0;
@@ -46,6 +46,8 @@ public class Joystick467
      * 
      * @return
      */
+    
+    @Override
     public Joystick getJoystick()
     {
         return joystick;
@@ -54,6 +56,8 @@ public class Joystick467
     /**
      * Read all inputs from the underlying joystick object.
      */
+    
+    @Override
     public void readInputs()
     {
         // read all buttons
@@ -62,13 +66,16 @@ public class Joystick467
             prevButtons[i] = buttons[i];
             buttons[i] = joystick.getRawButton(i + 1);
         }
-
         // Read Joystick Axes
         flap = joystick.getRawAxis(FLAP_AXIS) < 0.0;
         stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
         stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
         twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
         pov = joystick.getPOV(POV_INDEX);
+    }
+    
+    public int buttonsNumber(){
+    	return buttons.length;
     }
 
     /**
@@ -78,6 +85,7 @@ public class Joystick467
      * @param button
      * @return
      */
+    @Override
     public boolean buttonDown(int button)
     {
         return buttons[(button) - 1];
@@ -89,6 +97,7 @@ public class Joystick467
      * @param button
      * @return
      */
+    @Override
     public boolean buttonPressed(int button)
     {
         return buttons[button - 1] && !prevButtons[button - 1];
@@ -100,6 +109,7 @@ public class Joystick467
      * @param button
      * @return
      */
+    @Override
     public boolean buttonReleased(int button)
     {
         return !buttons[button - 1] && prevButtons[button - 1];
@@ -111,6 +121,7 @@ public class Joystick467
      * 
      * @return
      */
+    
     public double getStickX()
     {
         return stickX;
@@ -131,6 +142,7 @@ public class Joystick467
      * 
      * @return the angle of the POV in degrees, or -1 if the POV is not pressed.
      */
+    @Override
     public int getPOV()
     {
         return pov;
@@ -141,11 +153,13 @@ public class Joystick467
      * 
      * @return
      */
+    @Override
     public boolean getFlap()
     {
         return flap;
     }
 
+    @Override
     public double getTwist()
     {
         return twist;
@@ -156,11 +170,14 @@ public class Joystick467
      *
      * @return
      */
+    
+    @Override
     public double getStickDistance()
     {
         return Math.sqrt((stickX * stickX) + (stickY * stickY));
     }
 
+    @Override
     public boolean isInDeadzone()
     {
         return (Math.abs(stickX) < DEADZONE) && (Math.abs(stickY) < DEADZONE);
@@ -171,6 +188,8 @@ public class Joystick467
      *
      * @return Joystick Angle in range -PI to PI
      */
+    
+    @Override
     public double getStickAngle()
     {
         // This shouldn't be necessary, deadzone filtering should already
@@ -215,5 +234,15 @@ public class Joystick467
         // ensuring that the sign of the input is preserved
         return (input * Math.abs(input));
     }
-   
+
+	@Override
+	public double getTurn() {
+		return stickX;
+	}
+
+	@Override
+	public double getSpeed() {
+		return stickY;
+	}
+
 }

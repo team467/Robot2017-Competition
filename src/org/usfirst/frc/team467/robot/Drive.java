@@ -347,11 +347,11 @@ public class Drive extends RobotDrive {
 	 * @param speed
 	 */
 
-	public void xbSplit(double robotAngle, double driveAngle, double speed) {
+	public void xbSplit(double robotAngle, double driveAngle, double speed, double turn) {
 		//left joystick is field align
 		//right joystick is turn
 		fieldAlignDrive(robotAngle,driveAngle, speed);
-		turnDrive(speed);
+		turnDrive(turn);
 	}
 
 

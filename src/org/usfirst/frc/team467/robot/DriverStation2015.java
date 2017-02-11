@@ -1,30 +1,31 @@
 package org.usfirst.frc.team467.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class DriverStation2015
 {    
     private static DriverStation2015 driverstation2015 = null;
 
-    Joystick467 driverJoy = null;
-    
-    //make object of new xbox joystick class
-    XBJoystick xbJoy = null;
-    
     //Instantiated this in main class instead of inside of getDriveMode    
     // Mapping of functions to Joystick Buttons for normal operation
     private static int SLOW_BUTTON = Joystick467.TRIGGER;
     private static int TURN_BUTTON = 2;
     private static int TURBO_BUTTON = 7;
     private static int GYRO_RESET_BUTTON = 8;
-    private static int SHOOTER_UP = 4;
-    private static int SHOOTER_DOWN = 3;
-    
     // Mapping of functions to Joystick Buttons for calibration mode
     private static int CALIBRATE_CONFIRM_BUTTON = Joystick467.TRIGGER;
     private static int CALIBRATE_SLOW_BUTTON = 4;
     
     private static int UNWIND_BUTTON = 10;
     private static int FIELD_ALIGN = 5;
+       
+    MainJoystick467 driverJoy1 = null;
+    RightJoystick467 driverJoy2 = null;
+    String stickType;
+
+    public boolean split = false;
     
+    Joysticks sticks = null;
     enum Speed 
     {
         SLOW, FAST
@@ -47,17 +48,63 @@ public class DriverStation2015
     /**
      * Private constructor
      */
-    private DriverStation2015()
+    public DriverStation2015()
     {
-        driverJoy = new Joystick467(0);
+        makeJoysticks();
     }
 
+    private void makeJoysticks(){
+    	String newStickType = SmartDashboard.getString("DB/String 0", "XBSplit"); //Assume xbsplit
+    	if (newStickType.isEmpty())
+    	{
+    		newStickType = "xbsplit";
+    		}
+    	System.out.println(newStickType);{
+    	if (newStickType.equals(stickType))
+    	{
+    		return;
+    		}
+    	stickType = newStickType.toUpperCase();
+    	String stickTypeDescription;
+    	switch (stickType)
+    	{
+    	case "LT1":
+            driverJoy1 = new Joystick467(3);
+            driverJoy2 = null;
+            stickTypeDescription = "Logitech 1-stick";
+            split = false;
+            break;
+    	 case "XBSPLIT":
+             driverJoy1 = new XBJoystick(0);
+             driverJoy2 = new XBJoystickRight(0);
+             split = true;
+             stickTypeDescription = "XBox split-stick";
+             break;
+        default:
+           stickTypeDescription = "Invalid(XBSplit)";
+            driverJoy1 = new XBJoystick(0);
+            driverJoy2 = new XBJoystickRight(0);
+            split = true;
+            stickTypeDescription = "XBox split-stick";
+            break;
+    }
+    SmartDashboard.putString("DB/String 5", "Stick type " + stickTypeDescription);
+    }
+    }
+ 
     /**
      * Must be called prior to first button read.
      */
+    
     public void readInputs()
     {
-        driverJoy.readInputs();
+        makeJoysticks();
+        
+        driverJoy1.readInputs();
+        if (driverJoy2 != null)
+        {
+            driverJoy2.readInputs();
+        }
     }
 
     /**
@@ -65,23 +112,23 @@ public class DriverStation2015
      *
      * @return
      */
-    public Joystick467 getDriveJoystick()
+    public MainJoystick467 getDriveJoystick()
     {
-        return driverJoy;
+        return driverJoy1;
     }
     /**
      * Get joystick instance used for calibration.
      *
      * @return
      */
-    public Joystick467 getCalibrationJoystick()
+    public MainJoystick467 getCalibrationJoystick()
     {
-        return driverJoy;
+        return driverJoy1;
     }
 
-    public XBJoystick getXBJoystick()
+    public RightJoystick467 getRightDriveJoystick()
     {
-    	return xbJoy;
+        return driverJoy2;
     }
     // All button mappings are accessed through the functions below
 
@@ -109,12 +156,11 @@ public class DriverStation2015
         {
         	drivemode = DriveMode.STRAFE;
         }
-        if(getDriveJoystick().buttonDown(FIELD_ALIGN))
+        if(getDriveJoystick().buttonPressed(FIELD_ALIGN));
         {
         	drivemode = DriveMode.FIELD_ALIGN;
         }
-        //TODO: use with new xbox joystick class
-        if(getXBJoystick().getStickRX() != -1)
+        if(getDriveJoystick().buttonPressed(6));
         {
         	drivemode = DriveMode.XB_SPLIT;
         }
@@ -153,7 +199,7 @@ public class DriverStation2015
     
     public boolean getGyroReset()
     {
-        return driverJoy.buttonDown(GYRO_RESET_BUTTON);
+        return driverJoy1.buttonDown(GYRO_RESET_BUTTON);
     }
 
     /**
