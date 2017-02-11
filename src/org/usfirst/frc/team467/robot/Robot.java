@@ -47,6 +47,7 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2015.getInstance();
 		drive = Drive.getInstance();
+		drive.setSpeedMode();
 		Calibration.init();
 
 		/* Ignore Warning - Shashvat
