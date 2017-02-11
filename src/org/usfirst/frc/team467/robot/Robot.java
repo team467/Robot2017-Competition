@@ -27,7 +27,8 @@ public class Robot extends IterativeRobot {
 	private Drive drive;
 	private CameraStream cam;
 	private VisionProcessing vision;
-	private ADIS16448_IMU gyro;
+	private Gyrometer gyro;
+	private ADIS16448_IMU imu;
 
 	int session;
 
@@ -55,19 +56,28 @@ public class Robot extends IterativeRobot {
 		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
 		gyro = Gyrometer.getInstance();
+		imu = gyro.getIMU();
+		imu.calibrate();
+		imu.reset();
+		
+		SmartDashboard.putString("DB/String 0", "1.0");
+		SmartDashboard.putString("DB/String 1", "0.0");
+		SmartDashboard.putString("DB/String 2", "0.0");
+		SmartDashboard.putString("DB/String 3", "0.0");
 	}
 
 	public void disabledInit() {
 	}
 
 	public void disabledPeriodic() {
-		double gyroAngle = gyro.getAngleZ() / 4;
+		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 	}
 
 	public void autonomousInit() {
-		
+		imu.reset();
 	}
 
 	public void teleopInit() {
@@ -80,13 +90,20 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		double gyroAngle = gyro.getAngleZ() / 4;
-		SmartDashboard.putNumber("gyro", gyroAngle);
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
+		
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 		driverstation.readInputs();
-		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+//		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
 //		drive.crabDrive(driveAngle, 0.0);
-		boolean onTarget = drive.turnToAngle(30.0); // Face 30º according to gyro
+		boolean onTarget = drive.turnToAngle(30.0); // Face 2º according to gyro
 		if (onTarget)
 		{
 			System.out.println("TARGET ACQUIRED");

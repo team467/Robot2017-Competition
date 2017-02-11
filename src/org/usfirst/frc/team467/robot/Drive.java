@@ -32,8 +32,8 @@ public class Drive extends RobotDrive {
 	// Gyroscope
 	private ADIS16448_IMU gyro;
 	
-	private double[] aimingPIDs = {1.0, 0.0, 0.0, 0.0};
-	private PIDController aiming;
+	public double[] aimingPIDs = {2.0, 0.0, 0.0, 0.0};
+	public PIDController aiming;
 
 	// Steering objects
 	public Steering[] steering;
@@ -70,16 +70,7 @@ public class Drive extends RobotDrive {
 
 		// Make objects
 		data = DataStorage.getInstance();
-		gyro = Gyrometer.getInstance();
-		
-		aiming = new PIDController(aimingPIDs[0], aimingPIDs[1], aimingPIDs[2], aimingPIDs[3], gyro,
-				(output) -> {
-					turnDrive(output);
-				});
-		aiming.setInputRange(0, 360*4);		// 4 Gyro units per degree
-		aiming.setContinuous();				// 0º and 360º are the same point
-		aiming.setOutputRange(-1.0, 1.0);	// Max Speed in either direction
-		aiming.setPercentTolerance(1.0/360);// 1 degree tolerance
+		gyro = Gyrometer.getInstance().getIMU();
 
 		// Make steering array
 		steering = new Steering[4];
@@ -94,6 +85,17 @@ public class Drive extends RobotDrive {
 			steering[i] = new Steering(RobotMap.PIDvalues[i], RobotMap.STEERING_MOTOR_CHANNELS[i],
 					RobotMap.STEERING_SENSOR_CHANNELS[i], steeringCenter);
 		}
+		
+		aiming = new PIDController(aimingPIDs[0], aimingPIDs[1], aimingPIDs[2], aimingPIDs[3], Gyrometer.getInstance(),
+				(output) -> {
+					System.out.println("PID Output=" + output);
+					turnDrive(-output);
+				});
+		aiming.setInputRange(0, 360);		// 4 Gyro units per degree
+		aiming.setContinuous();				// 0º and 360º are the same point
+		aiming.setOutputRange(-1.0, 1.0);	// Max Speed in either direction
+		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
+		aiming.enable();
 	}
 
 	/**
@@ -237,6 +239,7 @@ public class Drive extends RobotDrive {
 	 * @param speed
 	 */
 	public void turnDrive(double speed) {
+		System.out.println("Turn Drive: speed=" + speed);
 		WheelCorrection frontLeft = wrapAroundCorrect(RobotMap.FRONT_LEFT, TURN_IN_PLACE_ANGLE, -speed);
 		WheelCorrection frontRight = wrapAroundCorrect(RobotMap.FRONT_RIGHT, -TURN_IN_PLACE_ANGLE, speed);
 		WheelCorrection backLeft = wrapAroundCorrect(RobotMap.BACK_LEFT, -TURN_IN_PLACE_ANGLE, -speed);
@@ -254,7 +257,10 @@ public class Drive extends RobotDrive {
 	 */
 	public boolean turnToAngle(double angle)
 	{
-		aiming.setSetpoint(angle * 4); // 4 gyro units per degree
+		aiming.enable();
+		aiming.setSetpoint(angle); // 4 gyro units per degree
+		System.out.println("Turn to Angle: angle=" + angle);
+		System.out.println("Turn to Angle: output=" + aiming.get());
 		return aiming.onTarget();
 	}
 
