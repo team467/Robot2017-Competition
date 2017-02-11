@@ -1,130 +1,78 @@
 package org.usfirst.frc.team467.robot.AutoCalibration;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
-import org.usfirst.frc.team467.robot.PIDCalibration.RunningAverage;
+import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-public class PIDTuningCycleCharacteristics
-{
-    private static int NO_TIME_YET = -1;
-    private static double NO_ERROR_YET = Double.MAX_VALUE;
-    private static int CYCLES_TO_AVERAGE = 8;
+public class PIDTuningCycleCharacteristics  extends BaseTuner implements Tuner {
 
 
-    // PID Output Characteristics
-    public LinkedHashMap<Long, Double> history;
-    public double sumOfErrors;
-    public RunningAverage averageError;
-    public RunningAverage shiftedAverageError;
-    public double maxOvershoot;
-    public ArrayList<Double> overshoots;
-    public RunningAverage averageOvershoot;
+    private boolean goingUp;
+    private double lastSpeed;
+	private long startTime;
+	private double maxAmplitude;
+    private ArrayList<Long> cycleTimes;
 
-    public long lastCycleTime;
-    public ArrayList<Long> cycleTimes;
-    public RunningAverage averageCycleTime;
-    public long timeToSteadyState;
+    public PIDTuningCycleCharacteristics(WheelPod wheelPod, boolean findVelocityPID) {
+		super(wheelPod, findVelocityPID);
+    	System.out.println("Characterizing PID values.");
+    	cycleTimes = new ArrayList<Long>();
+    	clear();
+    	currentValue = 0.1;
+    	previousValue = currentValue;
+    	increaseFactor = 0.01;
+    	pid(currentValue, 0, 0);
+    	f(0);
+    	if (findVelocityPID) {
+        	wheelPod.speedMode();
+    	} else {
+    		wheelPod.positionMode();
+    	}
+    	cycleTimes.clear();
+    	count = 0;
+	}
 
-    // Internal meta-computation
-    private boolean isFirstMove;
-    private boolean isGoingUp;
-    private long cycleTimeStart;
-    private long previousTime;
-    private double previousError;
-    private double previousState;
-
-
-    public PIDTuningCycleCharacteristics()
-    {
-        overshoots = new ArrayList<Double>();
-        cycleTimes = new ArrayList<Long>();
-        history = new LinkedHashMap<Long, Double>();
-        averageError = new RunningAverage(CYCLES_TO_AVERAGE);
-        shiftedAverageError = new RunningAverage(CYCLES_TO_AVERAGE);
-        averageOvershoot = new RunningAverage(CYCLES_TO_AVERAGE);
-        averageCycleTime = new RunningAverage(CYCLES_TO_AVERAGE);
-    }
-
-    public void clear() {
-        maxOvershoot = 0.0;
-        overshoots.clear();
-        averageOvershoot.clear();
-        sumOfErrors = 0.0;
-        averageError.clear();
-        shiftedAverageError.clear();
-        lastCycleTime = 0;
-        cycleTimes.clear();
-        averageCycleTime.clear();
-        timeToSteadyState = 0;
-        history.clear();
-        isFirstMove = true;
-        isGoingUp = true;
-        cycleTimeStart = 0;
-        previousTime = NO_TIME_YET;
-        previousError = NO_ERROR_YET;
-        previousState = 0.0;
-    }
-
-    public void goingUp() {
-        isGoingUp = true;
-    }
-
-    public void goingDown() {
-        isGoingUp = false;
-    }
-
-    private void recordOvershoot(long time, double error) {
-        double overshoot = Math.abs(error);
-        overshoots.add(overshoot);
-        long cycleTime = 0;
-        if (!isFirstMove) {
-            cycleTime = time-cycleTimeStart;
-            SmartDashboard.putNumber("Cycle Time", cycleTime);
-            cycleTimes.add(cycleTime);
-            SmartDashboard.putNumber("Average Error", averageError.average(error));
-            shiftedAverageError.average(error - averageError.average());
-            SmartDashboard.putNumber("Average Overshoot", averageOvershoot.average(overshoot));
-            SmartDashboard.putNumber("Average Cycle Time", averageCycleTime.average(cycleTime));
-        }
-        lastCycleTime = cycleTime;
-        cycleTimeStart = previousTime;
-        isFirstMove = false;
-    }
-
-    public void add(double state, double error) {
-        long time = System.nanoTime();
-        history.put(time, error);
-        if (previousTime != NO_TIME_YET && previousError != NO_ERROR_YET) {
-//            long timeDiff = (time - previousTime);
-//            double errorDiff = (error - previousError);
-            double stateDiff = (state - previousState);
-            double absoluteError = Math.abs(error);
-            if (absoluteError > maxOvershoot) {
-                maxOvershoot = absoluteError;
-            }
-            if ((isGoingUp && stateDiff <= 0) || (!isGoingUp && stateDiff >= 0)) {
-                    recordOvershoot(previousTime, previousError);
-            }
-        }
-        previousTime = time;
-        previousError = error;
-        previousState = state;
-    }
-
-    public double cycleTimeDividedByAverageCycleTime() {
-        if (cycleTimes.size() >= CYCLES_TO_AVERAGE) {
-            return ((double) lastCycleTime / averageCycleTime.absoluteAverage());
-        } else {
-            return Double.MAX_VALUE;
-        }
-
-    }
-
-    public double shiftedAverageError() {
-        return shiftedAverageError.average();
+	@Override
+	public boolean process() {
+    	double speed = wheelPod.readSensor();
+    	double error = Math.abs(wheelPod.error());
+    	long time = System.currentTimeMillis();
+    	if (count == 0) {
+    		startTime = time;
+    		cycleTimes.clear();
+	        wheelPod.set(setpoint);
+        	count++;
+    	} else if (error < DEFAULT_ALLOWABLE_ERROR) {
+    		set(0);
+    		wheelPod.percentVoltageBusMode();
+    		System.out.println("Max Overshoot: " + maxAmplitude + " Converge Time: " + ((time - startTime)/1000));
+    	} else if (count >= HOLD_PERIOD ) {
+    		System.out.println("Did not converge in hold period.");
+    		set(0);
+    		wheelPod.percentVoltageBusMode();
+    		return true;
+    	} else {
+    		if (goingUp) {
+    			if (speed  < lastSpeed) {
+    				// Found peek
+    				if (error > maxAmplitude) {
+    					maxAmplitude = error;
+    				}
+    				goingUp = false;
+    			}
+    		} else { // Going down
+       			if (speed > lastSpeed) {
+    				// Found trough
+       				if (maxAmplitude > error) {
+    					maxAmplitude = error;
+       				}
+    				goingUp = true;
+    			}
+    		}
+    	}
+    	lastSpeed = speed;
+    	count++;
+    	return false;
     }
 
 }

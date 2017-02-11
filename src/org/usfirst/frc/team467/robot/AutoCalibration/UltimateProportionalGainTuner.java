@@ -20,7 +20,9 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     private double lastPeak;
     private double lastSpeed;
     private long cycleStartTime;
+    private int numberCycles;
     private ArrayList<Long> cycleTimes;
+    private boolean positionIsSet;
 
 	/**
 	 * @param talon
@@ -35,16 +37,23 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
         Ku = 0.0;
         Tu = 0.0;
     	currentValue = 0.1;
-    	previousValue = 0.1;
-    	increaseFactor = 1;
-    	wheelPod.pid(currentValue, 0.0, 0.0);
-    	wheelPod.f(2.2);
+    	previousValue = currentValue;
+    	increaseFactor = 0.01;
+    	pid(currentValue, 0, 0);
+    	f(0);
+    	if (findVelocityPID) {
+        	wheelPod.speedMode();
+    	} else {
+    		wheelPod.positionMode();
+    	}
     	cycleDiff.clear();
     	cycleTimes.clear();
     	count = 0;
+    	numberCycles = 0;
     	lastSpeed = 0;
     	lastPeak = 0;
     	goingUp = true;
+    	positionIsSet = false;
 	}
 
     private int peakIncreaseCount() {
@@ -94,9 +103,11 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     }
 
     private double averageCycleTime() {
+    	numberCycles = 0;
     	double sumCycleTimes = 0.0;
     	for (Long time : cycleTimes) {
     		sumCycleTimes += (double) time;
+	    	numberCycles++;
     	}
     	if (cycleTimes.size() > 0) {
         	return (sumCycleTimes / (double) cycleTimes.size());
@@ -108,38 +119,60 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	@Override
 	public boolean process() {
     	double speed = wheelPod.readSensor();
-//    	System.out.println(speed + " - " + talon.getSetpoint() + " = " + talon.getError());
+//    	System.out.println(speed + " - " + SETPOINT + " = " + wheelPod.error());
     	long time = System.currentTimeMillis();
     	if (count == 0) {
     		cycleTimes.clear();
     		cycleDiff.clear();
-        	wheelPod.p(currentValue);
-        	wheelPod.set(SETPOINT);
+        	p(currentValue);
+			if (this.findVelocityPID) {
+	        	wheelPod.set(setpoint);
+			} else {
+				if (!positionIsSet) {
+		        	set(setpoint);
+		        	positionIsSet = true;
+				}
+			}
         	count++;
     	} else if (count >= HOLD_PERIOD ) {
     		count = 0;
-    		wheelPod.set(0);
+    		if (findVelocityPID) {
+    			set(0);
+    		} else {
+    			wheelPod.zeroPosition();
+    			set(0);
+        		positionIsSet = false;
+    		}
     		int peakIncreaseCount = peakIncreaseCount();
     		int cycleTimeIncreaseCount = cycleTimeIncreaseCount();
     		double averageCycleTime = averageCycleTime();
-    		System.out.println("P: " + currentValue + " Error: " + wheelPod.error() + " Speed: " + speed
+    		System.out.println(wheelPod.name() + " P: " + currentValue + " Error: " + wheelPod.error() + " Speed: " + speed
     				+ " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount
     				+ " Ave Cycle Times: " + averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount);
-    		if (Math.abs(peakIncreaseCount) == 0 && Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && averageCycleTime > 0.0) {
-//        		if (Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && averageCycleTime > 0.0) {
+    		if (Math.abs(peakIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
+    				&& Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
+    				&& numberCycles > 2 && speed > 0) {
     			System.out.println("Cycle times are stable");
     			Ku = currentValue;
     			Tu = averageCycleTime();
+    			wheelPod.percentVoltageBusMode();
     			return true;
     		}
-    		if (peakIncreaseCount > 0) {
+    		if (peakIncreaseCount > 0 ) {
     			// Getting worse -- unstable
     			decreaseValue();
     		} else {
     			increaseValue();
     		}
     	} else {
-    		wheelPod.set(SETPOINT);
+			if (this.findVelocityPID) {
+	        	set(setpoint);
+			} else {
+				if (!positionIsSet) {
+		        	set(setpoint);
+		        	positionIsSet = true;
+				}
+			}
     		if (goingUp) {
     			if (speed  < lastSpeed) {
     				// Found peek

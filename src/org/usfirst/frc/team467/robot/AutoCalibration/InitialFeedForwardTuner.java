@@ -27,11 +27,18 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
         System.out.println("Initializing initial feed forward stage.");
         clear();
         feedForward = 0.0;
-        currentValue = 1;
+        currentValue = 0.1;
         increaseFactor = 1;
         lastAverageError = Double.MAX_VALUE;
-        wheelPod.pid(0,0,0);
-        wheelPod.set(SETPOINT);
+    	if (findVelocityPID) {
+        	wheelPod.speedMode();
+    	} else {
+    		wheelPod.positionMode();
+    	}
+//        wheelPod.pid(1.1103,0,0); // 2.222 Error -11.4
+    	pid(2.203,0,0); // 2.222 Error -11.4
+//        wheelPod.pid(0,0,0);
+        set(setpoint);
     	errors = new ArrayList<Double>();
 	}
 
@@ -42,18 +49,18 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	public boolean process() {
     	double reading = wheelPod.readSensor();
     	double error = wheelPod.error();
-    	System.out.println(reading + " - " + SETPOINT + " = " + error);
+//    	System.out.println(reading + " - " + SETPOINT + " = " + error);
     	if (count == 0) {
     		errors.clear();
-    		wheelPod.f(currentValue);
-    		wheelPod.set(SETPOINT);
+    		f(currentValue);
+    		set(setpoint);
         	count++;
     	} else if (count >= HOLD_PERIOD ) {
     		count = 0;
-    		wheelPod.set(0);
+    		set(0);
     		double averageError = averageError();
-    		System.out.println("Feed Forward: " + currentValue
-    				+ " Speed or Position: " + wheelPod
+    		System.out.println(wheelPod.name() + " Feed Forward: " + currentValue
+    				+ " Speed or Position: " + wheelPod.error()
     				+ " Average Error: " + averageError + " Last Error: " + lastAverageError);
     		if (Math.abs(averageError) > Math.abs(lastAverageError)) {
     			// Getting worse -- unstable
@@ -65,10 +72,11 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     		if (Math.abs(averageError()) < FEED_FORWARD_ALLOWABLE_ERROR) {
     			feedForward = currentValue;
     	        System.out.println("Initial feed forward set to " + feedForward);
+    	        wheelPod.percentVoltageBusMode();
     			return true;
     		}
     	} else {
-    		wheelPod.set(SETPOINT);
+    		set(setpoint);
         	errors.add(error);
     		count++;
     	}

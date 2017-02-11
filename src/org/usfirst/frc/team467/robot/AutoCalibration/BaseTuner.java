@@ -12,7 +12,8 @@ import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 public abstract class BaseTuner implements Tuner {
 
     public static final int ENCODER_CODES_PER_REVOLUTION = 256;
-    protected static final double SETPOINT = 100;
+    protected static final double VELOCITY_SETPOINT = 100;
+    protected static final double POSITION_SETPOINT = 5;
 
     protected static final double DEFAULT_ALLOWABLE_ERROR = 2.0;
     protected static final double ALLOWABLE_CYCLE_TIME_ERROR = 0.5;
@@ -30,19 +31,27 @@ public abstract class BaseTuner implements Tuner {
 
     protected PID pid;
 
+    protected double setpoint;
+
     /**
 	 *
 	 */
 	public BaseTuner(WheelPod wheelPod, boolean findVelocityPID) {
 		isTalonPID = true;
         this.findVelocityPID = findVelocityPID;
+        if (findVelocityPID) {
+            setpoint = VELOCITY_SETPOINT;
+        } else {
+            setpoint = POSITION_SETPOINT;
+
+        }
         this.wheelPod = wheelPod;
         wheelPod.clear();
 	}
 
-	protected void set(double setpoint) {
+	protected void set(double currentSetpoint) {
 		if (isTalonPID) {
-			wheelPod.set(setpoint);
+			wheelPod.set(currentSetpoint);
 		}
 	}
 
@@ -60,8 +69,28 @@ public abstract class BaseTuner implements Tuner {
 		return reading;
 	}
 
-	protected void pid(double p, double i, double d, double f) {
-		wheelPod.pidf(p, i, d, f);
+	protected void p(double p) {
+		if (isTalonPID) {
+			wheelPod.p(p);
+		}
+	}
+
+	protected void f(double f) {
+		if (isTalonPID) {
+			wheelPod.f(f);
+		}
+	}
+
+	protected void pid(double p, double i, double d) {
+		if (isTalonPID) {
+			wheelPod.pid(p, i, d);
+		}
+	}
+
+	protected void pidf(double p, double i, double d, double f) {
+		if (isTalonPID) {
+			wheelPod.pidf(p, i, d, f);
+		}
 	}
 
     protected double increaseValue() {
@@ -72,7 +101,7 @@ public abstract class BaseTuner implements Tuner {
     }
 
     protected double decreaseValue() {
-        increaseFactor /= 10.0;
+        increaseFactor /= 2.0;
         currentValue = previousValue + increaseFactor;
         System.out.println("Decreased to " + currentValue);
         return currentValue;

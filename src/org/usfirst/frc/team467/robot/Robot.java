@@ -8,11 +8,14 @@
 package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.AutoCalibration.InitialFeedForwardTuner;
+import org.usfirst.frc.team467.robot.AutoCalibration.MaxSpeedTuner;
 import org.usfirst.frc.team467.robot.AutoCalibration.Tuner;
 import org.usfirst.frc.team467.robot.AutoCalibration.UltimateProportionalGainTuner;
 import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -30,7 +33,7 @@ public class Robot extends IterativeRobot {
 	private DriverStation2015 driverstation;
 	private Drive drive;
 
-	private Tuner autotuner;
+	private Tuner autotuner[];
 
 	private WheelPod wheelPods[];
 
@@ -74,25 +77,47 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	CANTalon talon;
+
 	public void autonomousInit() {
+
+		talon = new CANTalon(3);
+		talon.setP(0.01);
+		talon.changeControlMode(TalonControlMode.Position);
+		talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+
 		wheelPods = new WheelPod[4];
+		autotuner = new Tuner[4];
 		for (int i = 0; i < 4; i++) {
-			wheelPods[i] = new WheelPod(i, new PIDF(0,0,0,0));
+			wheelPods[i] = new WheelPod(i+1, new PIDF(0,0,0,0));
+//			autotuner[i] = new MaxSpeedTuner(wheelPods[i]);
+//			autotuner = new InitialFeedForwardTuner(wheelPods[0], true);
+			autotuner[i] = new UltimateProportionalGainTuner(wheelPods[i], false);
+			wheelPods[i].set(0);
+//			wheelPods[i].positionMode();
+//			wheelPods[i].zeroPosition();
 		}
-//		autotuner = new InitialFeedForwardTuner(wheelPods[2], true);
-		autotuner = new UltimateProportionalGainTuner(wheelPods[2], true);
+		wheelPods[1].positionMode();
+		wheelPods[1].zeroPosition();
 		isTuningComplete = false;
 	}
 
 	public void autonomousPeriodic() {
-		wheelPods[0].set(0);
+
+		wheelPods[1].readSensor();
 		if (!isTuningComplete) {
-			isTuningComplete = autotuner.process();
+			talon.set(50);
+//			for (Tuner tuner : autotuner) {
+//				isTuningComplete = tuner.process();
+//			}
+//			autotuner[0].process();
+			wheelPods[1].set(256);
+			isTuningComplete = true;
 		} else {
-			wheelPods[1].set(0);
+//			for (WheelPod pod : wheelPods) {
+//				pod.set(0);
+//			}
 		}
-		wheelPods[2].set(0);
-		wheelPods[3].set(0);
 	}
 
 	/**
