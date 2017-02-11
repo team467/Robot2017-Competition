@@ -96,7 +96,7 @@ public class Drive extends RobotDrive {
 		aiming.setInputRange(0, 360);		// 4 Gyro units per degree
 		aiming.setContinuous();				// 0º and 360º are the same point
 		aiming.setOutputRange(-1.0, 1.0);	// Max Speed in either direction
-		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
+		aiming.setAbsoluteTolerance(1.0);	// 1 degree tolerance
 	}
 
 	/**
