@@ -21,7 +21,7 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 	public WheelPodTuner(WheelPod wheelPod, boolean findVelocityPID) {
 		super(wheelPod, findVelocityPID);
 		wheelPod.pidf(0.0, 0.0, 0.0, 0.0);
-		stage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
+		stage = TuneStage.CHECK_SENSORS;
 		tuneInProgress = false;
 	}
 
@@ -32,6 +32,16 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 	@Override
 	public boolean process() {
 		switch (stage) {
+
+		case CHECK_SENSORS:
+			wheelPod.pidf(2, 0, 0, 3);
+			if (wheelPod.checkSensor()) {
+				stage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
+			} else {
+				stage = TuneStage.NO_TUNING;
+			}
+			wheelPod.pidf(0, 0, 0, 0);
+			break;
 
 		case ULTIMATE_PROPORTIONAL_TERM:
 			if (!tuneInProgress) {
@@ -71,10 +81,8 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 			}
 			break;
 
-		case NO_TUNING:
-
-			break;
 		case FEED_FORWARD_CURVE:
+		case NO_TUNING:
 		default:
 			return true;
 		}

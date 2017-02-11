@@ -10,6 +10,7 @@ package org.usfirst.frc.team467.robot.AutoCalibration;
 public enum TuneStage
 {
     NO_TUNING,
+    CHECK_SENSORS,
     INITIAL_FEED_FORWARD,
     MAX_SPEED,
     ULTIMATE_PROPORTIONAL_TERM,
