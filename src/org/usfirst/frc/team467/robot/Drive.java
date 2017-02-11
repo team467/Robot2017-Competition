@@ -88,14 +88,15 @@ public class Drive extends RobotDrive {
 		
 		aiming = new PIDController(aimingPIDs[0], aimingPIDs[1], aimingPIDs[2], aimingPIDs[3], Gyrometer.getInstance(),
 				(output) -> {
-					System.out.println("PID Output=" + output);
-					turnDrive(-output);
+					if (aiming.isEnabled()) {
+						System.out.println("PID Output=" + output);
+						turnDrive(-output);
+					}
 				});
 		aiming.setInputRange(0, 360);		// 4 Gyro units per degree
 		aiming.setContinuous();				// 0º and 360º are the same point
 		aiming.setOutputRange(-1.0, 1.0);	// Max Speed in either direction
 		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
-		aiming.enable();
 	}
 
 	/**
@@ -309,6 +310,7 @@ public class Drive extends RobotDrive {
 	 *            Speed to drive at
 	 */
 	public void crabDrive(double angle, double speed) {
+		System.out.println("Crab Drive: angle=" + angle + ", speed=" + speed);
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);

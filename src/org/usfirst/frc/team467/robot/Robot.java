@@ -115,6 +115,8 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		drive.aiming.reset();
+		System.out.println("-------Teleop Periodic-------");
 		// Read driverstation inputs
 		driverstation.readInputs();
 
@@ -134,8 +136,10 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 
 		drive.setSpeedMode();
+		drive.aiming.reset();
 
 		DriveMode driveMode = driverstation.getDriveMode();
+		System.out.println("Update Drive: drivemode=" + driveMode.name());
 		switch (driveMode) {
 		case UNWIND:
 			for (Steering wheelpod : Drive.getInstance().steering) {
