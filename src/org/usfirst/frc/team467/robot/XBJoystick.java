@@ -225,4 +225,19 @@ public class XBJoystick implements MainJoystick467{
 	public double getSpeed() {
 		return stickY;
 	}
+	
+	@Override
+	public double getTurnLeft(){
+		return triggerL;
+	}
+	
+	@Override
+	public double getTurnRight(){
+		return triggerR;
+	}
+
+	@Override
+	public double getYAxis() {
+		return stickY;
+	}
 }

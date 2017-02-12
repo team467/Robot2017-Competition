@@ -67,6 +67,7 @@ public class XBJoystickRight implements RightJoystick467
         return (Math.abs(stickX) < DEADZONE) && (Math.abs(stickY) < DEADZONE);
     }
     
+    @Override
     public double getStickAngle()
     {
         // This shouldn't be necessary, deadzone filtering should already
@@ -101,6 +102,11 @@ public class XBJoystickRight implements RightJoystick467
 	@Override
 	public double getSpeed() {
 		return stickY;
+	}
+
+	@Override
+	public double getXAxis() {
+		return stickX;
 	}
     
 }

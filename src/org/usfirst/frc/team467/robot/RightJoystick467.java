@@ -24,7 +24,11 @@ public interface RightJoystick467
 	     */
 	    
 	    double getTurn();
+	    
+	    double getXAxis();
 
 		double getSpeed();
+
+		double getStickAngle();
     
 }

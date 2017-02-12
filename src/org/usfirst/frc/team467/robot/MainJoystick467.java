@@ -52,12 +52,17 @@ public interface MainJoystick467
 
 	int getPOV();
 
+	double getTurnLeft();
+
+	double getTurnRight();
+	
 	boolean getFlap();
 
 	double getTwist();
 
 	double getStickAngle();
 
+	
     /**
      * Calculate the angle of this joystick.
      *
@@ -86,6 +91,9 @@ public interface MainJoystick467
 	     * @return
 	     */
 	    double getSpeed();
+
+		double getYAxis();
+
 
 	    /**
 	     * 
