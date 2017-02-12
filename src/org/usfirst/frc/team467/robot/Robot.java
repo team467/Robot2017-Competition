@@ -161,11 +161,6 @@ public class Robot extends IterativeRobot
 
                 }
                	break;
-//            case XB_SPLIT:
-//            	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//            				-driverstation.getRightDriveJoystick().getTurn() / 2,
-//            				driverstation.getDriveJoystick().getStickDistance());
-//            	break;
             case XB_SPLIT:
             	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
             				-driverstation.getRightDriveJoystick().getTurn() / 2,
