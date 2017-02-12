@@ -200,7 +200,8 @@ public class Robot extends IterativeRobot {
 			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
 				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
 			break;
-
+		default:
+			drive.stop(); // If no drive mode specified, don't drive!
         }
     }
 }
