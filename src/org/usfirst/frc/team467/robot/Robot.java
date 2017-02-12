@@ -8,7 +8,6 @@
 package org.usfirst.frc.team467.robot;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -19,12 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = 0.1;
 
 	// Robot objects
 	private DriverStation2015 driverstation;
 	private Drive drive;
+	private Joystick467 stick;
+	private XBJoystick xbstick;
 	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
@@ -50,17 +52,22 @@ public class Robot extends IterativeRobot {
 		drive.setSpeedMode();
 		Calibration.init();
 
-		/* Ignore Warning - Shashvat
-		   Will cause the initial computation of the look up table */
+		/*
+		 * Ignore Warning - Shashvat Will cause the initial computation of the
+		 * look up table
+		 */
 		LookUpTable table = LookUpTable.getInstance();
-		
+
 		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
 		gyro = Gyrometer.getInstance();
 		imu = gyro.getIMU();
 		imu.calibrate();
 		imu.reset();
-		
+
+		stick = new Joystick467(0);
+		xbstick = new XBJoystick(0);
+
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
 		SmartDashboard.putString("DB/String 2", "0.0");
@@ -71,6 +78,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+		SmartDashboard.putData("IMU", imu);
+
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -92,6 +101,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		imu.reset();
+		imu.calibrate();
 	}
 
 	public void testInit() {
@@ -106,11 +117,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 		driverstation.readInputs();
-//		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
-//		drive.crabDrive(driveAngle, 0.0);
+		// double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+		// drive.crabDrive(driveAngle, 0.0);
 		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to gyro
-		if (onTarget)
-		{
+		if (onTarget) {
 			System.out.println("TARGET ACQUIRED");
 		}
 	}
@@ -173,7 +183,11 @@ public class Robot extends IterativeRobot {
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
-
+//          case XB_SPLIT:
+//        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+//        				-driverstation.getRightDriveJoystick().getTurn() / 2,
+//        				driverstation.getDriveJoystick().getStickDistance());
+//        	break;
 		case FIELD_ALIGN:
 			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
 						    driverstation.getDriveJoystick().getStickDistance());
@@ -187,8 +201,6 @@ public class Robot extends IterativeRobot {
 				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
 			break;
 
-		default:
-			drive.stop(); // If no drive mode specified, don't drive!
-		}
-	}
+        }
+    }
 }

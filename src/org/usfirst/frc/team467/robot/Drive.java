@@ -40,7 +40,6 @@ public class Drive extends RobotDrive {
 
 	// Data storage object
 	private DataStorage data;
-
 	// Angle to turn at when rotating in place - initialized in constructor
 	// takes the arctan of width over length in radians
 	// Length is the wide side
@@ -334,8 +333,7 @@ public class Drive extends RobotDrive {
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-		System.out.println("gyroAngle" + gyro.getAngle() + " robotAngle:" + gyroAngle + " correctedAngle:" + corrected.angle
-				+ " driveAngle:" + driveAngle);
+		System.out.println("screw merge conflicts");
 	}
 
 
@@ -412,13 +410,13 @@ public class Drive extends RobotDrive {
 	 * @param POVangle
 	 *            angle of the POV joystick found on top of joystick
 	 */
-
-	public void strafeDrive(int POVangle) {
+	
+	public void strafeDrive(int POVangle){
 		double speed = SPEED_STRAFE;
 		double angle = POVangle * Math.PI / 180;
 		crabDrive(angle, speed);
 	}
-
+	
 	/**
 	 * @param x
 	 *            the x distance taken from the right joystick (RX)
@@ -427,36 +425,33 @@ public class Drive extends RobotDrive {
 	 * @param speed
 	 */
 
-	public void xbSplit(double x, double y) {
-		double angle = Math.atan(y / x);
-		double speed = Math.sqrt((x * x) + (y * y));
-		crabDrive(angle, speed);
-	}
 
-	/**
-	 *
-	 * @param direction
-	 *            direction is foward or backwards
-	 * @param angle
-	 *            angle to drive
-	 * @param speed
-	 *            drive speed
-	 */
-	public void xbSplitStrafe(double direction, double angle, double speed) {
-		double y = direction;
-		if (y > 0) {
-			y = 1;
+	public void xbSplit(double driveAngle, double turn, double speed) {
+		if (speed == 0){
+		turnDrive(turn);
 		}
-		if (y < 0) {
-			y = -1;
-		} else {
-			y = 0;
-		}
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
-		fourWheelDrive(y * corrected.speed, y * corrected.speed, y * corrected.speed, y * corrected.speed);
-		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-
+		else if (driveAngle != -1) {
+			crabDrive(driveAngle, speed);
+			}
 	}
+	
+	//Zeynep trying out a different kind of xbsplit. do not delete yet
+//	public void xbSplit(double strafe, double drive, double speed, double turnLeft, double turnRight){
+//		if (strafe > 0){
+//			crabDrive(0, speed);
+//			}
+//		if (strafe < 0){
+//			crabDrive(180, speed);
+//		}
+//		
+//		if (drive != 0){
+//		crabDrive(drive, speed);
+//		}
+//		
+//		turnDrive(turnLeft);
+//		turnDrive(turnRight);
+//	}
+//	
 
 	/**
 	 * Individually controls a specific steering motor
