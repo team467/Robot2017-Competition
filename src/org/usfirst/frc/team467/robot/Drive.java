@@ -55,7 +55,7 @@ public class Drive extends RobotDrive {
 	// Speed modifier constants
 	private static final double SPEED_SLOW_MODIFIER = 0.5;
 	private static final double SPEED_TURBO_MODIFIER = 2.0;
-	private static final double SPEED_MAX_MODIFIER = 0.8;
+	private static final double SPEED_MAX_MODIFIER = 0.5;
 	private static final double SPEED_MAX_CHANGE = 0.15;
 
 	// Speed to use for Strafe and Revolve Drive
@@ -109,8 +109,7 @@ public class Drive extends RobotDrive {
 			// First usage - create Drive object
 			frontleft = new WheelPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_LEFT]);
 			backleft = new WheelPod(RobotMap.BACK_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_LEFT]);
-			frontright = new WheelPod(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL,
-					RobotMap.SpeedPIDFvalues[RobotMap.FRONT_RIGHT]);
+			frontright = new WheelPod(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_RIGHT]);
 			backright = new WheelPod(RobotMap.BACK_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_RIGHT]);
 
 			instance = new Drive(frontleft.motor(), backleft.motor(), frontright.motor(), backright.motor());

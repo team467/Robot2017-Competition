@@ -74,11 +74,21 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
 		vision.update();
 	}
 
 	public void autonomousInit() {
 		imu.reset();
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
 	}
 
 	public void teleopInit() {
@@ -91,12 +101,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
-		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
-		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		drive.aiming.setPID(p, i, d, f);
-		
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -104,7 +108,7 @@ public class Robot extends IterativeRobot {
 		driverstation.readInputs();
 //		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
 //		drive.crabDrive(driveAngle, 0.0);
-		boolean onTarget = drive.turnToAngle(30.0); // Face 2º according to gyro
+		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to gyro
 		if (onTarget)
 		{
 			System.out.println("TARGET ACQUIRED");
@@ -115,8 +119,12 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		
 		drive.aiming.reset();
-		System.out.println("-------Teleop Periodic-------");
+//		System.out.println("-------Teleop Periodic-------");
 		// Read driverstation inputs
 		driverstation.readInputs();
 
@@ -139,7 +147,7 @@ public class Robot extends IterativeRobot {
 		drive.aiming.reset();
 
 		DriveMode driveMode = driverstation.getDriveMode();
-		System.out.println("Update Drive: drivemode=" + driveMode.name());
+//		System.out.println("Update Drive: drivemode=" + driveMode.name());
 		switch (driveMode) {
 		case UNWIND:
 			for (Steering wheelpod : Drive.getInstance().steering) {
