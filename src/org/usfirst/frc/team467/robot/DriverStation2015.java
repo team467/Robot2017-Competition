@@ -24,7 +24,7 @@ public class DriverStation2015
     MainJoystick467 driverJoy1 = null;
     RightJoystick467 driverJoy2 = null;
     String stickType;
-
+        
     public boolean split = false;
     
     Joysticks sticks = null;
@@ -56,10 +56,10 @@ public class DriverStation2015
     }
 
     private void makeJoysticks(){
-    	String newStickType = SmartDashboard.getString("DB/String 0", "XBSplit"); //Assume xbsplit
+    	String newStickType = SmartDashboard.getString("DB/String 0", "LT1"); //Assume xbsplit
     	if (newStickType.isEmpty())
     	{
-    		newStickType = "xbsplit";
+    		newStickType = "LT1";
     		}
     	System.out.println(newStickType);{
     	if (newStickType.equals(stickType))
@@ -83,11 +83,10 @@ public class DriverStation2015
              stickTypeDescription = "XBox split-stick";
              break;
         default:
-           stickTypeDescription = "Invalid(XBSplit)";
-            driverJoy1 = new XBJoystick(0);
-            driverJoy2 = new XBJoystickRight(0);
-            split = true;
-            stickTypeDescription = "XBox split-stick";
+        	 driverJoy1 = new Joystick467(0);
+             driverJoy2 = null;
+             stickTypeDescription = "Logitech 1-stick";
+             split = false;
             break;
     }
     SmartDashboard.putString("DB/String 5", "Stick type " + stickTypeDescription);
@@ -145,24 +144,28 @@ public class DriverStation2015
     	//Instantiated outside of this class and in main class
     	//crab drive is default. if else, it is strafe.
     	//return the chosen drivemode
-       DriveMode drivemode = DriveMode.CRAB;  // default is regular crab drive        
-        if (getDriveJoystick().buttonDown(TURN_BUTTON))
+       DriveMode drivemode = DriveMode.CRAB;  // default is regular crab drive       
+        if (driverJoy1.buttonDown(TURN_BUTTON))
         {
             drivemode = DriveMode.TURN;
         } 
-        if (getDriveJoystick().buttonDown(UNWIND_BUTTON))
+        if (driverJoy1.buttonDown(UNWIND_BUTTON))
         {
             drivemode = DriveMode.UNWIND;
         }
-        if(getDriveJoystick().getPOV() != -1)
+        if(driverJoy1.getPOV() != -1)
         {
         	drivemode = DriveMode.STRAFE;
         }
-        if(getDriveJoystick().buttonPressed(FIELD_ALIGN_BUTTON));
+        if(driverJoy1.buttonDown(FIELD_ALIGN_BUTTON));
         {
         	drivemode = DriveMode.FIELD_ALIGN;
         }
-        if(getDriveJoystick().buttonPressed(XB_SPLIT));
+        if(driverJoy1.buttonDown(VECTOR_DRIVE_BUTTON));
+        {
+        	drivemode = DriveMode.VECTOR;
+        }
+        if(driverJoy1.buttonDown(XB_SPLIT));
         {
         	drivemode = DriveMode.XB_SPLIT;
         }

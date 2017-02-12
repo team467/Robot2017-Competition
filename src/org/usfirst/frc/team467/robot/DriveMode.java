@@ -8,5 +8,4 @@ public enum DriveMode {
 	FIELD_ALIGN, // Drive field align
 	VECTOR, // Drives field aligned, but allows turns during movement
 	XB_SPLIT, // left joystick is front, back, right joystick is left, right
-	XB_SPLIT_STRAFE
 }
