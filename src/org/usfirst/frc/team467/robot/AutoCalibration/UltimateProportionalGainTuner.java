@@ -12,10 +12,10 @@ import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
  */
 public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 
-    private ArrayList<Double> cycleDiff;
+    private ArrayList<Long> cycleDiff;
     private boolean goingUp;
-    private double lastPeak;
-    private double lastSpeed;
+    private long lastPeak;
+    private long lastReading;
     private long cycleStartTime;
     private int numberCycles;
     private ArrayList<Long> cycleTimes;
@@ -27,14 +27,18 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	 */
 	public UltimateProportionalGainTuner(WheelPod wheelPod, boolean findVelocityPID) {
 		super(wheelPod, findVelocityPID);
-    	cycleDiff = new ArrayList<Double>();
+    	cycleDiff = new ArrayList<Long>();
     	cycleTimes = new ArrayList<Long>();
     	System.out.println("Starting autotune stage for ultimate proportional gain.");
     	clear();
-    	currentValue = 0.1;
+    	if (this.findVelocityPID) {
+        	currentValue = 1;
+    	} else {
+        	currentValue = 12;
+    	}
     	previousValue = currentValue;
     	increaseFactor = 1;
-    	p(currentValue);
+    	pidf(currentValue, 0.0, 0.0, 0.0);
     	if (findVelocityPID) {
         	wheelPod.speedMode();
     	} else {
@@ -44,7 +48,7 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	cycleTimes.clear();
     	count = 0;
     	numberCycles = 0;
-    	lastSpeed = 0;
+    	lastReading = 0;
     	lastPeak = 0;
     	goingUp = true;
     	positionIsSet = false;
@@ -52,13 +56,13 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 
     private int peakIncreaseCount() {
     	int increaseCount = 0;
-    	double previousPeak = 0;
+    	long previousPeak = 0;
     	for (int i = 0; i < cycleDiff.size(); i++) {
-    		double peak = cycleDiff.get(i);
+    		long peak = cycleDiff.get(i);
     		if (i != 0) {
-    			if (peak > previousPeak) {
+    			if ((peak - previousPeak) > 2) {
     				increaseCount++;
-    			} else if (peak < previousPeak) {
+    			} else if ((peak - previousPeak) < -2) {
     				increaseCount--;
     			}
     		}
@@ -67,27 +71,27 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	return increaseCount;
     }
 
-    private double averageCycleDiff() {
-    	double sumPeaks = 0.0;
-    	for (double peak : cycleDiff) {
-    		sumPeaks += peak;
+    private long averageCycleDiff() {
+    	double sumPeaks = 0;
+    	for (long peak : cycleDiff) {
+    		sumPeaks += (double) peak;
     	}
     	if (cycleDiff.size() > 0) {
-        	return (sumPeaks / (double) cycleDiff.size());
+        	return Math.round(sumPeaks / (double) cycleDiff.size());
     	} else {
-    		return 0.0;
+    		return 0;
     	}
     }
 
     private int cycleTimeIncreaseCount() {
     	int increaseCount = 0;
-    	double previousCycleTime = 0;
+    	long previousCycleTime = 0;
     	for (int i = 0; i < cycleTimes.size(); i++) {
-    		double cycleTime = cycleTimes.get(i);
+    		long cycleTime = cycleTimes.get(i);
     		if (i != 0) {
-    			if (cycleTime > previousCycleTime) {
+    			if ((cycleTime - previousCycleTime) > 2) {
     				increaseCount++;
-    			} else if (cycleTime < previousCycleTime) {
+    			} else if ((cycleTime - previousCycleTime) < -2) {
     				increaseCount--;
     			}
     		}
@@ -96,7 +100,7 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     	return increaseCount;
     }
 
-    private double averageCycleTime() {
+    private long averageCycleTime() {
     	numberCycles = 0;
     	double sumCycleTimes = 0.0;
     	for (Long time : cycleTimes) {
@@ -104,16 +108,15 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	    	numberCycles++;
     	}
     	if (cycleTimes.size() > 0) {
-        	return (sumCycleTimes / (double) cycleTimes.size());
+        	return Math.round(sumCycleTimes / (double) cycleTimes.size());
     	} else {
-    		return 0.0;
+    		return 0;
     	}
     }
 
 	@Override
 	public boolean process() {
-    	double speed = wheelPod.readSensor();
-//    	System.out.println(speed + " - " + SETPOINT + " = " + wheelPod.error());
+    	long reading = Math.round(wheelPod.readSensor());
     	long time = System.currentTimeMillis();
     	if (count == 0) {
     		cycleTimes.clear();
@@ -122,8 +125,9 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 			if (this.findVelocityPID) {
 	        	wheelPod.set(setpoint);
 			} else {
+				wheelPod.zeroPosition();
+	        	set(setpoint);
 				if (!positionIsSet) {
-		        	set(setpoint);
 		        	positionIsSet = true;
 				}
 			}
@@ -139,13 +143,14 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
     		}
     		int peakIncreaseCount = peakIncreaseCount();
     		int cycleTimeIncreaseCount = cycleTimeIncreaseCount();
-    		double averageCycleTime = averageCycleTime();
-    		System.out.println(wheelPod.name() + " P: " + currentValue + " Error: " + wheelPod.error() + " Speed: " + speed
+    		long averageCycleTime = averageCycleTime();
+    		System.out.println(wheelPod.name() + " P: " + currentValue + " Error: " + wheelPod.error() + " Reading: " + reading
     				+ " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount
-    				+ " Ave Cycle Times: " + averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount);
+    				+ " Ave Cycle Times: " + averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount
+    				+ " Number of Cycles: " + numberCycles);
     		if (Math.abs(peakIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
     				&& Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
-    				&& numberCycles > 2 && speed > 0) {
+    				&& numberCycles > 2 && reading > 0) {
     			System.out.println("Cycle times are stable");
     			velocityMaxStableProportionalTerm(currentValue);
     			velocityMaxStableCycleTime(averageCycleTime());
@@ -176,25 +181,25 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 				}
 			}
     		if (goingUp) {
-    			if (speed  < lastSpeed) {
+    			if (reading  < lastReading) {
     				// Found peek
-    				lastPeak = speed;
+    				lastPeak = reading;
     				cycleStartTime = System.currentTimeMillis();
 //    	        	System.out.println("Peak " + speed);
     				goingUp = false;
     			}
     		} else { // Going down
-       			if (speed > lastSpeed) {
+       			if (reading > lastReading) {
     				// Found trough
 //       	        	System.out.println("Trough " + speed + " Diff: " + (lastPeak - speed) + " Cycle Time: " + (time - cycleStartTime));
-       				cycleDiff.add(lastPeak - speed);
+       				cycleDiff.add(lastPeak - reading);
        				this.cycleTimes.add(time - cycleStartTime);
     				goingUp = true;
     			}
     		}
     		count++;
     	}
-		lastSpeed = speed;
+		lastReading = reading;
     	return false;
     }
 
