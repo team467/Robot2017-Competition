@@ -26,7 +26,6 @@ public class MaxSpeedTuner extends BaseTuner implements Tuner {
 		goingForward = true;
 		isComplete = false;
 		wheelPod.speedMode();
-		wheelPod.pidf(2.16, 0.00864, 135.0, 3.0);
 	}
 
 	@Override
