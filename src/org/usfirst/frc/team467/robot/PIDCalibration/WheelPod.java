@@ -21,7 +21,7 @@ public class WheelPod {
 	private static final int VELOCITY_PID_PROFILE = 0;
     private static final int POSITION_PID_PROFILE = 1;
 
-    private static final int ENCODER_CODES_PER_REVOLUTION = 256;
+    public static final int ENCODER_CODES_PER_REVOLUTION = 256;
 
 	// The default PID settings if not otherwise specified.
 	private static final double DEFAULT_P = 2.16;
@@ -157,25 +157,32 @@ public class WheelPod {
 
     private void setTalonParameters() {
     	motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-//    	motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
+    	motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
 //    	motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
-//    	motor.setPosition(0);
-//    	motor.setEncPosition(0);
-//    	motor.enableBrakeMode(true);
+    	motor.enableBrakeMode(true);
     }
 
 	public void pi(double p, double i) {
+		this.p = p;
+		this.i = i;
 		motor.setP(p);
 		motor.setI(i);
 	}
 
 	public void pid(double p, double i, double d) {
+		this.p = p;
+		this.i = i;
+		this.d = d;
 		motor.setP(p);
 		motor.setI(i);
 		motor.setD(d);
 	}
 
 	public void pidf(double p, double i, double d, double f) {
+		this.p = p;
+		this.i = i;
+		this.d = d;
+		this.f = f;
 		motor.setP(p);
 		motor.setI(i);
 		motor.setD(d);
@@ -183,18 +190,22 @@ public class WheelPod {
 	}
 
 	public void p(double p) {
-		motor.setF(p);
+		this.p = p;
+		motor.setP(p);
 	}
 
 	public void i(double i) {
-		motor.setF(i);
+		this.i = i;
+		motor.setI(i);
 	}
 
 	public void d(double d) {
-		motor.setF(d);
+		this.d = d;
+		motor.setD(d);
 	}
 
 	public void f(double f) {
+		this.f = f;
 		motor.setF(f);
 	}
 
@@ -253,6 +264,10 @@ public class WheelPod {
 	public void saveToPreferences() {
 		prefs = Preferences.getInstance();
 		keyHeader = "Pod-" + pod.name + "-PID-";
+		prefs.putDouble(keyHeader + "P", p);
+		prefs.putDouble(keyHeader + "I", i);
+		prefs.putDouble(keyHeader + "D", d);
+		prefs.putDouble(keyHeader + "F", f);
 		if (motor.getControlMode() == TalonControlMode.Speed) {
 			prefs.putDouble(keyHeader + "Velocity-P", p);
 			prefs.putDouble(keyHeader + "Velocity-I", i);
@@ -342,13 +357,11 @@ public class WheelPod {
 		isPosition = true;
 		motor.setProfile(POSITION_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Position);
-//		motor.setPosition(0);
-//		motor.setEncPosition(0);
+		motor.setPosition(0);
 	}
 
 	public void zeroPosition() {
 		motor.setPosition(0);
-		motor.setEncPosition(0);
 	}
 
 	/**
@@ -358,27 +371,24 @@ public class WheelPod {
 		isPosition = false;
 		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Speed);
-		motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
 		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
 	}
 
 	public void set(double setpoint) {
 		if (this.isPosition) {
-			System.out.println("Setting to " + setpoint);
 			motor.set(setpoint);
-			System.out.println(isPosition + " " + motor.getControlMode() + " " + motor.getPosition() + " " + motor.getSetpoint());
 		} else {
 			motor.set(setpoint);
 		}
 	}
 
 	public double readSensor() {
-		double reading = motor.getEncVelocity();
+		double reading = Double.NaN;
 		if (isPosition) {
 			reading =  motor.getPosition();
-			System.out.println(name() + ": " + motor.getControlMode() + " SET: " + motor.getSetpoint()
-			+ " ERR: " + motor.getError() + " ENC: " + motor.getEncPosition()
-			+ " READ: " + reading);
+//			System.out.println(name() + ": " + motor.getControlMode() + " SET: " + motor.getSetpoint()
+//			+ " ERR: " + motor.getError() + " ENC: " + motor.getEncPosition()
+//			+ " READ: " + reading);
 		} else {
 			reading = motor.getSpeed();
 		}
@@ -469,7 +479,12 @@ public class WheelPod {
 	 * @return the current error
 	 */
 	public double error() {
-		double error = motor.getError();
+		double error;
+		if (this.isPosition) {
+			error = motor.getError() / ENCODER_CODES_PER_REVOLUTION;
+		} else {
+			error = motor.getError();
+		}
 		averageError(error);
 		SmartDashboard.putNumber(pod.abr + "-Error", error);
 		return error;
