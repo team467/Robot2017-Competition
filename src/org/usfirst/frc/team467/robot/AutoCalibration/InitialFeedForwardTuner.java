@@ -12,9 +12,9 @@ import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
  */
 public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 
-    private ArrayList<Double> errors;
-    private double lastAverageError;
-    private double FEED_FORWARD_ALLOWABLE_ERROR = 5.0;
+    private ArrayList<Long> errors;
+    private long lastAverageError;
+    private long FEED_FORWARD_ALLOWABLE_ERROR = 5;
 
 
 	/**
@@ -27,13 +27,13 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
         clear();
         currentValue = 0.1;
         increaseFactor = 1;
-        lastAverageError = Double.MAX_VALUE;
+        lastAverageError = Long.MAX_VALUE;
     	if (findVelocityPID) {
         	wheelPod.speedMode();
     	} else {
     		wheelPod.positionMode();
     	}
-    	errors = new ArrayList<Double>();
+    	errors = new ArrayList<Long>();
 	}
 
 	/* (non-Javadoc)
@@ -42,7 +42,7 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	@Override
 	public boolean process() {
     	wheelPod.readSensor(); // TODO: Remove when all works
-    	double error = wheelPod.error();
+    	long error = Math.round(wheelPod.error());
     	if (count == 0) {
     		errors.clear();
     		f(currentValue);
@@ -51,9 +51,9 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     	} else if (count >= HOLD_PERIOD ) {
     		count = 0;
     		set(0);
-    		double averageError = averageError();
+    		long averageError = averageError();
     		System.out.println(wheelPod.name() + " Feed Forward: " + currentValue
-    				+ " Speed or Position: " + wheelPod.error()
+    				+ " Error: " + wheelPod.error()
     				+ " Average Error: " + averageError + " Last Error: " + lastAverageError);
     		if (Math.abs(averageError) > Math.abs(lastAverageError)) {
     			// Getting worse -- unstable
@@ -76,15 +76,15 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
     	return false;
 	}
 
-    private double averageError() {
+    private long averageError() {
     	double sumErrors = 0.0;
-    	for (double error : errors) {
-    		sumErrors += error;
+    	for (long error : errors) {
+    		sumErrors += (double) error;
     	}
     	if (errors.size() > 0) {
-        	return (sumErrors / (double) errors.size());
+        	return Math.round((sumErrors / (double) errors.size()));
     	} else {
-    		return 0.0;
+    		return 0;
     	}
     }
 
