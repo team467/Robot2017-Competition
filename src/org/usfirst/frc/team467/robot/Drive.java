@@ -293,9 +293,20 @@ public class Drive extends RobotDrive {
 	 *            the joystick travels
 	 */
 	// TODO: do conversion outside of method
-	public void fieldAlignDrive(double driveAngle, double speed) {
+//	public void fieldAlignDrive(double driveAngle, double speed) {
+//		// convert the angle of the robot from native units to radians
+//		double gyroAngle = gyro.getAngleZ() * Math.PI / 720;
+//		// the angle that the wheels need to turn to
+//		double angleDiff = driveAngle - gyroAngle;
+//		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
+//		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+//		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+//		System.out.println("screw merge conflicts");
+//	}
+	
+	public void fieldAlignDrive(double gyro, double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
-		double gyroAngle = gyro.getAngleZ() * Math.PI / 720;
+		double gyroAngle = gyro * Math.PI / 720;
 		// the angle that the wheels need to turn to
 		double angleDiff = driveAngle - gyroAngle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);

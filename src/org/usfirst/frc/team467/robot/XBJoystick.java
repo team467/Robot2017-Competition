@@ -48,7 +48,7 @@ public class XBJoystick implements MainJoystick467{
     public void readInputs()
     {
         // read all buttons
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 9; i++)
         {
             prevButtons[i] = buttons[i];
             buttons[i] = joystick.getRawButton(i + 1);
@@ -240,4 +240,5 @@ public class XBJoystick implements MainJoystick467{
 	public double getYAxis() {
 		return stickY;
 	}
+	
 }

@@ -55,23 +55,23 @@ public class DriverStation2015
         makeJoysticks();
     }
 
-    private void makeJoysticks(){
-    	String newStickType = SmartDashboard.getString("DB/String 0", "LT1"); //Assume xbsplit
+    private MainJoystick467 makeJoysticks(){
+    	String newStickType = SmartDashboard.getString("DB/String 0", "LT1"); //Assume LT1
     	if (newStickType.isEmpty())
     	{
     		newStickType = "LT1";
     		}
-    	System.out.println(newStickType);{
-    	if (newStickType.equals(stickType))
-    	{
-    		return;
-    		}
+    	System.out.println(newStickType);
+//    	if (newStickType.equals(stickType))
+//    	{
+//    		return;
+//    		}
     	stickType = newStickType.toUpperCase();
     	String stickTypeDescription;
     	switch (stickType)
     	{
     	case "LT1":
-            driverJoy1 = new Joystick467(0);
+            driverJoy1 = new XBJoystick(0);
             driverJoy2 = null;
             stickTypeDescription = "Logitech 1-stick";
             split = false;
@@ -90,7 +90,7 @@ public class DriverStation2015
             break;
     }
     SmartDashboard.putString("DB/String 5", "Stick type " + stickTypeDescription);
-    }
+    return driverJoy1;
     }
  
     /**
@@ -144,6 +144,8 @@ public class DriverStation2015
     	//Instantiated outside of this class and in main class
     	//crab drive is default. if else, it is strafe.
     	//return the chosen drivemode
+        boolean fieldAligned = driverJoy1.buttonDown(5);
+
        DriveMode drivemode = DriveMode.CRAB;  // default is regular crab drive       
         if (driverJoy1.buttonDown(TURN_BUTTON))
         {
@@ -157,7 +159,7 @@ public class DriverStation2015
         {
         	drivemode = DriveMode.STRAFE;
         }
-        if(driverJoy1.buttonDown(FIELD_ALIGN_BUTTON));
+        if(fieldAligned);
         {
         	drivemode = DriveMode.FIELD_ALIGN;
         }
@@ -223,5 +225,9 @@ public class DriverStation2015
     public boolean getCalibrateSlowTurn()
     {
         return getCalibrationJoystick().buttonDown(CALIBRATE_SLOW_BUTTON);
+    }
+    
+    public boolean button5Down(){
+    	return driverJoy1.buttonDown(5);
     }
 }
