@@ -17,6 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * SmartDashboard.
  */
 public class WheelPod {
+
+	private static final int VELOCITY_PID_PROFILE = 0;
+    private static final int POSITION_PID_PROFILE = 1;
+
+    public static final int ENCODER_CODES_PER_REVOLUTION = 256;
+
 	// The default PID settings if not otherwise specified.
 	private static final double DEFAULT_P = 2.16;
 	private static final double DEFAULT_I = 0.00864;
@@ -45,6 +51,12 @@ public class WheelPod {
 	private double i;
 	private double d;
 	private double f;
+
+	// Wheel Limit Parameters - Velocity
+	private double velocityMaxStableProportionalTerm;
+	private double velocityMaxStableCycleTime;
+	private double velocityMaxForwardSpeed;
+	private double velocityMaxBackwardSpeed;
 
 	// The movement settings.
 	private double speed;
@@ -83,17 +95,22 @@ public class WheelPod {
 	 *            the feed forward input
 	 */
 	public WheelPod(Pod pod, double p, double i, double d, double f) {
+		isPosition = false;
 		averageError = new RunningAverage(MAX_ERROR_COUNT);
 		this.pod = pod;
 		this.p = p;
 		this.i = i;
 		this.d = d;
 		this.f = f;
+		velocityMaxStableProportionalTerm = 0.0;
+		velocityMaxStableCycleTime = 0.0;
+		velocityMaxForwardSpeed = 0.0;
+		velocityMaxBackwardSpeed = 0.0;
 		motor = new CANTalon(pod.id);
+		setTalonParameters();
+		motor.changeControlMode(TalonControlMode.PercentVbus);
 		motor.setPID(p, i, d);
 		motor.setF(f);
-		isPosition = false;
-		motor.changeControlMode(TalonControlMode.PercentVbus);
 
 		speed = SmartDashboard.getNumber("Speed", 0.0);
 		position = (int) SmartDashboard.getNumber("Position", 0.0);
@@ -116,12 +133,106 @@ public class WheelPod {
 	 *            the wheel pod identifier
 	 */
 	public WheelPod(Pod pod) {
+		isPosition = false;
 		this.pod = pod;
 		p = DEFAULT_P;
 		i = DEFAULT_I;
 		d = DEFAULT_D;
 		f = DEFAULT_F;
+		velocityMaxStableProportionalTerm = 0.0;
+		velocityMaxStableCycleTime = 0.0;
+		velocityMaxForwardSpeed = 0.0;
+		velocityMaxBackwardSpeed = 0.0;
+		motor = new CANTalon(pod.id);
 		loadFromPreferences();
+		setTalonParameters();
+		motor.changeControlMode(TalonControlMode.PercentVbus);
+	}
+
+    public void clear() {
+    	motor.clearStickyFaults();
+    	motor.clearMotionProfileTrajectories();
+    	motor.ClearIaccum();
+    }
+
+    private void setTalonParameters() {
+    	motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+    	motor.configEncoderCodesPerRev(ENCODER_CODES_PER_REVOLUTION);
+//    	motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+    	motor.enableBrakeMode(true);
+    }
+
+	public void pi(double p, double i) {
+		this.p = p;
+		this.i = i;
+		motor.setP(p);
+		motor.setI(i);
+	}
+
+	public void pid(double p, double i, double d) {
+		this.p = p;
+		this.i = i;
+		this.d = d;
+		motor.setP(p);
+		motor.setI(i);
+		motor.setD(d);
+	}
+
+	public void pidf(double p, double i, double d, double f) {
+		this.p = p;
+		this.i = i;
+		this.d = d;
+		this.f = f;
+		motor.setP(p);
+		motor.setI(i);
+		motor.setD(d);
+		motor.setF(f);
+	}
+
+	public void p(double p) {
+		this.p = p;
+		motor.setP(p);
+	}
+
+	public void i(double i) {
+		this.i = i;
+		motor.setI(i);
+	}
+
+	public void d(double d) {
+		this.d = d;
+		motor.setD(d);
+	}
+
+	public void f(double f) {
+		this.f = f;
+		motor.setF(f);
+	}
+
+	public String pidfValueString() {
+		String values = "";
+		values += "P = " + motor.getP() + " ";
+		values += "I = " + motor.getI() + " ";
+		values += "D = " + motor.getD() + " ";
+		values += "F = " + motor.getF() + " ";
+		return values;
+	}
+
+	public void velocityMaxStableProportionalTerm(double velocityMaxStableProportionalTerm) {
+		this.velocityMaxStableProportionalTerm = velocityMaxStableProportionalTerm;
+	}
+
+	public void velocityMaxStableCycleTime(double velocityMaxStableCycleTime) {
+		this.velocityMaxStableCycleTime = velocityMaxStableCycleTime;
+	}
+
+
+	public void velocityMaxForwardSpeed(double velocityMaxForwardSpeed) {
+		this.velocityMaxForwardSpeed = velocityMaxForwardSpeed;
+	}
+
+	public void velocityMaxBackwardSpeed(double velocityMaxBackwardSpeed) {
+		this.velocityMaxBackwardSpeed = velocityMaxBackwardSpeed;
 	}
 
 	/*
@@ -150,6 +261,30 @@ public class WheelPod {
 		f = prefs.getDouble(keyHeader + "F", f);
 	}
 
+	public void saveToPreferences() {
+		prefs = Preferences.getInstance();
+		keyHeader = "Pod-" + pod.name + "-PID-";
+		prefs.putDouble(keyHeader + "P", p);
+		prefs.putDouble(keyHeader + "I", i);
+		prefs.putDouble(keyHeader + "D", d);
+		prefs.putDouble(keyHeader + "F", f);
+		if (motor.getControlMode() == TalonControlMode.Speed) {
+			prefs.putDouble(keyHeader + "Velocity-P", p);
+			prefs.putDouble(keyHeader + "Velocity-I", i);
+			prefs.putDouble(keyHeader + "Velocity-D", d);
+			prefs.putDouble(keyHeader + "Velocity-F", f);
+		} else {
+			prefs.putDouble(keyHeader + "Position-P", p);
+			prefs.putDouble(keyHeader + "Position-I", i);
+			prefs.putDouble(keyHeader + "Position-D", d);
+			prefs.putDouble(keyHeader + "Position-F", f);
+		}
+		prefs.putDouble(keyHeader + "MaxForwardSpeed", velocityMaxForwardSpeed);
+		prefs.putDouble(keyHeader + "MaxBackwardSpeed", velocityMaxBackwardSpeed);
+		prefs.putDouble(keyHeader + "VelocityMaxStableProportionalTerm", velocityMaxStableProportionalTerm);
+		prefs.putDouble(keyHeader + "VelocityMaxStableCycleTime", velocityMaxStableCycleTime);
+	}
+
 	/**
 	 * Moves a distance if in position mode.
 	 *
@@ -173,39 +308,91 @@ public class WheelPod {
 		motor.reverseOutput(true);
 	}
 
+	public boolean checkReversed() {
+		if (pod.isReversed) {
+			motor.reverseOutput(true);
+			motor.reverseSensor(true);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkSensor() {
+		boolean sensorWorking = false;
+		motor.set(100);
+		try {
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		if (motor.getControlMode() == TalonControlMode.Speed) {
+			if ((motor.getSpeed() != 0) && motor.getError() != 0) {
+				sensorWorking = true;
+			}
+		} else if (motor.getControlMode() == TalonControlMode.Position) {
+			if ((motor.getPosition() != 0) && motor.getError() != 0) {
+				sensorWorking = true;
+			}
+		}
+		motor.set(0);
+		if (!sensorWorking) {
+			System.out.println(name() + " sensors are not working!");
+		} else {
+			System.out.println(name() + " sensors working!");
+		}
+		return sensorWorking;
+	}
+
 	/**
 	 * Changes the control mode to percentage of voltage bus.
 	 */
-	public void setPercentVoltageBusMode() {
+	public void percentVoltageBusMode() {
 		motor.changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	/**
 	 * Sets the Talon into position mode.
 	 */
-	public void setPositionMode() {
+	public void positionMode() {
 		isPosition = true;
+		motor.setProfile(POSITION_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Position);
-		motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		motor.configEncoderCodesPerRev(256);
-		motor.setAllowableClosedLoopErr(0);
-		motor.setForwardSoftLimit(11);
-		motor.setReverseSoftLimit(-11);
+		motor.setPosition(0);
+	}
+
+	public void zeroPosition() {
 		motor.setPosition(0);
 	}
 
 	/**
 	 * Sets the Talon into speed mode.
 	 */
-	public void setSpeedMode() {
+	public void speedMode() {
 		isPosition = false;
+		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Speed);
-		motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		motor.configEncoderCodesPerRev(256);
 		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
-		motor.setForwardSoftLimit(11);
-		motor.setReverseSoftLimit(-11);
-		motor.setPosition(0);
+	}
+
+	public void set(double setpoint) {
+		if (this.isPosition) {
+			motor.set(setpoint);
+		} else {
+			motor.set(setpoint);
+		}
+	}
+
+	public double readSensor() {
+		double reading = Double.NaN;
+		if (isPosition) {
+			reading =  motor.getPosition();
+//			System.out.println(name() + ": " + motor.getControlMode() + " SET: " + motor.getSetpoint()
+//			+ " ERR: " + motor.getError() + " ENC: " + motor.getEncPosition()
+//			+ " READ: " + reading);
+		} else {
+			reading = motor.getSpeed();
+		}
+		return reading;
 	}
 
 	/**
@@ -215,6 +402,10 @@ public class WheelPod {
 	 */
 	public CANTalon motor() {
 		return motor;
+	}
+
+	public String name() {
+		return pod.name;
 	}
 
 	/**
@@ -288,7 +479,12 @@ public class WheelPod {
 	 * @return the current error
 	 */
 	public double error() {
-		double error = motor.getError();
+		double error;
+		if (this.isPosition) {
+			error = motor.getError() / ENCODER_CODES_PER_REVOLUTION;
+		} else {
+			error = motor.getError();
+		}
 		averageError(error);
 		SmartDashboard.putNumber(pod.abr + "-Error", error);
 		return error;

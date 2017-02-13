@@ -76,7 +76,6 @@ public class Robot extends IterativeRobot
     {
     	gyro.reset();
     	gyro.calibrate();
-
     }
 
     public void testInit()
@@ -95,11 +94,11 @@ public class Robot extends IterativeRobot
     /**
      * This function is called periodically during operator control
      */
-    public void teleopPeriodic()
-    {  
+    public void teleopPeriodic(){
     	// Read driverstation inputs
     	driverstation.readInputs();
     	        
+      
         if(driverstation.getGyroReset())
         {
         	gyro.reset();
