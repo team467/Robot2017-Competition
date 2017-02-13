@@ -56,13 +56,6 @@ public class Drive extends RobotDrive {
 	// Speed to use for Strafe and Revolve Drive
 	private static final double SPEED_STRAFE = 0.6;
 
-	public void printError() {
-		System.out.println(frontleft.motor().getError()
-				+ " " + frontright.motor().getError()
-				+ " " + backleft.motor().getError()
-				+ " " + backright.motor().getError());
-	}
-
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
@@ -159,18 +152,7 @@ public class Drive extends RobotDrive {
 			throw new NullPointerException("Null motor provided");
 		}
 
-		printError();
-
 		final double MAX_DRIVE_ANGLE = Math.PI / 25;
-
-//		frontleft.motor().reverseSensor(true);
-//		backright.motor().reverseSensor(true);
-//		backright.motor().reverseOutput(true);
-
-//		System.out.println("Front Left Speed: " + frontleft.motor().getSpeed());
-//		System.out.println("Front Right Speed: " + frontright.motor().getSpeed());
-//		System.out.println("Back Left Speed: " + backleft.motor().getSpeed());
-//		System.out.println("Back Right Speed: " + backright.motor().getSpeed());
 
 		// Don't drive until wheels are close to the commanded steering angle
 		if (steering[RobotMap.FRONT_LEFT].getAngleDelta() < MAX_DRIVE_ANGLE
@@ -313,8 +295,11 @@ public class Drive extends RobotDrive {
 		System.out.println("screw merge conflicts");
 	}
 
+
 	/**
-	* @param driveAngle
+	 * Vector drive
+	 *
+	 * @param driveAngle
 	 *            the angle you want the robot to drive, taken from the angle of
 	 *            the joystick this is passed in in radians
 	 * @param speed
@@ -376,7 +361,6 @@ public class Drive extends RobotDrive {
 		//drive wheelpods
 		fourWheelSteer(flSteering, frSteering, blSteering, brSteering);
 		fourWheelDrive(flSpd, frSpd, blSpd, brSpd);
-
 	}
 
 	/**
