@@ -74,7 +74,7 @@ public class Calibration {
 	 * @return int val of which wheel to select
 	 */
 	private static int getWheelStick(int prevSelectedWheel) {
-		MainJoystick467 joystick = DriverStation2015.getInstance().getCalibrationJoystick();
+		Joystick467 joystick = DriverStation2015.getInstance().getCalibrationJoystick();
 		double stickAngle = joystick.getStickAngle();
 
 		// Select motor being calibrated

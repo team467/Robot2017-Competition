@@ -295,9 +295,9 @@ public class Drive extends RobotDrive {
 //		System.out.println("screw merge conflicts");
 //	}
 	
-	public void fieldAlignDrive(double gyro, double driveAngle, double speed) {
+	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
-		double gyroAngle = gyro * Math.PI / 720;
+		double gyroAngle = gyro.getAngleZ() * Math.PI / 720;
 		// the angle that the wheels need to turn to
 		double angleDiff = driveAngle - gyroAngle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);

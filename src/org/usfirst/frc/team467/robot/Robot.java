@@ -42,9 +42,7 @@ public class Robot extends IterativeRobot {
 		drive = Drive.getInstance();
 		Calibration.init();
 
-		/* Ignore Warning - Shashvat
-		   Will cause the initial computation of the look up table */
-		LookUpTable table = LookUpTable.getInstance();
+		LookUpTable.init();
 
 	}
 
