@@ -190,13 +190,9 @@ public class Robot extends IterativeRobot {
 		// -driverstation.getRightDriveJoystick().getTurn() / 2,
 		// driverstation.getDriveJoystick().getStickDistance());
 		// break;
-		// case FIELD_ALIGN:
-		// //angle Z is taken from the ADIS 16448 gyrometer
-		// drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-		// driverstation.getDriveJoystick().getStickDistance());
 		case FIELD_ALIGN:
 			// angle Z is taken from the ADIS 16448 gyrometer
-			drive.fieldAlignDrive(imu.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
+			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
 					driverstation.getDriveJoystick().getStickDistance());
 			System.out.println("WHYY");
 			break;
