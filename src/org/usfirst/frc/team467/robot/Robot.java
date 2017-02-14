@@ -102,7 +102,6 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		imu.reset();
-		imu.calibrate();
 	}
 
 	public void testInit() {
