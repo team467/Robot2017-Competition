@@ -26,7 +26,6 @@ public class Robot extends IterativeRobot {
 	private DriverStation2015 driverstation;
 	private Drive drive;
 	private Joystick467 stick;
-	private XBJoystick xbstick;
 	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
@@ -52,11 +51,7 @@ public class Robot extends IterativeRobot {
 		drive.setSpeedMode();
 		Calibration.init();
 
-		/*
-		 * Ignore Warning - Shashvat Will cause the initial computation of the
-		 * look up table
-		 */
-		LookUpTable table = LookUpTable.getInstance();
+		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
@@ -66,7 +61,6 @@ public class Robot extends IterativeRobot {
 		imu.reset();
 
 		stick = new Joystick467(0);
-		xbstick = new XBJoystick(0);
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");

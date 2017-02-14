@@ -269,7 +269,7 @@ public class Joystick467 {
 		}
 
 		// Return value in range -PI to PI
-		double stickAngle = Math.atan(stickX / -stickY);
+		double stickAngle = LookUpTable.getArcTan(stickX / -stickY);
 
 		if (stickY > 0) {
 			stickAngle += (stickX > 0) ? Math.PI : -Math.PI;
@@ -294,7 +294,7 @@ public class Joystick467 {
 		}
 
 		// Return value in range -PI to PI
-		double stickAngle = Math.atan(turnStickX / -turnStickY);
+		double stickAngle = LookUpTable.getArcTan(turnStickX / -turnStickY);
 
 		if (turnStickY > 0) {
 			stickAngle += (turnStickX > 0) ? Math.PI : -Math.PI;
@@ -313,7 +313,7 @@ public class Joystick467 {
 			return (stickRX > 0.0) ? Math.PI / 2 : -Math.PI / 2;
 		}
 
-		double stickAngle = Math.atan(stickRX / -stickRY);
+		double stickAngle = LookUpTable.getArcTan(stickRX / -stickRY);
 
 		if (stickRY > 0) {
 			stickAngle += (stickX > 0) ? Math.PI : -Math.PI;
