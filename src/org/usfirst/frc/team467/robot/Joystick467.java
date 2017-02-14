@@ -25,7 +25,12 @@ public class Joystick467 {
 	private int pov = 0;
 	private double twist = 0.0;
 	private boolean flap = false;
-
+	
+	private double turnStickX = 0.0;
+	private double turnStickY = 0.0;
+	private double leftTrigger = 0.0;
+	private double rightTrigger = 0.0;
+	
 	public static final int TRIGGER = 1;
 	private static final double DEADZONE = 0.1;
 
@@ -34,7 +39,16 @@ public class Joystick467 {
 	private static final int TWIST_AXIS = 2;
 	private static final int FLAP_AXIS = 3;
 	private static final int POV_INDEX = 0;
+	
+	//XBOX axis
+	private static final int AXIS_LEFT_TRIGGER = 2;
+	private static final int AXIS_RIGHT_TRIGGER = 3;
+	private static final int AXIS_TURN_X = 4;
+	private static final int AXIS_TURN_Y = 5;
 
+	private static boolean isXbox = false;
+	
+	
 	/**
 	 * Create a new joystick on a given channel
 	 *
@@ -42,6 +56,7 @@ public class Joystick467 {
 	 */
 	public Joystick467(int stick) {
 		joystick = new Joystick(stick);
+		setXbox();
 	}
 
 	/**
@@ -52,25 +67,53 @@ public class Joystick467 {
 	public Joystick getJoystick() {
 		return joystick;
 	}
+	
 
 	/**
 	 * Read all inputs from the underlying joystick object.
 	 */
 	public void readInputs() {
-		// read all buttons
-		for (int i = 0; i < 12; i++) {
-			prevButtons[i] = buttons[i];
-			buttons[i] = joystick.getRawButton(i + 1);
+		if (!isXbox){
+			// read all buttons
+			for (int i = 0; i < 12; i++) {
+				prevButtons[i] = buttons[i];
+				buttons[i] = joystick.getRawButton(i + 1);
+			}
+	
+			// Read Joystick Axes
+			flap = joystick.getRawAxis(FLAP_AXIS) < 0.0;
+			stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
+			stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
+			twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
+			pov = joystick.getPOV(POV_INDEX);
 		}
-
-		// Read Joystick Axes
-		flap = joystick.getRawAxis(FLAP_AXIS) < 0.0;
-		stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
-		stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
-		twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
-		pov = joystick.getPOV(POV_INDEX);
+		else if (isXbox){
+			// read all buttons
+			for (int i = 0; i < 10; i++) {
+				prevButtons[i] = buttons[i];
+				buttons[i] = joystick.getRawButton(i + 1);
+			}
+	
+			// Read Joystick Axes
+			stickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_Y));
+			stickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_X));
+			pov = joystick.getPOV(POV_INDEX);
+			turnStickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_TURN_X));
+			turnStickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_TURN_Y));
+			leftTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_LEFT_TRIGGER));
+			rightTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_TRIGGER));
+		}
 	}
 
+	public boolean getXbox(){
+		return isXbox;
+	}
+	
+	public void setXbox() {
+		isXbox = joystick.getIsXbox();
+	}
+	
+	
 	/**
 	 * Check if a specific button is being held down. Ignores first button
 	 * press, but the robot loops too quickly for this to matter.
@@ -111,6 +154,13 @@ public class Joystick467 {
 	public double getStickX() {
 		return stickX;
 	}
+	
+	public double getTurnStickX() {
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}
+		return turnStickX;
+	}
 
 	/**
 	 * Gets the Y position of the stick. Up to down ranges from -1.0 to 1.0,
@@ -120,6 +170,13 @@ public class Joystick467 {
 	 */
 	public double getStickY() {
 		return stickY;
+	}
+	
+	public double getTurnStickY(){
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}
+		return turnStickY;
 	}
 
 	public double getStickRX() {
@@ -137,6 +194,20 @@ public class Joystick467 {
 	public int getPOV() {
 		return pov;
 	}
+	
+	public double getLeftTrigger() {
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}
+		return leftTrigger;
+	}
+	
+	public double getRightTrigger() {
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}
+		return rightTrigger;
+	}
 
 	/**
 	 *
@@ -144,10 +215,16 @@ public class Joystick467 {
 	 * @return
 	 */
 	public boolean getFlap() {
+		if (isXbox){
+			System.out.println("Warning: calling non XBox function for XBox joystick");
+		}
 		return flap;
 	}
 
 	public double getTwist() {
+		if (isXbox){
+			System.out.println("Warning: calling non XBox function for XBox joystick");
+		}
 		return twist;
 	}
 
@@ -159,6 +236,13 @@ public class Joystick467 {
 	public double getStickDistance() {
 		return Math.sqrt((stickX * stickX) + (stickY * stickY));
 	}
+	
+	public double getTurnStickDistance() {
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}
+		return Math.sqrt((turnStickX * turnStickX) + (turnStickY * turnStickY));
+	}
 
 	public double getRStickDistance() {
 		return Math.sqrt((stickRX * stickRX) + (stickRY * stickRY));
@@ -166,6 +250,13 @@ public class Joystick467 {
 
 	public boolean isInDeadzone() {
 		return (Math.abs(stickX) < DEADZONE) && (Math.abs(stickY) < DEADZONE);
+	}
+	
+	public boolean isTurnStickInDeadzone() {
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}		
+		return (Math.abs(turnStickX) < DEADZONE) && (Math.abs(turnStickY) < DEADZONE);
 	}
 
 	/**
@@ -190,6 +281,31 @@ public class Joystick467 {
 
 		if (stickY > 0) {
 			stickAngle += (stickX > 0) ? Math.PI : -Math.PI;
+		}
+
+		return (stickAngle);
+	}
+	
+	public double getTurnStickAngle() {
+		if (!isXbox){
+			System.out.println("Warning: calling XBox function for non XBox joystick");
+		}	
+		// This shouldn't be necessary, deadzone filtering should already
+		// be performed - however it doesn't hurt to make sure.
+		if (isTurnStickInDeadzone()) {
+			return 0.0;
+		}
+
+		if (turnStickY == 0.0) {
+			// In Y deadzone avoid divide by zero error
+			return (turnStickX > 0.0) ? Math.PI / 2 : -Math.PI / 2;
+		}
+
+		// Return value in range -PI to PI
+		double stickAngle = Math.atan(turnStickX / -turnStickY);
+
+		if (turnStickY > 0) {
+			stickAngle += (turnStickX > 0) ? Math.PI : -Math.PI;
 		}
 
 		return (stickAngle);

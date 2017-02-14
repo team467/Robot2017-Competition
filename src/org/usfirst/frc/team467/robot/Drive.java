@@ -302,8 +302,7 @@ public class Drive extends RobotDrive {
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-		System.out.println("gyroAngle" + gyro.getAngle() + " robotAngle:" + gyroAngle + " correctedAngle:" + corrected.angle
-				+ " driveAngle:" + driveAngle);
+
 	}
 
 
@@ -394,11 +393,14 @@ public class Drive extends RobotDrive {
 	 *            the y distance taken from the right joystick (RY)
 	 * @param speed
 	 */
-
-	public void xbSplit(double x, double y) {
-		double angle = Math.atan(y / x);
-		double speed = Math.sqrt((x * x) + (y * y));
-		crabDrive(angle, speed);
+	public void xbSplit(double turn, double speed) {
+		double driveAngle = gyro.getAngleZ();
+		if (speed == 0){
+			turnDrive(turn);
+		}
+		else if (driveAngle != -1) {
+			crabDrive(driveAngle, speed);
+		}
 	}
 
 	/**

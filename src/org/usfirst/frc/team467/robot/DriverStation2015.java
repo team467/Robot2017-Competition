@@ -42,6 +42,7 @@ public class DriverStation2015 {
 	private DriverStation2015() {
 		driverJoy = new Joystick467(0);
 	}
+	
 
 	/**
 	 * Must be called prior to first button read.
@@ -49,6 +50,7 @@ public class DriverStation2015 {
 	public void readInputs() {
 		driverJoy.readInputs();
 	}
+	
 
 	/**
 	 * Gets joystick instance used by driver.

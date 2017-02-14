@@ -58,6 +58,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		driverstation.getDriveJoystick().setXbox();
 	}
 
 	public void testInit() {
@@ -91,7 +92,6 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
-
 		drive.setSpeedMode();
 
 		DriveMode driveMode = driverstation.getDriveMode();
@@ -103,7 +103,12 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
-			drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+			if (driverstation.getDriveJoystick().getXbox()){
+				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
+			}
+			else{
+				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+			}
 			break;
 
 		case CRAB:
@@ -127,12 +132,27 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case VECTOR:
-			drive.setSpeedMode();
-			//drive.vectorDrive(driverstation.getDriveJoystick().getStickX(), driverstation.getDriveJoystick().getStickY(),
-			//		driverstation.getDriveJoystick().getTwist());
-			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+			if (driverstation.getDriveJoystick().getXbox()){
+				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
+			}
+			else {
+				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
 				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
+			}
 			break;
+//		case XB_SPLIT:
+//			if (driverstation.getDriveJoystick().getXbox()){
+//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+//	    				driverstation.getDriveJoystick().getStickDistance(),
+//	    				-driverstation.getDriveJoystick().getTurnStickX() / 2);
+//			}
+//			else {
+//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+//	    				driverstation.getDriveJoystick().getStickDistance(),
+//	    				-driverstation.getDriveJoystick().getTwist() / 2);
+//			}
+//			break;
 
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
