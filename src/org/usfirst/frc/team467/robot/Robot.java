@@ -132,11 +132,15 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		
+
 		drive.aiming.reset();
-//		System.out.println("-------Teleop Periodic-------");
+		// System.out.println("-------Teleop Periodic-------");
 		// Read driverstation inputs
 		driverstation.readInputs();
+
+		if (driverstation.getGyroReset()) {
+			imu.reset();
+		}
 
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
@@ -152,12 +156,7 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
-
-		drive.setSpeedMode();
-		drive.aiming.reset();
-
 		DriveMode driveMode = driverstation.getDriveMode();
-//		System.out.println("Update Drive: drivemode=" + driveMode.name());
 		switch (driveMode) {
 		case UNWIND:
 			for (Steering wheelpod : Drive.getInstance().steering) {
@@ -176,32 +175,44 @@ public class Robot extends IterativeRobot {
 				drive.stop();
 			} else {
 				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-							    driverstation.getDriveJoystick().getStickDistance());
+						driverstation.getDriveJoystick().getStickDistance());
 			}
 			break;
-
 		case STRAFE:
-			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
-			break;
-//          case XB_SPLIT:
-//        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//        				-driverstation.getRightDriveJoystick().getTurn() / 2,
-//        				driverstation.getDriveJoystick().getStickDistance());
-//        	break;
-		case FIELD_ALIGN:
-			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-						    driverstation.getDriveJoystick().getStickDistance());
-			break;
+			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
+				// Don't start driving until commanded speed greater than
+				// minimum
+				drive.stop();
+			} else {
+				drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 
+			}
+			break;
+		// case XB_SPLIT:
+		// drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+		// -driverstation.getRightDriveJoystick().getTurn() / 2,
+		// driverstation.getDriveJoystick().getStickDistance());
+		// break;
+		// case FIELD_ALIGN:
+		// //angle Z is taken from the ADIS 16448 gyrometer
+		// drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
+		// driverstation.getDriveJoystick().getStickDistance());
+		case FIELD_ALIGN:
+			// angle Z is taken from the ADIS 16448 gyrometer
+			drive.fieldAlignDrive(imu.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
+					driverstation.getDriveJoystick().getStickDistance());
+			System.out.println("WHYY");
+			break;
 		case VECTOR:
 			drive.setSpeedMode();
-			//drive.vectorDrive(driverstation.getDriveJoystick().getStickX(), driverstation.getDriveJoystick().getStickY(),
-			//		driverstation.getDriveJoystick().getTwist());
+			// drive.vectorDrive(driverstation.getDriveJoystick().getStickX(),
+			// driverstation.getDriveJoystick().getStickY(),
+			// driverstation.getDriveJoystick().getTwist());
 			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
+					driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
 			break;
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
-        }
-    }
+		}
+	}
 }
