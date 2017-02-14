@@ -44,6 +44,7 @@ public class Robot extends IterativeRobot {
 
 		/* Ignore Warning - Shashvat
 		   Will cause the initial computation of the look up table */
+		//hi
 		LookUpTable table = LookUpTable.getInstance();
 
 	}
