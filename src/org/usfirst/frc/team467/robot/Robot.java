@@ -156,6 +156,10 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
+		
+		drive.setSpeedMode();
+		drive.aiming.reset();
+
 		DriveMode driveMode = driverstation.getDriveMode();
 		switch (driveMode) {
 		case UNWIND:
@@ -179,14 +183,7 @@ public class Robot extends IterativeRobot {
 			}
 			break;
 		case STRAFE:
-			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
-				// Don't start driving until commanded speed greater than
-				// minimum
-				drive.stop();
-			} else {
-				drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
-
-			}
+			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
 		// case XB_SPLIT:
 		// drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
