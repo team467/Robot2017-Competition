@@ -102,7 +102,6 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		imu.reset();
-		driverstation.getDriveJoystick().setXbox();
 	}
 
 	public void testInit() {
@@ -167,7 +166,7 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
-			if (driverstation.getDriveJoystick().getXbox()){
+			if (driverstation.getDriveJoystick().isXbox()){
 				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
 			}
 			else{
