@@ -22,7 +22,7 @@ public class LookUpTable {
 		return tableunit * Math.PI / 180;
 	}
 
-	private LookUpTable() {
+	public static void init() {
 		sinVals = new double[360];
 		tanVals = new double[181];
 		for (int i = 0; i < 360; ++i) {
@@ -37,12 +37,6 @@ public class LookUpTable {
 		tanVals[180] = Double.POSITIVE_INFINITY;
 	}
 
-	public static LookUpTable getInstance() {
-		if (table == null) {
-			table = new LookUpTable();
-		}
-		return table;
-	}
 
 	/* input in radians */
 	public static double getSin(double a) {
