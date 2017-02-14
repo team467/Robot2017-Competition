@@ -1,7 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
-public class DriverStation2015 {
-	private static DriverStation2015 driverstation2015 = null;
+public class DriverStation2017 {
+	private static DriverStation2017 instance = null;
 
 	Joystick467 driverJoy = null;
 
@@ -29,17 +29,17 @@ public class DriverStation2015 {
 	 *
 	 * @return
 	 */
-	public static DriverStation2015 getInstance() {
-		if (driverstation2015 == null) {
-			driverstation2015 = new DriverStation2015();
+	public static DriverStation2017 getInstance() {
+		if (instance == null) {
+			instance = new DriverStation2017();
 		}
-		return driverstation2015;
+		return instance;
 	}
 
 	/**
 	 * Private constructor
 	 */
-	private DriverStation2015() {
+	private DriverStation2017() {
 		driverJoy = new Joystick467(0);
 	}
 	

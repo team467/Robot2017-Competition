@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = 0.1;
 
 	// Robot objects
-	private DriverStation2015 driverstation;
+	private DriverStation2017 driverstation;
 	private Drive drive;
 	private Joystick467 stick;
 	private CameraStream cam;
@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 		// Initialize logging framework.
 
 		// Make robot objects
-		driverstation = DriverStation2015.getInstance();
+		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
 		drive.setSpeedMode();
 		Calibration.init();

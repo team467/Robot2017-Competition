@@ -52,7 +52,7 @@ public class Calibration {
 		drive.individualSteeringDrive(calibrationAngle, motorId);
 
 		// Write and set new center if trigger is pressed
-		if (DriverStation2015.getInstance().getCalibrateConfirmSelection()) {
+		if (DriverStation2017.getInstance().getCalibrateConfirmSelection()) {
 			double currentAngle = drive.getSteeringAngle(motorId);
 
 			// Write data to robot
@@ -74,7 +74,7 @@ public class Calibration {
 	 * @return int val of which wheel to select
 	 */
 	private static int getWheelStick(int prevSelectedWheel) {
-		Joystick467 joystick = DriverStation2015.getInstance().getCalibrationJoystick();
+		Joystick467 joystick = DriverStation2017.getInstance().getCalibrationJoystick();
 		double stickAngle = joystick.getStickAngle();
 
 		// Select motor being calibrated
@@ -109,12 +109,12 @@ public class Calibration {
 	private static double getCalibrationAngle(double prevCalibrationAngle) {
 
 		// If slow pressed on stick is pressed, slow down wheel calibration.
-		double rateMultiplier = (DriverStation2015.getInstance().getCalibrateSlowTurn()) ? getCalibrationSlowTurnRate()
+		double rateMultiplier = (DriverStation2017.getInstance().getCalibrateSlowTurn()) ? getCalibrationSlowTurnRate()
 				: 1;
 
 		// Drive motor based on twist angle
 		// Increase wheel angle by a small amount based on joystick twist
-		prevCalibrationAngle += (DriverStation2015.getInstance().getCalibrationJoystick().getTwist() / 100.0)
+		prevCalibrationAngle += (DriverStation2017.getInstance().getCalibrationJoystick().getTwist() / 100.0)
 				* rateMultiplier;
 
 		return prevCalibrationAngle;

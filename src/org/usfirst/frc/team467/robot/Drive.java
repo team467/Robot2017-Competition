@@ -269,9 +269,9 @@ public class Drive extends RobotDrive {
 	private double limitSpeed(double speed, int wheelID) {
 		// Apply speed modifiers first
 
-		if (DriverStation2015.getInstance().getSlow()) {
+		if (DriverStation2017.getInstance().getSlow()) {
 			speed *= SPEED_SLOW_MODIFIER;
-		} else if (DriverStation2015.getInstance().getTurbo()) {
+		} else if (DriverStation2017.getInstance().getTurbo()) {
 			speed *= SPEED_TURBO_MODIFIER;
 		} else {
 			// Limit maximum regular speed to specified Maximum.
