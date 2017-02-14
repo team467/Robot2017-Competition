@@ -102,6 +102,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		imu.reset();
+		driverstation.getDriveJoystick().setXbox();
 	}
 
 	public void testInit() {
@@ -140,7 +141,6 @@ public class Robot extends IterativeRobot {
 		if (driverstation.getGyroReset()) {
 			imu.reset();
 		}
-
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
@@ -155,10 +155,9 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
-		
 		drive.setSpeedMode();
 		drive.aiming.reset();
-
+		
 		DriveMode driveMode = driverstation.getDriveMode();
 		switch (driveMode) {
 		case UNWIND:
@@ -168,7 +167,12 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
-			drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+			if (driverstation.getDriveJoystick().getXbox()){
+				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
+			}
+			else{
+				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+			}
 			break;
 
 		case CRAB:
