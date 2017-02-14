@@ -7,8 +7,6 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -18,183 +16,146 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot
-{
-    private static final double MIN_DRIVE_SPEED = 0.1;
+public class Robot extends IterativeRobot {
+	private static final double MIN_DRIVE_SPEED = 0.1;
 
-    // Robot objects
-    private DriverStation2015 driverstation;
-    private Drive drive;
-    private Joystick467 stick;
-    private XBJoystick xbstick;
-    private ADIS16448_IMU gyro;
+	// Robot objects
+	private DriverStation2015 driverstation;
+	private Drive drive;
 
-    int session;
+	int session;
 
-    /**
-     * Time in milliseconds
-     */
-    double time;
+	/**
+	 * Time in milliseconds
+	 */
+	double time;
 
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
-    public void robotInit()
-    {
-        // Initialize logging framework.
+	/**
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
+	 */
+	public void robotInit() {
+		// Initialize logging framework.
 
-        // Make robot objects
-        driverstation = DriverStation2015.getInstance();
-        drive = Drive.getInstance();
-        Calibration.init();
-        gyro = Gyrometer.getInstance();
-        LookUpTable table = LookUpTable.getInstance();
-        
-        stick = new Joystick467(0);
-        xbstick = new XBJoystick(0);
-    }
+		// Make robot objects
+		driverstation = DriverStation2015.getInstance();
+		drive = Drive.getInstance();
+		Calibration.init();
 
-    public void disabledInit()
-    {
-    }
+		/* Ignore Warning - Shashvat
+		   Will cause the initial computation of the look up table */
+		LookUpTable table = LookUpTable.getInstance();
 
-    public void disabledPeriodic()
-    {
-    	SmartDashboard.putData("IMU", gyro);
-//    	System.out.println("x:" + gyro.getAngleX() + "y:" + gyro.getAngleY() + "z:" + gyro.getAngleZ());
-//    	gyro.reset();
-    }
+	}
 
-    public void autonomousInit()
-    {
-    	gyro.reset();
-    	gyro.calibrate();
-    }
+	public void disabledInit() {
+	}
 
-    public void teleopInit()
-    {
-    	gyro.reset();
-    	gyro.calibrate();
-    }
+	public void disabledPeriodic() {
+	}
 
-    public void testInit()
-    {
-    }
+	public void autonomousInit() {
+	}
 
-    public void testPeriodic()
-    {
-    }
+	public void teleopInit() {
+		driverstation.getDriveJoystick().setXbox();
+	}
 
-    public void autonomousPeriodic()
-    {
-        driverstation.readInputs();
-    }
+	public void testInit() {
+	}
 
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic(){
-    	// Read driverstation inputs
-    	driverstation.readInputs();
-    	        
-      
-        if(driverstation.getGyroReset())
-        {
-        	gyro.reset();
-        }
+	public void testPeriodic() {
+	}
 
-        if (driverstation.getCalibrate())
-        {
-            // Calibrate Mode
-            Calibration.updateCalibrate();
-        }
-        else
-        {
-            // Drive Mode
-            updateDrive();
-        }
-    }
+	public void autonomousPeriodic() {
+		driverstation.readInputs();
+	}
 
-    /**
-     * called once per iteration to perform any necessary updates to the drive
-     * system.
-     */
-    private void updateDrive()
-    {
-    	DriveMode driveMode = driverstation.getDriveMode();
-        switch (driveMode)
-        {
-            case UNWIND:
-                for (Steering wheelpod : Drive.getInstance().steering)
-                {
-                    wheelpod.setAbsoluteAngle(0);
-                }
-                break;
+	/**
+	 * This function is called periodically during operator control
+	 */
+	public void teleopPeriodic() {
+		// Read driverstation inputs
+		driverstation.readInputs();
 
-            case TURN:
-                drive.turnDrive(-driverstation.getDriveJoystick().getTwist()/2);
-                break;
+		if (driverstation.getCalibrate()) {
+			// Calibrate Mode
+			Calibration.updateCalibrate();
+		} else {
+			// Drive Mode
+			updateDrive();
+		}
+	}
 
-            case CRAB:
-                if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED)
-                {
-                    // Don't start driving until commanded speed greater than minimum
-                    drive.stop();
-                }
-                else
-                {
-                    drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-                    				driverstation.getDriveJoystick().getStickDistance());
-                }
-                break;
-            case STRAFE:
-            	if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED)
-                {
-                    // Don't start driving until commanded speed greater than minimum
-                    drive.stop();
-                }
-                else
-                {
-                	drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+	/**
+	 * called once per iteration to perform any necessary updates to the drive
+	 * system.
+	 */
+	private void updateDrive() {
+		drive.setSpeedMode();
 
-                }
-               	break;
-//            case XB_SPLIT:
-//            	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//            				-driverstation.getRightDriveJoystick().getTurn() / 2,
-//            				driverstation.getDriveJoystick().getStickDistance());
-//            	break;
-//            case FIELD_ALIGN:
-//            	//angle Z is taken from the ADIS 16448 gyrometer
-//            	drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-//            			driverstation.getDriveJoystick().getStickDistance());
-            case FIELD_ALIGN:
-            	//angle Z is taken from the ADIS 16448 gyrometer
-            	drive.fieldAlignDrive(gyro.getAngleZ(), driverstation.getDriveJoystick().getStickAngle(),
-            			driverstation.getDriveJoystick().getStickDistance());
-            	System.out.println("WHYY");
-            	break;
-            case VECTOR:
-    			drive.setSpeedMode();
-    			//drive.vectorDrive(driverstation.getDriveJoystick().getStickX(), driverstation.getDriveJoystick().getStickY(),
-    			//		driverstation.getDriveJoystick().getTwist());
-    			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-    				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
-    			break;
-		default:
-			 if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED)
-             {
-                 // Don't start driving until commanded speed greater than minimum
-                 drive.stop();
-             }
-             else
-             {
-                 drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-                 				driverstation.getDriveJoystick().getStickDistance());
-             }
+		DriveMode driveMode = driverstation.getDriveMode();
+		switch (driveMode) {
+		case UNWIND:
+			for (Steering wheelpod : Drive.getInstance().steering) {
+				wheelpod.setAbsoluteAngle(0);
+			}
 			break;
 
-        }
-    }
+		case TURN:
+			if (driverstation.getDriveJoystick().getXbox()){
+				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
+			}
+			else{
+				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+			}
+			break;
+
+		case CRAB:
+			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
+				// Don't start driving until commanded speed greater than
+				// minimum
+				drive.stop();
+			} else {
+				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
+							    driverstation.getDriveJoystick().getStickDistance());
+			}
+			break;
+
+		case STRAFE:
+			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+			break;
+
+		case FIELD_ALIGN:
+			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
+						    driverstation.getDriveJoystick().getStickDistance());
+			break;
+
+		case VECTOR:
+			if (driverstation.getDriveJoystick().getXbox()){
+				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
+			}
+			else {
+				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
+			}
+			break;
+//		case XB_SPLIT:
+//			if (driverstation.getDriveJoystick().getXbox()){
+//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+//	    				driverstation.getDriveJoystick().getStickDistance(),
+//	    				-driverstation.getDriveJoystick().getTurnStickX() / 2);
+//			}
+//			else {
+//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+//	    				driverstation.getDriveJoystick().getStickDistance(),
+//	    				-driverstation.getDriveJoystick().getTwist() / 2);
+//			}
+//			break;
+
+		default:
+			drive.stop(); // If no drive mode specified, don't drive!
+		}
+	}
 }

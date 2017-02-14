@@ -303,7 +303,7 @@ public class Drive extends RobotDrive {
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-		System.out.println("screw merge conflicts");
+
 	}
 
 
@@ -396,14 +396,16 @@ public class Drive extends RobotDrive {
 	 */
 
 
-	public void xbSplit(double driveAngle, double turn, double speed) {
+	public void xbSplit(double turn, double speed) {
+		double driveAngle = gyro.getAngleZ();
 		if (speed == 0){
-		turnDrive(turn);
+			turnDrive(turn);
 		}
 		else if (driveAngle != -1) {
 			crabDrive(driveAngle, speed);
-			}
+		}
 	}
+
 
 	//Zeynep trying out a different kind of xbsplit. do not delete yet
 //	public void xbSplit(double strafe, double drive, double speed, double turnLeft, double turnRight){
