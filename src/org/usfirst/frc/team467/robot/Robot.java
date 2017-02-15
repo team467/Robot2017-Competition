@@ -22,6 +22,7 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
+	private Climber climber;
 
 	int session;
 
@@ -40,6 +41,7 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
+		climber = new Climber(RobotMap.CLIMBER, driverstation);
 		Calibration.init();
 
 		LookUpTable.init();
@@ -75,6 +77,16 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// Read driverstation inputs
 		driverstation.readInputs();
+		
+		//if climber button down, then climb
+		if(driverstation.climberUp()){
+			climber.climb();
+		}
+		else if (driverstation.climberDown()){
+			climber.descend();
+		} else {
+			climber.stop();
+		}
 
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
@@ -139,13 +151,6 @@ public class Robot extends IterativeRobot {
 				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
 			}
 			break;
-//		case XB_SPLIT:
-//			if (driverstation.getDriveJoystick().getXbox()){
-//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//	    				driverstation.getDriveJoystick().getStickDistance(),
-//	    				-driverstation.getDriveJoystick().getTurnStickX() / 2);
-//			}
-//			else {
 //	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
 //	    				driverstation.getDriveJoystick().getStickDistance(),
 //	    				-driverstation.getDriveJoystick().getTwist() / 2);

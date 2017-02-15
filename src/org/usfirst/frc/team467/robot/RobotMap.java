@@ -50,6 +50,9 @@ public class RobotMap {
 	public static final int FRONT_LEFT_MOTOR_CHANNEL = 2;
 	public static final int BACK_LEFT_MOTOR_CHANNEL = 3;
 	public static final int BACK_RIGHT_MOTOR_CHANNEL = 4;
+	
+	// Game pieces motor channels
+    public static final int CLIMBER = 1;
 
 	//
 	// Digital Inputs

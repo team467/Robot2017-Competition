@@ -1,9 +1,13 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
+import org.usfirst.frc.team467.robot.Climber.direction;
+
 public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
 
 	Joystick467 driverJoy = null;
+	ButtonPanel2017 buttonPanel = null;
 
 	// Mapping of functions to Joystick Buttons for normal operation
 	private static int SLOW_BUTTON = Joystick467.TRIGGER;
@@ -18,8 +22,7 @@ public class DriverStation2017 {
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = Joystick467.TRIGGER;
 	private static int CALIBRATE_SLOW_BUTTON = 4;
-
-
+	
 	enum Speed {
 		SLOW, FAST
 	}
@@ -49,6 +52,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
+		buttonPanel.readInputs();
 	}
 	
 
@@ -92,6 +96,7 @@ public class DriverStation2017 {
 		}
 		if (getDriveJoystick().buttonDown(FIELD_ALIGN_BUTTON)) {
 			drivemode = DriveMode.FIELD_ALIGN;
+			System.out.println("field align enabled");
 		}
 		if (getDriveJoystick().buttonDown(VECTOR_DRIVE_BUTTON)) {
 			drivemode = DriveMode.VECTOR;
@@ -148,6 +153,33 @@ public class DriverStation2017 {
 	 */
 	public boolean getCalibrateSlowTurn() {
 		return getCalibrationJoystick().buttonDown(CALIBRATE_SLOW_BUTTON);
+	}
+	
+	public direction getClimberDirection(){
+		if (buttonPanel.buttonDown(Buttons.CLIMBER_UP)){
+			return direction.UP;
+		}
+		else if (buttonPanel.buttonDown(Buttons.CLIMBER_DOWN)){
+			return direction.DOWN;
+		} else {
+			return direction.STOP;
+		}
+	}
+	
+	public boolean climberUp(){
+		if (getClimberDirection() == direction.UP){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public boolean climberDown(){
+		if(getClimberDirection() == direction.DOWN){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 }
