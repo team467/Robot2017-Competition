@@ -161,10 +161,10 @@ public class Drive extends RobotDrive {
 				|| steering[RobotMap.BACK_RIGHT].getAngleDelta() < MAX_DRIVE_ANGLE) {
 			switch (controlMode) {
 			case Speed:
-				m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * frontLeftSpeed * RobotMap.MAX_SPEED);
-				m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * frontRightSpeed * RobotMap.MAX_SPEED);
-				m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * backLeftSpeed * RobotMap.MAX_SPEED);
-				m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * backRightSpeed * RobotMap.MAX_SPEED);
+				m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
+				m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
+				m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
+				m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
 				break;
 			case Voltage:
 			case PercentVbus:
@@ -344,6 +344,7 @@ public class Drive extends RobotDrive {
 
         WheelCorrection corrected;
 
+        //TODO:
         //front left motor
         corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FL.getAngle(), FL.getSpeed());
         flSteering = corrected.angle; flSpd = corrected.speed;

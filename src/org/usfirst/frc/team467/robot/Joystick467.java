@@ -56,7 +56,7 @@ public class Joystick467 {
 	 */
 	public Joystick467(int stick) {
 		joystick = new Joystick(stick);
-		setXbox();
+		updateIsXbox();
 	}
 
 	/**
@@ -73,6 +73,7 @@ public class Joystick467 {
 	 * Read all inputs from the underlying joystick object.
 	 */
 	public void readInputs() {
+		isXbox = joystick.getIsXbox();
 		if (!isXbox){
 			// read all buttons
 			for (int i = 0; i < 12; i++) {
@@ -105,11 +106,11 @@ public class Joystick467 {
 		}
 	}
 
-	public boolean getXbox(){
+	public boolean getIsXbox(){
 		return isXbox;
 	}
 	
-	public void setXbox() {
+	public void updateIsXbox() {
 		isXbox = joystick.getIsXbox();
 	}
 	

@@ -7,6 +7,7 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -22,6 +23,8 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
+	private ADIS16448_IMU imu;
+	private Gyrometer gyro;
 
 	int session;
 
@@ -41,6 +44,10 @@ public class Robot extends IterativeRobot {
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
 		Calibration.init();
+		gyro = Gyrometer.getInstance();
+		imu = gyro.getIMU();
+		imu.calibrate();
+		imu.reset();
 
 		LookUpTable.init();
 
@@ -56,7 +63,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		driverstation.getDriveJoystick().setXbox();
+		driverstation.updateJoystickIsXbox();
+		
 	}
 
 	public void testInit() {
@@ -66,6 +74,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		imu.reset();
 		driverstation.readInputs();
 	}
 
@@ -101,7 +110,7 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
-			if (driverstation.getDriveJoystick().getXbox()){
+			if (driverstation.getDriveJoystick().getIsXbox()){
 				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
 			}
 			else{
@@ -130,7 +139,7 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case VECTOR:
-			if (driverstation.getDriveJoystick().getXbox()){
+			if (driverstation.getDriveJoystick().getIsXbox()){
 				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
 					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
 			}
