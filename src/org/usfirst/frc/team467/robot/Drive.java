@@ -317,7 +317,7 @@ public class Drive extends RobotDrive {
 		Vector straightVector = Vector.makeSpeedAngle(speed, angleDiff);
 
 		//add the turning vector component
-		//maybe multiply the turn component by a constant factor if robot is not tunring enough
+		//maybe multiply the turn component by a constant factor if robot is not turning enough
 		final Vector FR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, TURN_IN_PLACE_ANGLE));
 		final Vector FL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, -TURN_IN_PLACE_ANGLE));
 		final Vector BL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, TURN_IN_PLACE_ANGLE));
