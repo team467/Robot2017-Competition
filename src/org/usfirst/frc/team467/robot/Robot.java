@@ -23,8 +23,8 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
-	private ADIS16448_IMU imu;
-	private Gyrometer gyro;
+	private ADIS16448_IMU gyro;
+	private Gyrometer gyrometer;
 
 	int session;
 
@@ -44,10 +44,10 @@ public class Robot extends IterativeRobot {
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
 		Calibration.init();
-		gyro = Gyrometer.getInstance();
-		imu = gyro.getIMU();
-		imu.calibrate();
-		imu.reset();
+		gyrometer = Gyrometer.getInstance();
+		gyro = gyrometer.getIMU();
+		gyro.calibrate();
+		gyro.reset();
 
 		LookUpTable.init();
 
@@ -63,6 +63,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		gyro.reset();
+		driverstation.readInputs();
 		driverstation.updateJoystickIsXbox();
 		
 	}
@@ -74,7 +76,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		imu.reset();
 		driverstation.readInputs();
 	}
 

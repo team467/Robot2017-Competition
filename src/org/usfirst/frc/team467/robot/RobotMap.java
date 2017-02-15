@@ -109,6 +109,8 @@ public class RobotMap {
 			new PIDF(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
 	};
 	
+	public static final PIDF GearDevicePID = new PIDF(0.1, 0.01, 0.001, 0);
+	
 	//TODO: need actual motor channels 
 	public static final int[] CLIMBER_MOTOR_CHANNELS = { 6, 7 };
 	//TODO: need actual motor channels

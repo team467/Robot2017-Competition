@@ -22,5 +22,10 @@ public class GearDevice {
 		// MUST CHANGE
 		sensor = new AnalogPotentiometer(RobotMap.GEAR_SENSOR_CHANNEL, 360, 30);
 
+		controller = new PIDController(RobotMap.GearDevicePID.p, RobotMap.GearDevicePID.p, RobotMap.GearDevicePID.p, sensor, spark);
+	}
+	
+	public static void setTo(double a) {
+		controller.setSetpoint(a);
 	}
 }

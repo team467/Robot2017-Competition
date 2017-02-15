@@ -65,7 +65,7 @@ public class Drive extends RobotDrive {
 
 		// Make objects
 		data = DataStorage.getInstance();
-		gyro = new ADIS16448_IMU();
+		gyro = Gyrometer.getInstance().getIMU();
 
 		// Make steering array
 		steering = new Steering[4];
@@ -322,6 +322,10 @@ public class Drive extends RobotDrive {
 	 */
 	// TODO: do conversion outside of method
 	public void vectorDrive(double driveAngle, double speed, double turnSpeed){
+		if (speed == 0 && turnSpeed == 0) {
+			stop();
+			return;
+		}
 		driveAngle *= -1;
 		//get counterclockwise angle
 		double gyroAngle = -gyro.getAngleZ()  * Math.PI / 720;
@@ -346,15 +350,15 @@ public class Drive extends RobotDrive {
 
         //TODO:
         //front left motor
-        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FL.getAngle(), FL.getSpeed());
+        corrected = wrapAroundCorrect(RobotMap.FRONT_LEFT, Math.PI - FL.getAngle(), FL.getSpeed());
         flSteering = corrected.angle; flSpd = corrected.speed;
 
         //front right motor
-        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FR.getAngle(), FR.getSpeed());
+        corrected = wrapAroundCorrect(RobotMap.FRONT_RIGHT, Math.PI - FR.getAngle(), FR.getSpeed());
         frSteering = corrected.angle; frSpd = corrected.speed;
 
         //back left motor
-        corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BL.getAngle(), BL.getSpeed());
+        corrected = wrapAroundCorrect(RobotMap.BACK_LEFT, Math.PI - BL.getAngle(), BL.getSpeed());
         blSteering = corrected.angle; blSpd = corrected.speed;
 
         //back right motor
