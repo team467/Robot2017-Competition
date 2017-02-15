@@ -44,10 +44,7 @@ public class Joystick467 {
 	private static final int AXIS_LEFT_TRIGGER = 2;
 	private static final int AXIS_RIGHT_TRIGGER = 3;
 	private static final int AXIS_TURN_X = 4;
-	private static final int AXIS_TURN_Y = 5;
-
-	private static boolean isXbox = false;
-	
+	private static final int AXIS_TURN_Y = 5;	
 	
 	/**
 	 * Create a new joystick on a given channel
@@ -56,7 +53,6 @@ public class Joystick467 {
 	 */
 	public Joystick467(int stick) {
 		joystick = new Joystick(stick);
-		setXbox();
 	}
 
 	/**
@@ -73,7 +69,7 @@ public class Joystick467 {
 	 * Read all inputs from the underlying joystick object.
 	 */
 	public void readInputs() {
-		if (!isXbox){
+		if (!isXbox()){
 			// read all buttons
 			for (int i = 0; i < 12; i++) {
 				prevButtons[i] = buttons[i];
@@ -87,7 +83,7 @@ public class Joystick467 {
 			twist = accelerateJoystickInput(joystick.getRawAxis(TWIST_AXIS));
 			pov = joystick.getPOV(POV_INDEX);
 		}
-		else if (isXbox){
+		else if (isXbox()){
 			// read all buttons
 			for (int i = 0; i < 10; i++) {
 				prevButtons[i] = buttons[i];
@@ -105,12 +101,8 @@ public class Joystick467 {
 		}
 	}
 
-	public boolean getXbox(){
-		return isXbox;
-	}
-	
-	public void setXbox() {
-		isXbox = joystick.getIsXbox();
+	public boolean isXbox(){
+		return joystick.getIsXbox();
 	}
 	
 	
@@ -156,7 +148,7 @@ public class Joystick467 {
 	}
 	
 	public double getTurnStickX() {
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}
 		return turnStickX;
@@ -173,7 +165,7 @@ public class Joystick467 {
 	}
 	
 	public double getTurnStickY(){
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}
 		return turnStickY;
@@ -196,14 +188,14 @@ public class Joystick467 {
 	}
 	
 	public double getLeftTrigger() {
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}
 		return leftTrigger;
 	}
 	
 	public double getRightTrigger() {
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}
 		return rightTrigger;
@@ -215,14 +207,14 @@ public class Joystick467 {
 	 * @return
 	 */
 	public boolean getFlap() {
-		if (isXbox){
+		if (isXbox()){
 			System.out.println("Warning: calling non XBox function for XBox joystick");
 		}
 		return flap;
 	}
 
 	public double getTwist() {
-		if (isXbox){
+		if (isXbox()){
 			System.out.println("Warning: calling non XBox function for XBox joystick");
 		}
 		return twist;
@@ -238,7 +230,7 @@ public class Joystick467 {
 	}
 	
 	public double getTurnStickDistance() {
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}
 		return Math.sqrt((turnStickX * turnStickX) + (turnStickY * turnStickY));
@@ -253,7 +245,7 @@ public class Joystick467 {
 	}
 	
 	public boolean isTurnStickInDeadzone() {
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}		
 		return (Math.abs(turnStickX) < DEADZONE) && (Math.abs(turnStickY) < DEADZONE);
@@ -287,7 +279,7 @@ public class Joystick467 {
 	}
 	
 	public double getTurnStickAngle() {
-		if (!isXbox){
+		if (!isXbox()){
 			System.out.println("Warning: calling XBox function for non XBox joystick");
 		}	
 		// This shouldn't be necessary, deadzone filtering should already
