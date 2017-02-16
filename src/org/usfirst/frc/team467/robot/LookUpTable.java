@@ -9,7 +9,6 @@ package org.usfirst.frc.team467.robot;
  *input/output is in radians
  */
 public class LookUpTable {
-	private static LookUpTable table = null;
 
 	/* tan(i) = tanVals[i + 90] (in Degrees) */
 	private static double[] sinVals, tanVals;

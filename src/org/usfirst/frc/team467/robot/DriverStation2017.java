@@ -61,9 +61,6 @@ public class DriverStation2017 {
 		return driverJoy;
 	}
 	
-	public void updateJoystickIsXbox() {
-		driverJoy.updateIsXbox();
-	}
 
 	/**
 	 * Get joystick instance used for calibration.

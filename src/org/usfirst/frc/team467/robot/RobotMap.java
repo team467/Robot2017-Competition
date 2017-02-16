@@ -75,13 +75,17 @@ public class RobotMap {
 	public static final double WIDTH = 18.5; // inches btw the wheels
 
 	// Steering motor constant array
-	public static final int[] STEERING_MOTOR_CHANNELS = { RobotMap.FRONT_LEFT_STEERING_MOTOR_CHANNEL,
-			RobotMap.FRONT_RIGHT_STEERING_MOTOR_CHANNEL, RobotMap.BACK_LEFT_STEERING_MOTOR_CHANNEL,
+	public static final int[] STEERING_MOTOR_CHANNELS = {
+			RobotMap.FRONT_LEFT_STEERING_MOTOR_CHANNEL,
+			RobotMap.FRONT_RIGHT_STEERING_MOTOR_CHANNEL,
+			RobotMap.BACK_LEFT_STEERING_MOTOR_CHANNEL,
 			RobotMap.BACK_RIGHT_STEERING_MOTOR_CHANNEL };
 
 	// Steering sensor constant array
-	public static final int[] STEERING_SENSOR_CHANNELS = { RobotMap.FRONT_LEFT_STEERING_SENSOR_CHANNEL,
-			RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL, RobotMap.BACK_LEFT_STEERING_SENSOR_CHANNEL,
+	public static final int[] STEERING_SENSOR_CHANNELS = {
+			RobotMap.FRONT_LEFT_STEERING_SENSOR_CHANNEL,
+			RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL,
+			RobotMap.BACK_LEFT_STEERING_SENSOR_CHANNEL,
 			RobotMap.BACK_RIGHT_STEERING_SENSOR_CHANNEL };
 
 	// Data keys (names used when saving centers to robot)
@@ -93,10 +97,8 @@ public class RobotMap {
 	public static final double STEERING_RANGE = 4095;
 
 	// PID array
-	public static final PID[] PIDvalues = { new PID(-0.013, 0.0, 0.0), // Front
-																		// Left
-																		// PID
-																		// values
+	public static final PID[] PIDvalues = {
+			new PID(-0.013, 0.0, 0.0), // Front Left PID values
 			new PID(-0.013, 0.0, 0.0), // Front Right PID values
 			new PID(-0.013, 0.0, 0.0), // Back Left PID values
 			new PID(-0.015, 0.0, 0.0), // Back Right PID values
@@ -125,6 +127,4 @@ public class RobotMap {
 	public static final double wheelpodRadius = 18.29;
 	/* diameter of wheelpod in inches */
 	public static final double wheeldiameter = 6;
-
-
 }

@@ -9,6 +9,7 @@ package org.usfirst.frc.team467.robot;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -17,14 +18,19 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = 0.1;
 
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
-	private ADIS16448_IMU gyro;
-	private Gyrometer gyrometer;
+
+	private Joystick467 stick;
+	private CameraStream cam;
+	private VisionProcessing vision;
+	private Gyrometer gyro;
+	private ADIS16448_IMU imu;
 
 	int session;
 
@@ -43,30 +49,59 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
+		drive.setSpeedMode();
 		Calibration.init();
-		gyrometer = Gyrometer.getInstance();
-		gyro = gyrometer.getIMU();
-		gyro.calibrate();
-		gyro.reset();
+		gyro = Gyrometer.getInstance();
+		imu = gyro.getIMU();
+		imu.calibrate();
+		imu.reset();
 
 		LookUpTable.init();
 
+		cam = CameraStream.getInstance();
+		vision = VisionProcessing.getInstance();
+		gyro = Gyrometer.getInstance();
+		imu = gyro.getIMU();
+		imu.calibrate();
+		imu.reset();
+
+		stick = new Joystick467(0);
+
+		SmartDashboard.putString("DB/String 0", "1.0");
+		SmartDashboard.putString("DB/String 1", "0.0");
+		SmartDashboard.putString("DB/String 2", "0.0");
+		SmartDashboard.putString("DB/String 3", "0.0");
 	}
 
 	public void disabledInit() {
 	}
 
 	public void disabledPeriodic() {
+		SmartDashboard.putData("IMU", imu);
+
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", gyroAngle);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
+		vision.update();
 	}
 
 	public void autonomousInit() {
+		imu.reset();
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
 	}
 
 	public void teleopInit() {
-		gyro.reset();
-		driverstation.readInputs();
-		driverstation.updateJoystickIsXbox();
-		
+		imu.reset();
+		driverstation.readInputs();	
 	}
 
 	public void testInit() {
@@ -76,16 +111,35 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		vision.update();
 		driverstation.readInputs();
+		// double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+		// drive.crabDrive(driveAngle, 0.0);
+		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to gyro
+		if (onTarget) {
+			System.out.println("TARGET ACQUIRED");
+		}
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+
+		drive.aiming.reset();
+		// System.out.println("-------Teleop Periodic-------");
 		// Read driverstation inputs
 		driverstation.readInputs();
 
+		if (driverstation.getGyroReset()) {
+			imu.reset();
+		}
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
@@ -101,7 +155,8 @@ public class Robot extends IterativeRobot {
 	 */
 	private void updateDrive() {
 		drive.setSpeedMode();
-
+		drive.aiming.reset();
+		
 		DriveMode driveMode = driverstation.getDriveMode();
 		switch (driveMode) {
 		case UNWIND:
@@ -111,7 +166,8 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
-			if (driverstation.getDriveJoystick().getIsXbox()){
+
+			if (driverstation.getDriveJoystick().isXbox()){
 				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
 			}
 			else{
@@ -126,21 +182,28 @@ public class Robot extends IterativeRobot {
 				drive.stop();
 			} else {
 				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-							    driverstation.getDriveJoystick().getStickDistance());
+						driverstation.getDriveJoystick().getStickDistance());
 			}
 			break;
-
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
-
+		// case XB_SPLIT:
+		// drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
+		// -driverstation.getRightDriveJoystick().getTurn() / 2,
+		// driverstation.getDriveJoystick().getStickDistance());
+		// break;
 		case FIELD_ALIGN:
+			// angle Z is taken from the ADIS 16448 gyrometer
 			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-						    driverstation.getDriveJoystick().getStickDistance());
+					driverstation.getDriveJoystick().getStickDistance());
 			break;
-
 		case VECTOR:
-			if (driverstation.getDriveJoystick().getIsXbox()){
+			drive.setSpeedMode();
+			// drive.vectorDrive(driverstation.getDriveJoystick().getStickX(),
+			// driverstation.getDriveJoystick().getStickY(),
+			// driverstation.getDriveJoystick().getTwist());
+			if (driverstation.getDriveJoystick().isXbox()){
 				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
 					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
 			}
@@ -149,21 +212,8 @@ public class Robot extends IterativeRobot {
 				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
 			}
 			break;
-//		case XB_SPLIT:
-//			if (driverstation.getDriveJoystick().getXbox()){
-//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//	    				driverstation.getDriveJoystick().getStickDistance(),
-//	    				-driverstation.getDriveJoystick().getTurnStickX() / 2);
-//			}
-//			else {
-//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//	    				driverstation.getDriveJoystick().getStickDistance(),
-//	    				-driverstation.getDriveJoystick().getTwist() / 2);
-//			}
-//			break;
-
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
-		}
+			}
 	}
 }
