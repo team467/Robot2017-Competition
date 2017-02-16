@@ -14,8 +14,8 @@ public class Climber {
 	  public Climber(int motorChannel, DriverStation2017 driverstation)
 	  {
 		  motor = new Spark(motorChannel);
-		  this.driverstation = driverstation;  
-	  }
+		  this.driverstation = driverstation;
+ 	  }
 	  
 	  public void stop(){
 		  motor.set(0.0);
@@ -27,9 +27,5 @@ public class Climber {
 	  
 	  public void descend(){
 		  motor.set(-motorSpeed);
-	  }
-	  
-	  enum direction{
-		  UP, DOWN, STOP
 	  }
 }

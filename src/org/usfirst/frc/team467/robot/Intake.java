@@ -27,5 +27,4 @@ public class Intake
     {
         motor.set(0.0);
     }
-
 }

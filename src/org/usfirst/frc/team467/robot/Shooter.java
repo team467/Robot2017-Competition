@@ -39,5 +39,4 @@ public class Shooter
         motorLeft.set(0.0);
     }
     
-
 }

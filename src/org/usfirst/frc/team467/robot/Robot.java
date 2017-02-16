@@ -23,6 +23,9 @@ public class Robot extends IterativeRobot {
 	private DriverStation2017 driverstation;
 	private Drive drive;
 	private Climber climber;
+	private Intake intake;
+	private Shooter shooter;
+	private Agitator agitator;
 
 	int session;
 
@@ -42,6 +45,7 @@ public class Robot extends IterativeRobot {
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
 		climber = new Climber(RobotMap.CLIMBER, driverstation);
+		//TODO: add in the other game pieces when the motor position is leaerned
 		Calibration.init();
 
 		LookUpTable.init();
@@ -78,21 +82,12 @@ public class Robot extends IterativeRobot {
 		// Read driverstation inputs
 		driverstation.readInputs();
 		
-		//if climber button down, then climb
-		if(driverstation.climberUp()){
-			climber.climb();
-		}
-		else if (driverstation.climberDown()){
-			climber.descend();
-		} else {
-			climber.stop();
-		}
-
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
 		} else {
 			// Drive Mode
+			driverstation.getNavigation();
 			updateDrive();
 		}
 	}

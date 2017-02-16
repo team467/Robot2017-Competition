@@ -1,7 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
 import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.Joystick;
 
 public class ButtonPanel2017 {
