@@ -176,10 +176,10 @@ public class Drive extends RobotDrive {
 				|| steering[RobotMap.BACK_RIGHT].getAngleDelta() < MAX_DRIVE_ANGLE) {
 			switch (controlMode) {
 			case Speed:
-				m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * frontLeftSpeed * RobotMap.MAX_SPEED);
-				m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * frontRightSpeed * RobotMap.MAX_SPEED);
-				m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * backLeftSpeed * RobotMap.MAX_SPEED);
-				m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * backRightSpeed * RobotMap.MAX_SPEED);
+				m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
+				m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
+				m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
+				m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
 				break;
 			case Voltage:
 			case PercentVbus:
@@ -340,6 +340,10 @@ public class Drive extends RobotDrive {
 	 */
 	// TODO: do conversion outside of method
 	public void vectorDrive(double driveAngle, double speed, double turnSpeed){
+		if (speed == 0 && turnSpeed == 0) {
+			stop();
+			return;
+		}
 		driveAngle *= -1;
 		//get counterclockwise angle
 		double gyroAngle = -gyro.getAngleZ()  * Math.PI / 720;
@@ -362,6 +366,18 @@ public class Drive extends RobotDrive {
 
 		WheelCorrection corrected;
 
+        //front left motor
+        corrected = wrapAroundCorrect(RobotMap.FRONT_LEFT, Math.PI - FL.getAngle(), FL.getSpeed());
+        flSteering = corrected.angle; flSpd = corrected.speed;
+
+        //front right motor
+        corrected = wrapAroundCorrect(RobotMap.FRONT_RIGHT, Math.PI - FR.getAngle(), FR.getSpeed());
+        frSteering = corrected.angle; frSpd = corrected.speed;
+
+        //back left motor
+        corrected = wrapAroundCorrect(RobotMap.BACK_LEFT, Math.PI - BL.getAngle(), BL.getSpeed());
+        blSteering = corrected.angle; blSpd = corrected.speed;
+
 		//front left motor
 		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FL.getAngle(), FL.getSpeed());
 		flSteering = corrected.angle; flSpd = corrected.speed;
@@ -373,6 +389,7 @@ public class Drive extends RobotDrive {
 		//back left motor
 		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BL.getAngle(), BL.getSpeed());
 		blSteering = corrected.angle; blSpd = corrected.speed;
+
 
 		//back right motor
 		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BR.getAngle(), BR.getSpeed());

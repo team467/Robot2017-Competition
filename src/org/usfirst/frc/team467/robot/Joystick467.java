@@ -63,7 +63,6 @@ public class Joystick467 {
 	public Joystick getJoystick() {
 		return joystick;
 	}
-	
 
 	/**
 	 * Read all inputs from the underlying joystick object.
@@ -101,7 +100,7 @@ public class Joystick467 {
 		}
 	}
 
-	public boolean isXbox(){
+	public boolean isXbox() {
 		return joystick.getIsXbox();
 	}
 	

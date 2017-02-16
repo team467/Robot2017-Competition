@@ -25,6 +25,7 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
+
 	private Joystick467 stick;
 	private CameraStream cam;
 	private VisionProcessing vision;
@@ -50,6 +51,10 @@ public class Robot extends IterativeRobot {
 		drive = Drive.getInstance();
 		drive.setSpeedMode();
 		Calibration.init();
+		gyro = Gyrometer.getInstance();
+		imu = gyro.getIMU();
+		imu.calibrate();
+		imu.reset();
 
 		LookUpTable.init();
 
@@ -96,6 +101,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		imu.reset();
+		driverstation.readInputs();	
 	}
 
 	public void testInit() {
@@ -160,6 +166,7 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
+
 			if (driverstation.getDriveJoystick().isXbox()){
 				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
 			}
@@ -190,7 +197,6 @@ public class Robot extends IterativeRobot {
 			// angle Z is taken from the ADIS 16448 gyrometer
 			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
 					driverstation.getDriveJoystick().getStickDistance());
-			System.out.println("WHYY");
 			break;
 		case VECTOR:
 			drive.setSpeedMode();
@@ -208,6 +214,6 @@ public class Robot extends IterativeRobot {
 			break;
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
-		}
+			}
 	}
 }

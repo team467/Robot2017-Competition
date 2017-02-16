@@ -111,6 +111,18 @@ public class RobotMap {
 			new PIDF(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
 	};
 	
+	public static final PIDF GearDevicePID = new PIDF(0.1, 0.01, 0.001, 0);
+	
+	//TODO: need actual motor channels 
+	public static final int[] CLIMBER_MOTOR_CHANNELS = { 6, 7 };
+	//TODO: need actual motor channels
+	public static final int BALL_INTAKE_MOTOR_CHANNEL = 8;
+	//TODO: need actual motor channels
+	public static final int GEAR_DEVICE_MOTOR_CHANNEL = 9;
+	//TODO: need actual input device channel
+	public static final int GEAR_SENSOR_CHANNEL = 5;
+	
+	
 	/* distance from the center of the robot to the wheelpod in inches */
 	public static final double wheelpodRadius = 18.29;
 	/* diameter of wheelpod in inches */
