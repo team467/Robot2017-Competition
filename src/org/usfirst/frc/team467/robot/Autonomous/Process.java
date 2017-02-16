@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Runs through a set of actions. <br>
@@ -19,19 +20,27 @@ public class Process {
 
 	public void run()
 	{
-		if (action.condition.condition()) {
-			System.out.println(action.description);
-			action.activity.doIt();
-		} else {
+//		if (action.condition.condition()) {
+//			System.out.println(action.description);
+//			action.activity.doIt();
+//		} else {
+//			action = agenda.pop();
+//		}
+		// TODO rename condition method
+		if (action.isDone()) {
+			// TODO print here
 			action = agenda.pop();
 		}
+
+		System.out.println(action.description);
+		action.activity.doIt();
 	}
 	
 	public void addAction(Action action) {
 		agenda.add(action);
 	}
 	
-	public void addActions(LinkedList<Action> actions) {
+	public void addActions(List<Action> actions) {
 		agenda.addAll(actions);
 	}
 }
