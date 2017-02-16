@@ -20,12 +20,12 @@ public class Action {
 	}
 
 	@FunctionalInterface
-	public interface Condition {
+	public static interface Condition {
 		public boolean isDone();
 	}
 	
 	@FunctionalInterface
-	public interface Activity {
+	public static interface Activity {
 		public void doIt();
 	}
 }

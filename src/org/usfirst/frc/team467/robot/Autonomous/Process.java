@@ -14,7 +14,7 @@ public class Process {
 	
 	public Process() {
 		agenda = new LinkedList<Action>();
-		// agenda.add(Actions.example);
+		 agenda.add(Actions.example);
 		action = agenda.pop();
 	}
 
@@ -42,5 +42,23 @@ public class Process {
 	
 	public void addActions(List<Action> actions) {
 		agenda.addAll(actions);
+	}
+	
+	public static class Duration implements Action.Condition {
+		private double duration;
+		private double actionStartTimeMS = -1;
+		public Duration(double duration) {
+			this.duration = duration;
+		}
+		
+		@Override
+		public boolean isDone() {
+			if (actionStartTimeMS == -1) {
+				actionStartTimeMS = System.currentTimeMillis();
+			}
+			
+			return (System.currentTimeMillis() > duration + actionStartTimeMS);
+		}
+		
 	}
 }
