@@ -1,9 +1,9 @@
 package org.usfirst.frc.team467.robot;
 
-import com.ctre.CANTalon;
+import edu.wpi.first.wpilibj.Spark;
 
 public class Climber {
-	  private CANTalon motor;
+	  private Spark motor;
 	  
 	  private double motorSpeed = 0.7;
 	  private DriverStation2017 driverstation;
@@ -13,7 +13,7 @@ public class Climber {
 	  //TODO: current burnout sensor?
 	  public Climber(int motorChannel, DriverStation2017 driverstation)
 	  {
-		  motor = new CANTalon(motorChannel);
+		  motor = new Spark(motorChannel);
 		  this.driverstation = driverstation;  
 	  }
 	  

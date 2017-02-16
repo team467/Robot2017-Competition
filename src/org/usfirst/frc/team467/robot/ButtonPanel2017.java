@@ -8,7 +8,13 @@ public class ButtonPanel2017 {
 	
 	public enum Buttons {
 		CLIMBER_UP(1), 
-		CLIMBER_DOWN(2);
+		CLIMBER_DOWN(2),
+		SHOOTER_SPIN(3), 
+        SHOOTER_FAILSAFE(4),
+        INTAKE_IN(5),
+        INTAKE_OUT(6),
+        AGITATOR_SHOOT(7),
+        AGITATOR_REVERSE(8);
 		
 		public final int id;
 		
