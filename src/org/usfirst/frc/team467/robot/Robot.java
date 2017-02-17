@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-		climber = new Climber(RobotMap.CLIMBER, driverstation);
+//		climber = new Climber(RobotMap.CLIMBER_MOTOR_1, RobotMap.CLIMBER_MOTOR_2, driverstation);
 		//TODO: add in the other game pieces when the motor position is leaerned
 		Calibration.init();
 
@@ -62,7 +62,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		driverstation.getDriveJoystick().setXbox();
+		driverstation.getDriveJoystick().setXbox();;
 	}
 
 	public void testInit() {
@@ -87,7 +87,7 @@ public class Robot extends IterativeRobot {
 			Calibration.updateCalibrate();
 		} else {
 			// Drive Mode
-			driverstation.getNavigation();
+//			driverstation.getNavigation();
 			updateDrive();
 		}
 	}
@@ -131,21 +131,21 @@ public class Robot extends IterativeRobot {
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
 
-		case FIELD_ALIGN:
-			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-						    driverstation.getDriveJoystick().getStickDistance());
-			break;
-
-		case VECTOR:
-			if (driverstation.getDriveJoystick().getXbox()){
-				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
-			}
-			else {
-				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
-			}
-			break;
+//		case FIELD_ALIGN:
+//			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
+//						    driverstation.getDriveJoystick().getStickDistance());
+//			break;
+//
+//		case VECTOR:
+//			if (driverstation.getDriveJoystick().getXbox()){
+//				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+//					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
+//			}
+//			else {
+//				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+//				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
+//			}
+//			break;
 //	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
 //	    				driverstation.getDriveJoystick().getStickDistance(),
 //	    				-driverstation.getDriveJoystick().getTwist() / 2);

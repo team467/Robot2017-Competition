@@ -29,7 +29,7 @@ public class Drive extends RobotDrive {
 	private TalonControlMode controlMode;
 
 	// Gyroscope
-	private ADIS16448_IMU gyro;
+//	private ADIS16448_IMU gyro;
 
 	// Steering objects
 	public Steering[] steering;
@@ -65,7 +65,7 @@ public class Drive extends RobotDrive {
 
 		// Make objects
 		data = DataStorage.getInstance();
-		gyro = new ADIS16448_IMU();
+//		gyro = new ADIS16448_IMU();
 
 		// Make steering array
 		steering = new Steering[4];
@@ -283,15 +283,15 @@ public class Drive extends RobotDrive {
 	 *            the speed you want the robot to go, taken from the distance
 	 *            the joystick travels
 	 */	
-	public void fieldAlignDrive(double driveAngle, double speed) {
-		// convert the angle of the robot from native units to radians
-		double gyroAngle = gyro.getAngleZ() * Math.PI / 720;
-		// the angle that the wheels need to turn to
-		double angleDiff = driveAngle - gyroAngle;
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
-		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-	}
+//	public void fieldAlignDrive(double driveAngle, double speed) {
+//		// convert the angle of the robot from native units to radians
+//		double gyroAngle = gyro.getAngleZ() * Math.PI / 720;
+//		// the angle that the wheels need to turn to
+//		double angleDiff = driveAngle - gyroAngle;
+//		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
+//		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+//		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+//	}
 
 	/**
 	 * Vector drive
@@ -307,58 +307,58 @@ public class Drive extends RobotDrive {
 	 *            takes a vakue between -1 and 1
 	 */
 	// TODO: do conversion outside of method
-	public void vectorDrive(double driveAngle, double speed, double turnSpeed){
-		driveAngle *= -1;
-		//get counterclockwise angle
-		double gyroAngle = -gyro.getAngleZ()  * Math.PI / 720;
-		double angleDiff = driveAngle - gyroAngle;
-
-		//vector component of the moving part of the motion
-		Vector straightVector = Vector.makeSpeedAngle(speed, angleDiff);
-
-		//add the turning vector component
-		//maybe multiply the turn component by a constant factor if robot is not turning enough
-		final Vector FR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, TURN_IN_PLACE_ANGLE));
-		final Vector FL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, -TURN_IN_PLACE_ANGLE));
-		final Vector BL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, TURN_IN_PLACE_ANGLE));
-		final Vector BR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, -TURN_IN_PLACE_ANGLE));
-
-		//final speeds of the 4 wheel pods
-		double flSpd, frSpd, blSpd, brSpd;
-		//final steering angles of the 4 wheel pods
-		double flSteering, frSteering, blSteering, brSteering;
-
-		WheelCorrection corrected;
-
-		//front left motor
-		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FL.getAngle(), FL.getSpeed());
-		flSteering = corrected.angle; flSpd = corrected.speed;
-
-		//front right motor
-		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FR.getAngle(), FR.getSpeed());
-		frSteering = corrected.angle; frSpd = corrected.speed;
-
-		//back left motor
-		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BL.getAngle(), BL.getSpeed());
-		blSteering = corrected.angle; blSpd = corrected.speed;
-
-		//back right motor
-		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BR.getAngle(), BR.getSpeed());
-		brSteering = corrected.angle; brSpd = corrected.speed;
-
-		//if some speed is > 1, divide correspondingly to have max speed = 1
-		double maximumSpd = Math.max(Math.max(Math.abs(brSpd),  Math.abs(blSpd)), Math.max(Math.abs(frSpd),  Math.abs(flSpd)));
-		if (maximumSpd > 1){
-			frSpd /= maximumSpd;
-			flSpd /= maximumSpd;
-			brSpd /= maximumSpd;
-			blSpd /= maximumSpd;
-		}
-
-		//drive wheelpods
-		fourWheelSteer(flSteering, frSteering, blSteering, brSteering);
-		fourWheelDrive(flSpd, frSpd, blSpd, brSpd);
-	}
+//	public void vectorDrive(double driveAngle, double speed, double turnSpeed){
+//		driveAngle *= -1;
+//		//get counterclockwise angle
+//		double gyroAngle = -gyro.getAngleZ()  * Math.PI / 720;
+//		double angleDiff = driveAngle - gyroAngle;
+//
+//		//vector component of the moving part of the motion
+//		Vector straightVector = Vector.makeSpeedAngle(speed, angleDiff);
+//
+//		//add the turning vector component
+//		//maybe multiply the turn component by a constant factor if robot is not turning enough
+//		final Vector FR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, TURN_IN_PLACE_ANGLE));
+//		final Vector FL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, -TURN_IN_PLACE_ANGLE));
+//		final Vector BL = Vector.add(straightVector, Vector.makeSpeedAngle(turnSpeed, TURN_IN_PLACE_ANGLE));
+//		final Vector BR = Vector.add(straightVector, Vector.makeSpeedAngle(-turnSpeed, -TURN_IN_PLACE_ANGLE));
+//
+//		//final speeds of the 4 wheel pods
+//		double flSpd, frSpd, blSpd, brSpd;
+//		//final steering angles of the 4 wheel pods
+//		double flSteering, frSteering, blSteering, brSteering;
+//
+//		WheelCorrection corrected;
+//
+//		//front left motor
+//		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FL.getAngle(), FL.getSpeed());
+//		flSteering = corrected.angle; flSpd = corrected.speed;
+//
+//		//front right motor
+//		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - FR.getAngle(), FR.getSpeed());
+//		frSteering = corrected.angle; frSpd = corrected.speed;
+//
+//		//back left motor
+//		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BL.getAngle(), BL.getSpeed());
+//		blSteering = corrected.angle; blSpd = corrected.speed;
+//
+//		//back right motor
+//		corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, Math.PI - BR.getAngle(), BR.getSpeed());
+//		brSteering = corrected.angle; brSpd = corrected.speed;
+//
+//		//if some speed is > 1, divide correspondingly to have max speed = 1
+//		double maximumSpd = Math.max(Math.max(Math.abs(brSpd),  Math.abs(blSpd)), Math.max(Math.abs(frSpd),  Math.abs(flSpd)));
+//		if (maximumSpd > 1){
+//			frSpd /= maximumSpd;
+//			flSpd /= maximumSpd;
+//			brSpd /= maximumSpd;
+//			blSpd /= maximumSpd;
+//		}
+//
+//		//drive wheelpods
+//		fourWheelSteer(flSteering, frSteering, blSteering, brSteering);
+//		fourWheelDrive(flSpd, frSpd, blSpd, brSpd);
+//	}
 
 	/**
 	 * strafeDrive
@@ -380,15 +380,7 @@ public class Drive extends RobotDrive {
 	 *            the y distance taken from the right joystick (RY)
 	 * @param speed
 	 */
-	public void xbSplit(double turn, double speed) {
-		double driveAngle = -gyro.getAngleZ()  * Math.PI / 720;
-		if (speed == 0){
-			turnDrive(turn);
-		}
-		else if (driveAngle != -1) {
-			crabDrive(driveAngle, speed);
-		}
-	}
+	
 
 
 	//Zeynep trying out a different kind of xbsplit. do not delete yet

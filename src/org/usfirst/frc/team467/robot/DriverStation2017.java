@@ -26,10 +26,10 @@ public class DriverStation2017 {
 	
 	
 	//TODO: arbitrary ints were used for arguments so they should be changed
-	private Climber climber = new Climber(0, DriverStation2017.getInstance());
-	private Intake intake = new Intake(0);
-	private Shooter shooter = new Shooter(0, 0, DriverStation2017.getInstance());
-	private Agitator agitator = new Agitator(0);
+//	private Climber climber = new Climber(RobotMap.CLIMBER_MOTOR_1, RobotMap.CLIMBER_MOTOR_2, DriverStation2017());
+//	private Intake intake = new Intake(0);
+//	private Shooter shooter = new Shooter(0, 0, DriverStation2017.getInstance());
+//	private Agitator agitator = new Agitator(0);
 	
 	enum Speed {
 		SLOW, FAST
@@ -59,7 +59,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
-		buttonPanel.readInputs();
+//		buttonPanel.readInputs();
 	}
 	
 
@@ -142,9 +142,9 @@ public class DriverStation2017 {
 		return getDriveJoystick().getFlap();
 	}
 
-	public boolean getGyroReset() {
-		return driverJoy.buttonDown(GYRO_RESET_BUTTON);
-	}
+//	public boolean getGyroReset() {
+//		return driverJoy.buttonDown(GYRO_RESET_BUTTON);
+//	}
 
 	/**
 	 *
@@ -167,37 +167,37 @@ public class DriverStation2017 {
 	//Currently all code just has one for each action that needs to be held down
 	//Can change based on preferences 
 	
-	public void getNavigation(){
-		if (climberUp()){
-			climber.climb();
-		}
-		if (climberDown()){
-			climber.descend();
-		}
-		if (shooterFailSafe()){
-			shooter.failsafe();
-		}
-		if (shooterSpinning()){
-			shooter.spin();
-		}
-		if (intakeIn()){
-			intake.in();
-		}
-		if (intakeOut()){
-			intake.out();
-		}
-		if (agitatorShoot()){
-			agitator.shoot();
-		}
-		if (agitatorReverse()){
-			agitator.reverse();
-		} else {
-			climber.stop();
-			shooter.stop();
-			intake.stop();
-			agitator.stop();
-		}
-	}
+//	public void getNavigation(){
+//		if (climberUp()){
+//			climber.climb();
+//		}
+//		if (climberDown()){
+//			climber.descend();
+//		}
+//		if (shooterFailSafe()){
+//			shooter.failsafe();
+//		}
+//		if (shooterSpinning()){
+//			shooter.spin();
+//		}
+//		if (intakeIn()){
+//			intake.in();
+//		}
+//		if (intakeOut()){
+//			intake.out();
+//		}
+//		if (agitatorShoot()){
+//			agitator.shoot();
+//		}
+//		if (agitatorReverse()){
+//			agitator.reverse();
+//		} else {
+//			climber.stop();
+//			shooter.stop();
+//			intake.stop();
+//			agitator.stop();
+//		}
+//	}
 	
 	//Which direction should climber go?
 		public GamePieceDirection getClimberDirection(){
