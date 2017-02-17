@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 
 /**
@@ -11,11 +12,14 @@ import org.usfirst.frc.team467.robot.Drive;
  * Can be used in Autonomous and also Teleop routines.
  */
 public class Process {
+	private static final Logger LOGGER = Logger.getLogger(Process.class);
+	private String name;
 	private LinkedList<Action> agenda;
-	private LinkedList<Action> master;
+	private final LinkedList<Action> master;
 	private Action action = null;
 	
-	public Process() {
+	public Process(String name) {
+		this.name = name;
 		master = new LinkedList<>();
 		agenda = new LinkedList<>();
 		reset();
@@ -34,10 +38,12 @@ public class Process {
 //		}
 		if (action == null || action.isDone()) {
 			try {
+				LOGGER.debug("Next action");
 				action = agenda.pop();
 			} catch (NoSuchElementException e) {
+				LOGGER.debug("Ran out of actions");
 				// Stop everything forever
-				action = new Action("Process Complete", () -> {return false;}, () -> { Drive.getInstance().stop();});
+				action = new Action("Process Complete", () -> {return false;}, () -> { Drive.getInstance().stop();} );
 			}
 			System.out.println("----- Starting action: " + action.description + " -----");
 		}
@@ -57,7 +63,13 @@ public class Process {
 	}
 	
 	public void reset() {
-		agenda = master;
+		for (Action act : master) {
+			if (act.condition == (Duration) act.condition) {
+				((Duration) act.condition).reset();
+			}
+		}
+		// Copy master (not reference)
+		agenda = new LinkedList<>(master);
 		action = null;
 	}
 	
@@ -77,5 +89,12 @@ public class Process {
 			return (System.currentTimeMillis() > duration + actionStartTimeMS);
 		}
 		
+		public void reset() {
+			actionStartTimeMS = -1;
+		}
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

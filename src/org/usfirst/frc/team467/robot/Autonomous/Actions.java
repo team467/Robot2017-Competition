@@ -1,7 +1,5 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
-import java.util.LinkedList;
-
 import org.usfirst.frc.team467.robot.*;
 
 public class Actions {
@@ -16,7 +14,7 @@ public class Actions {
 	
 	public static Process getExampleProcess()
 	{
-		Process mode = new Process();
+		Process mode = new Process("Example Auto");
 		mode.addAction(example);
 		mode.addAction(moveForward);
 		return mode;
