@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.usfirst.frc.team467.robot.Drive;
+
 /**
  * Runs through a set of actions. <br>
  * Can be used in Autonomous and also Teleop routines.
@@ -14,8 +16,8 @@ public class Process {
 	private Action action = null;
 	
 	public Process() {
-		master = new LinkedList<Action>();
-		agenda = new LinkedList<Action>();
+		master = new LinkedList<>();
+		agenda = new LinkedList<>();
 		reset();
 	}
 	
@@ -34,7 +36,8 @@ public class Process {
 			try {
 				action = agenda.pop();
 			} catch (NoSuchElementException e) {
-				action = new Action("Process Complete", () -> {return false;}, () -> { /* Do Nothing */ });
+				// Stop everything forever
+				action = new Action("Process Complete", () -> {return false;}, () -> { Drive.getInstance().stop();});
 			}
 			System.out.println("----- Starting action: " + action.description + " -----");
 		}
