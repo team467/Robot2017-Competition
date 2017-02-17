@@ -12,6 +12,7 @@ public class ButtonPanel2017 {
         SHOOTER_FAILSAFE(4),
         INTAKE_IN(5),
         INTAKE_OUT(6),
+        //agitator will not have buttons
         AGITATOR_SHOOT(7),
         AGITATOR_REVERSE(8);
 		

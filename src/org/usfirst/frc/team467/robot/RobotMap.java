@@ -35,24 +35,29 @@ public class RobotMap {
 	// PWM IDs
 	//
 
-	// Steering motors - Talon, roboRio
-	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 0;
-	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 1;
-	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 2;
-	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 3;
+	// Steering motor channels - SPIKES, roboRio
+	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 4;	//Spike #1
+	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 5;	//Spike #2
+	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 6;	//Spike #3
+	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 7;	//Spike #4
+
 
 	//
 	// CAN IDs
 	//
 
-	// Drive motors - CAN, CANTalons
-	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 1;
-	public static final int FRONT_LEFT_MOTOR_CHANNEL = 2;
-	public static final int BACK_LEFT_MOTOR_CHANNEL = 3;
-	public static final int BACK_RIGHT_MOTOR_CHANNEL = 4;
-	
+	// Drive motors - TalonSRX
+	public static final int BACK_LEFT_MOTOR_CHANNEL = 0;	//TalonSRX #1
+	public static final int BACK_RIGHT_MOTOR_CHANNEL = 1;	//TalonSRX #2
+	public static final int FRONT_LEFT_MOTOR_CHANNEL = 2;	//TalonSRX #3
+	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 3;	//TalonSRX #4
+
 	// Game pieces motor channels
-    public static final int CLIMBER = 1;
+    public static final int SHOOTER_MOTOR_1 = 12;	//TalonSRX #5
+    public static final int SHOOTER_MOTOR_2 = 13;	//TalonSRX #6
+    public static final int CLIMBER_MOTOR_1 = 14;	//Spark #5
+    public static final int CLIMBER_MOTOR_2 = 15;	//SPark #6
+    public static final int AGITATOR_MOTOR = 11;	//Spike #1
 
 	//
 	// Digital Inputs
@@ -63,10 +68,10 @@ public class RobotMap {
 	//
 
 	// Steering sensors - roboRio
-	public static final int FRONT_LEFT_STEERING_SENSOR_CHANNEL = 0;
-	public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 1;
-	public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 2;
-	public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 3;
+	public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 0;	//Aln0 Steering sensor #1
+	public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 1;	//Aln1 Steering sensor #2
+	public static final int FRONT_LEFT_STEERING_SENSOR_CHANNEL = 2;	//Aln2 Steering sensor #3
+	public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 3;//Aln3 Steering sensor #4
 
 	//
 	// Robot Dimensions
