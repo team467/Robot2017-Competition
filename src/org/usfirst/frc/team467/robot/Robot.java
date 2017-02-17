@@ -163,13 +163,7 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case TURN:
-
-			if (driverstation.getDriveJoystick().isXbox()){
-				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
-			}
-			else{
-				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
-			}
+			drive.turnDrive(-driverstation.getDriveJoystick().getTurn() / 2);
 			break;
 
 		case CRAB:
@@ -197,17 +191,8 @@ public class Robot extends IterativeRobot {
 			break;
 		case VECTOR:
 			drive.setSpeedMode();
-			// drive.vectorDrive(driverstation.getDriveJoystick().getStickX(),
-			// driverstation.getDriveJoystick().getStickY(),
-			// driverstation.getDriveJoystick().getTwist());
-			if (driverstation.getDriveJoystick().isXbox()){
-				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
-			}
-			else {
-				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
-			}
+			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
 			break;
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!

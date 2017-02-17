@@ -337,5 +337,15 @@ public class Joystick467 {
 		// ensuring that the sign of the input is preserved
 		return (input * Math.abs(input));
 	}
+	
+	
+	public double getTurn() {
+		if (isXbox()){
+			return turnStickX;
+		}
+		else {
+			return twist;
+		}
+	}
 
 }
