@@ -26,7 +26,6 @@ public class Robot extends IterativeRobot {
 	private DriverStation2017 driverstation;
 	private Drive drive;
 
-	private Joystick467 stick;
 	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
@@ -64,8 +63,6 @@ public class Robot extends IterativeRobot {
 		imu = gyro.getIMU();
 		imu.calibrate();
 		imu.reset();
-
-		stick = new Joystick467(0);
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");

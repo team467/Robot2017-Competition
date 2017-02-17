@@ -13,7 +13,6 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 	private Tuner tuner;
 	private TuneStage stage;
 	private boolean tuneInProgress;
-	private int count;
 
 	/**
 	 * @param wheelPod
@@ -24,7 +23,6 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 		wheelPod.pidf(0.0, 0.0, 0.0, 0.0);
 		stage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
 		tuneInProgress = false;
-		count = 0;
 	}
 
 

@@ -26,6 +26,18 @@ public class Gyrometer implements PIDSource {
 		return gyro;
 	}
 
+	// base gyro returns values in degrees - 1440 degrees per rotation
+	public double getAngleZRadians()
+	{
+		return gyro.getAngleZ() * Math.PI / 720;
+	}
+	
+	// base gyro returns values in degrees - 1440 degrees per rotation
+	public double getAngleZDegrees()
+	{
+		return gyro.getAngleZ() / 4;
+	}
+	
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		// Sorry I'm just displacement for now :P
