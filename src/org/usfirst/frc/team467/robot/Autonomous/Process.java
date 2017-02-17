@@ -2,22 +2,26 @@ package org.usfirst.frc.team467.robot.Autonomous;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Runs through a set of actions. <br>
  * Can be used in Autonomous and also Teleop routines.
  */
 public class Process {
-	private int index = 0;
 	private LinkedList<Action> agenda;
-	private Action action;
+	private LinkedList<Action> master;
+	private Action action = null;
 	
 	public Process() {
+		master = new LinkedList<Action>();
 		agenda = new LinkedList<Action>();
-		 agenda.add(Actions.example);
-		action = agenda.pop();
+		reset();
 	}
-
+	
+	/**
+	 * Run periodically to perform the Actions
+	 */
 	public void run()
 	{
 //		if (action.condition.condition()) {
@@ -26,10 +30,13 @@ public class Process {
 //		} else {
 //			action = agenda.pop();
 //		}
-		// TODO rename condition method
-		if (action.isDone()) {
-			// TODO print here
-			action = agenda.pop();
+		if (action == null || action.isDone()) {
+			try {
+				action = agenda.pop();
+			} catch (NoSuchElementException e) {
+				action = new Action("Process Complete", () -> {return false;}, () -> { /* Do Nothing */ });
+			}
+			System.out.println("----- Starting action: " + action.description + " -----");
 		}
 
 		System.out.println(action.description);
@@ -37,11 +44,18 @@ public class Process {
 	}
 	
 	public void addAction(Action action) {
-		agenda.add(action);
+		master.add(action);
+		reset();
 	}
 	
 	public void addActions(List<Action> actions) {
-		agenda.addAll(actions);
+		master.addAll(actions);
+		reset();
+	}
+	
+	public void reset() {
+		agenda = master;
+		action = null;
 	}
 	
 	public static class Duration implements Action.Condition {
