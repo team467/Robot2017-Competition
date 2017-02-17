@@ -36,10 +36,10 @@ public class RobotMap {
 	//
 
 	// Steering motor channels - SPIKES, roboRio
-	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 4;	//Spike #1
-	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 5;	//Spike #2
-	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 6;	//Spike #3
-	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 7;	//Spike #4
+	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 1;	//Spark #1 PWM
+	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 4;	//Spark #2 PWM
+	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 2;	//Spark #3 PWM
+	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 3;	//Spark #4 PWM
 
 
 	//
