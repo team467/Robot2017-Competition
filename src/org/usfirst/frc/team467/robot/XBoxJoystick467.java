@@ -18,10 +18,7 @@ public class XBoxJoystick467 {
 	private boolean[] prevButtons = new boolean[NUM_BUTTONS]; // array of previous button states
 														      // used for debouncing
 	private double leftStickX = 0.0;
-	private double leftStickY = 0.0;
-	private double stickRX = 0.0;
-	private double stickRY = 0.0;
-	
+	private double leftStickY = 0.0;	
 	private double rightStickX = 0.0;
 	private double rightStickY = 0.0;
 	private double leftTrigger = 0.0;
@@ -166,10 +163,6 @@ public class XBoxJoystick467 {
 		return Math.sqrt((rightStickX * rightStickX) + (rightStickY * rightStickY));
 	}
 
-	public double getRStickDistance() {
-		return Math.sqrt((stickRX * stickRX) + (stickRY * stickRY));
-	}
-
 	private double calculateStickAngle(double stickX, double stickY)
 	{
 		if (stickY == 0.0) {
@@ -196,7 +189,7 @@ public class XBoxJoystick467 {
 		return (calculateStickAngle(leftStickX, leftStickY));
 	}
 	
-	public double getrightStickAngle() {
+	public double getRightStickAngle() {
 		return (calculateStickAngle(rightStickX, rightStickY));
 	}
 

@@ -42,7 +42,9 @@ public class Vector {
 		// avoid divide by zero issues
 		if (vy == 0.0) {
 			if (vx < 0) {
-				angle = -Math.PI;
+				angle = -Math.PI / 2;
+			} else {
+				angle = Math.PI / 2;
 			}
 		} else if (vy > 0.0) {
 			angle = LookUpTable.getArcTan(vx / vy);

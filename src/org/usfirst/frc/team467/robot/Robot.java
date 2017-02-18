@@ -173,32 +173,35 @@ public class Robot extends IterativeRobot {
 			
 		case VECTOR:
 			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
-			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(),        // Field aligned direction
-					          driveSpeed,                                                  // Robot speed
-					          driveSpeed * driverstation.getVectorTurnDirection());		   // Robot turn speed
-				break;
-				
-			case CRAB:
-				if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
-					// Don't start driving until commanded speed greater than
-					// mininum
-					drive.stop();
-				} 
-				else {
-					drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(),     // Robot aligned direction
-							        driverstation.getDriveJoystick().getLeftStickDistance()); // Robot speed
-				}
-				break;
-				
-			case UNWIND:
-				for (Steering wheelpod : Drive.getInstance().steering) {
-					wheelpod.setAbsoluteAngle(0);
-				}
-				break;
-				
-			default:
+			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance();
+			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
+					driveSpeed,                                                     // Robot speed
+					turnSpeed * driverstation.getVectorTurnDirection());            // Robot turn speed
+			break;
+
+		case CRAB:
+			if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
+				// Don't start driving until commanded speed greater than
+				// mininum
 				drive.stop();
-				break;
+			} else {
+				drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Robot
+																						// aligned
+																						// direction
+						driverstation.getDriveJoystick().getLeftStickDistance()); // Robot
+																					// speed
+			}
+			break;
+
+		case UNWIND:
+			for (Steering wheelpod : Drive.getInstance().steering) {
+				wheelpod.setAbsoluteAngle(0);
+			}
+			break;
+
+		default:
+			drive.stop();
+			break;
 		}
 	}
 }
