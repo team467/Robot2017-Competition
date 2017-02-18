@@ -12,6 +12,7 @@ public class DriverStation2017 {
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
 	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_START;
+	private static int AUTO_BUTTON = XBoxJoystick467.BUTTON_BACK;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
@@ -76,7 +77,10 @@ public class DriverStation2017 {
 
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
 		
-		if (getDriveJoystick().buttonDown(AIM_BUTTON)) {
+		if (getDriveJoystick().buttonDown(AUTO_BUTTON)) {
+			drivemode = DriveMode.AUTONOMOUS;
+		}
+		else if (getDriveJoystick().buttonDown(AIM_BUTTON)) {
 			drivemode = DriveMode.AIM;
 		}
 		

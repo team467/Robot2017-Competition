@@ -21,7 +21,6 @@ public class Process {
 		this.name = name;
 		master = new LinkedList<>();
 		agenda = new LinkedList<>();
-		reset();
 	}
 	
 	/**
@@ -48,6 +47,10 @@ public class Process {
 		}
 
 		action.activity.doIt();
+	}
+	
+	public boolean isComplete() {
+		return agenda.isEmpty();
 	}
 	
 	public void addAction(Action action) {

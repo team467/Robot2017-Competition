@@ -168,6 +168,13 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 		drive.aiming.reset();
 		DriveMode driveMode = driverstation.getDriveMode();
+		
+		if (!Actions.getBasicProcess().isComplete()) {
+			Actions.getBasicProcess().run();
+			return; // Takes over until completion
+		} else if (driveMode == DriveMode.AUTONOMOUS) {
+			Actions.getExampleProcess().reset();
+		}
 
 		switch (driveMode) {
 			case AIM:
