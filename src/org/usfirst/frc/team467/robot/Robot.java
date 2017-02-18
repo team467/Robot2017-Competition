@@ -55,13 +55,14 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-		drive.setSpeedMode();
+		// drive.setSpeedMode();
+		drive.setPercentVoltageBusMode();
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
 		imu = gyro.getIMU();
 		imu.calibrate();
 		imu.reset();
-		
+
 		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
@@ -165,15 +166,17 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
-		drive.setSpeedMode();
 		drive.aiming.reset();
+		
 		if (driverstation.getDriveJoystick().isXbox()) {
 			DriveMode driveMode = driverstation.getDriveMode();
 			switch (driveMode) {
 			case VECTOR:
-				drive.setSpeedMode();
+//				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+//					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
 				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
+					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getVectorTurnSpeed());
+
 				break;
 			case CRAB:
 				if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
@@ -232,8 +235,11 @@ public class Robot extends IterativeRobot {
 				break;
 			case VECTOR:
 				drive.setSpeedMode();
+//				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+//					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
 				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
+					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getVectorTurnSpeed());				
+				
 				break;
 			default:
 				drive.stop(); // If no drive mode specified, don't drive!
