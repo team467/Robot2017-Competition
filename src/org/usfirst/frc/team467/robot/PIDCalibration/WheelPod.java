@@ -3,7 +3,7 @@
  */
 package org.usfirst.frc.team467.robot.PIDCalibration;
 
-import org.usfirst.frc.team467.robot.PIDF;
+import org.usfirst.frc.team467.robot.PID;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -76,7 +76,7 @@ public class WheelPod {
 	 * @param pidf
 	 *            the speed p, i, d, and f values
 	 */
-	public WheelPod(int deviceChannel, PIDF pidf) {
+	public WheelPod(int deviceChannel, PID pidf) {
 		this(Pod.idToPod(deviceChannel), pidf.p, pidf.i, pidf.d, pidf.f);
 	}
 
