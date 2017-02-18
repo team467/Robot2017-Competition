@@ -330,23 +330,23 @@ public class Drive extends RobotDrive {
 		double angleDiff = driveAngle - gyro.getAngleZRadians();
 
 		// vector component of the field aligned part of the motion
-		NewVector faVector = new NewVector(LookUpTable.getSin(angleDiff) * speed,
+		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed,
 										   LookUpTable.getCos(angleDiff) * speed);
 		
 		// Only need to do math for first turn vector - can use symmetry to generate the rest
-		NewVector flTurn = new NewVector(LookUpTable.getSin(TURN_IN_PLACE_ANGLE) * turnSpeed,
+		Vector flTurn = new Vector(LookUpTable.getSin(TURN_IN_PLACE_ANGLE) * turnSpeed,
 										 LookUpTable.getCos(TURN_IN_PLACE_ANGLE) * turnSpeed);
 		
-		NewVector frTurn = new NewVector( flTurn.getX(), -flTurn.getY());
-		NewVector blTurn = new NewVector(-flTurn.getX(),  flTurn.getY());
-		NewVector brTurn = new NewVector(-flTurn.getX(), -flTurn.getY());
+		Vector frTurn = new Vector( flTurn.getX(), -flTurn.getY());
+		Vector blTurn = new Vector(-flTurn.getX(),  flTurn.getY());
+		Vector brTurn = new Vector(-flTurn.getX(), -flTurn.getY());
 		
 		// add the field aligned and turn vectors
 		
-		NewVector FL = faVector.Add(flTurn);
-		NewVector FR = faVector.Add(frTurn);
-		NewVector BL = faVector.Add(blTurn);
-		NewVector BR = faVector.Add(brTurn);
+		Vector FL = faVector.Add(flTurn);
+		Vector FR = faVector.Add(frTurn);
+		Vector BL = faVector.Add(blTurn);
+		Vector BR = faVector.Add(brTurn);
 
 		// Figure out corrected angles & speeds for each wheel
 		// Note - correction calculates shortest distance to drive to required angle and will

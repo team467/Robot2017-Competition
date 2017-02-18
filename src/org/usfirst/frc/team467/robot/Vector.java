@@ -1,11 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
 // Simple vector class
-public class NewVector {
+public class Vector {
 	private double vx;
 	private double vy;
 
-	NewVector(double x, double y) {
+	Vector(double x, double y) {
 		vx = x;
 		vy = y;
 	}
@@ -16,8 +16,8 @@ public class NewVector {
 	 * @param v 
 	 * @return
 	 */
-	NewVector Add(NewVector v) {
-		return new NewVector(vx + v.vx, vy + v.vy);
+	Vector Add(Vector v) {
+		return new Vector(vx + v.vx, vy + v.vy);
 	}
 
 	/**

@@ -3,29 +3,17 @@ package org.usfirst.frc.team467.robot;
 public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
 
-	Joystick467 driverJoy = null;
+	XBoxJoystick467 driverJoy = null;
 
 	// Mapping of functions to Joystick Buttons for normal operation
-	private static int SLOW_BUTTON = Joystick467.TRIGGER;
-	private static int TURN_BUTTON = 2;
-	private static int TURBO_BUTTON = 7;
-	private static int GYRO_RESET_BUTTON = 8;
-	private static int UNWIND_BUTTON = 10;
-	private static int FIELD_ALIGN_BUTTON = 5;
-	private static int VECTOR_DRIVE_BUTTON = 6;
-	private static int VECTOR_LEFT_BUTTON = 11;
-	private static int VECTOR_RIGHT_BUTTON = 12;
-	private static int XB_SPLIT = 4;
 	
-	
-	//for xbox only
-	private static int CRAB_DRIVE = 5;
-	
+	private static int GYRO_RESET_BUTTON = XBoxJoystick467.BUTTON_Y;
+	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
+	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
+	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
-	private static int CALIBRATE_CONFIRM_BUTTON = Joystick467.TRIGGER;
-	private static int CALIBRATE_SLOW_BUTTON = 4;
-
+	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
 
 	enum Speed {
 		SLOW, FAST
@@ -47,9 +35,8 @@ public class DriverStation2017 {
 	 * Private constructor
 	 */
 	private DriverStation2017() {
-		driverJoy = new Joystick467(0);
+		driverJoy = new XBoxJoystick467(0);
 	}
-	
 
 	/**
 	 * Must be called prior to first button read.
@@ -57,24 +44,22 @@ public class DriverStation2017 {
 	public void readInputs() {
 		driverJoy.readInputs();
 	}
-	
 
 	/**
 	 * Gets joystick instance used by driver.
 	 *
 	 * @return
 	 */
-	public Joystick467 getDriveJoystick() {
+	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
 	}
-	
 
 	/**
 	 * Get joystick instance used for calibration.
 	 *
 	 * @return
 	 */
-	public Joystick467 getCalibrationJoystick() {
+	public XBoxJoystick467 getCalibrationJoystick() {
 		return driverJoy;
 	}
 
@@ -87,83 +72,30 @@ public class DriverStation2017 {
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
-		if (driverJoy.isXbox()){
-			DriveMode drivemode = DriveMode.VECTOR;
-			//UNWIND takes greatest priority
-			if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
-				drivemode = DriveMode.UNWIND;
-			}
-			else if (getDriveJoystick().getPOV() != -1) {
-				drivemode = DriveMode.STRAFE;
-			}
-			else if (getDriveJoystick().buttonDown(CRAB_DRIVE)){
-				drivemode = DriveMode.CRAB;
-			}
-			else {
-				drivemode = DriveMode.VECTOR;
-			}
-			return drivemode;
+
+		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
+
+		// UNWIND takes greatest priority
+		
+		if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
+			drivemode = DriveMode.UNWIND;
+		} else if (getDriveJoystick().buttonDown(CRAB_DRIVE)) {
+			drivemode = DriveMode.CRAB;
 		}
-		else{
-			DriveMode drivemode = DriveMode.CRAB; // default is regular crab drive
-			if (getDriveJoystick().buttonDown(TURN_BUTTON)) {
-				drivemode = DriveMode.TURN;
-			}
-			if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
-				drivemode = DriveMode.UNWIND;
-			}
-			if (getDriveJoystick().getPOV() != -1) {
-				drivemode = DriveMode.STRAFE;
-			}
-			if (getDriveJoystick().buttonDown(FIELD_ALIGN_BUTTON)) {
-				drivemode = DriveMode.FIELD_ALIGN;
-			}
-			if (getDriveJoystick().buttonDown(VECTOR_DRIVE_BUTTON)) {
-				drivemode = DriveMode.VECTOR;
-			}
-			if (getDriveJoystick().buttonDown(XB_SPLIT)) {
-				drivemode = DriveMode.XB_SPLIT;
-			}
 		return drivemode;
-		}
 	}
 
-	public double getVectorTurnSpeed() {
-		double turnSpeed = 0.0;
-		if (getDriveJoystick().getTurn() < 0)
-		{
-			turnSpeed = -0.2;
-		}
-		else if (getDriveJoystick().getTurn() > 0)
-		{
-			turnSpeed = 0.2;
-		}
-		return turnSpeed;
-	}
-	/**
-	 *
-	 * @return true if button required to enable slow driving mode are pressed
-	 */
-	public boolean getSlow() {
-		if (getDriveJoystick().isXbox()) {
-			return (getDriveJoystick().getLeftTrigger() == 1);
-		}
-		else {
-			return getDriveJoystick().buttonDown(TURBO_BUTTON);
-		}
-	}
+	// return +1 for right, -1 for left
+	public double getVectorTurnDirection() {
 
-	/**
-	 *
-	 * @return true if button required to enable turbo driving mode are pressed
-	 */
-	public boolean getTurbo() {
-		if (getDriveJoystick().isXbox()) {
-			return (getDriveJoystick().getRightTrigger() == 1);
+		double turnDirection = 0.0;
+
+		if (driverJoy.getRightStickX() < 0) {
+			turnDirection = -1.0;
+		} else if (driverJoy.getRightStickX() > 0) {
+			turnDirection = 1.0;
 		}
-		else {
-			return getDriveJoystick().buttonDown(TURBO_BUTTON);
-		}
+		return turnDirection;
 	}
 
 	// Calibration functions. Calibration is a separate use mode - so the
@@ -175,12 +107,7 @@ public class DriverStation2017 {
 	 * @return true if calibration mode selected
 	 */
 	public boolean getCalibrate() {
-		if (getDriveJoystick().isXbox()) {
-			return getDriveJoystick().buttonDown(3);
-		}
-		else{
-			return getDriveJoystick().getFlap();
-		}
+			return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
 
 	public boolean getGyroReset() {
@@ -188,19 +115,10 @@ public class DriverStation2017 {
 	}
 
 	/**
-	 *
 	 * @return true if button to confirm calibration selection is pressed
 	 */
 	public boolean getCalibrateConfirmSelection() {
 		return getCalibrationJoystick().buttonDown(CALIBRATE_CONFIRM_BUTTON);
-	}
-
-	/**
-	 *
-	 * @return true if button to enable calibration slow turn mode is pressed
-	 */
-	public boolean getCalibrateSlowTurn() {
-		return getCalibrationJoystick().buttonDown(CALIBRATE_SLOW_BUTTON);
 	}
 
 }
