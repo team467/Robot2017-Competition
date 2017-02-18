@@ -45,12 +45,36 @@ public class RobotMap {
 	// CAN IDs
 	//
 
+	
+	
 	// Drive motors - TalonSRX
 	public static final int FRONT_LEFT_MOTOR_CHANNEL = 1;	//TalonSRX #3
 	public static final int BACK_LEFT_MOTOR_CHANNEL = 2;	//TalonSRX #1
 	public static final int BACK_RIGHT_MOTOR_CHANNEL = 3;	//TalonSRX #2
 	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 4;	//TalonSRX #4
 
+	public static final int[] DRIVING_MOTOR_CHANNELS = { 
+			FRONT_LEFT_MOTOR_CHANNEL, 
+			BACK_LEFT_MOTOR_CHANNEL, 
+			BACK_RIGHT_MOTOR_CHANNEL, 
+			FRONT_RIGHT_MOTOR_CHANNEL
+			};
+
+	// Invert the drive motors to allow for wiring.
+	public static final boolean FRONT_LEFT_DRIVE_INVERT = false;
+	public static final boolean BACK_LEFT_DRIVE_INVERT = false;
+	public static final boolean BACK_RIGHT_DRIVE_INVERT = true;
+	public static final boolean FRONT_RIGHT_DRIVE_INVERT = true;
+
+	public static final boolean[] IS_DRIVE_MOTOR_INVERTED = { 
+			FRONT_LEFT_DRIVE_INVERT,
+			BACK_LEFT_DRIVE_INVERT, 
+			BACK_RIGHT_DRIVE_INVERT,
+			FRONT_RIGHT_DRIVE_INVERT
+			};
+
+	
+	
 	//
 	// Digital Inputs
 	//
@@ -123,12 +147,25 @@ public class RobotMap {
 	public static final int GEAR_DEVICE_MOTOR_CHANNEL = 9;
 	//TODO: need actual input device channel
 	public static final int GEAR_SENSOR_CHANNEL = 5;
-	
-	
-	/* distance from the center of the robot to the wheelpod in inches */
-	public static final double wheelpodRadius = 18.29;
-	/* diameter of wheelpod in inches */
-	public static final double wheeldiameter = 6;
+
+	/**
+	 * The number of encoder ticks per one revolution of the wheel. This is used
+	 * for correctly determining RPM and position.
+	 */
+	public static final int WHEELPOD_ENCODER_CODES_PER_REVOLUTION = 256;
+
+	/**
+	 * Used to ensure that all Talon SRX outputs are relative to a fixed value.
+	 * If the available voltage is below the nominal and a value about that is
+	 * requested, the output will be 100%.
+	 */
+	public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
+
+	/**
+	 * The circumference of the wheels for use in determining distance in
+	 * position mode.
+	 */
+	public static final double WHEELPOD_CIRCUMFERENCE = 18.85;
 	
 	public static final double MIN_DRIVE_SPEED = 0.1;
 }

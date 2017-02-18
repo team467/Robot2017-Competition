@@ -4,8 +4,6 @@
  */
 package org.usfirst.frc.team467.robot;
 
-import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
-
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
@@ -106,10 +104,10 @@ public class Drive extends RobotDrive {
 	public static Drive getInstance() {
 		if (instance == null) {
 			// First usage - create Drive object
-			frontleft = new WheelPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_LEFT]);
-			backleft = new WheelPod(RobotMap.BACK_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_LEFT]);
-			frontright = new WheelPod(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_RIGHT]);
-			backright = new WheelPod(RobotMap.BACK_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_RIGHT]);
+			frontleft = new WheelPod(RobotMap.FRONT_LEFT);
+			backleft = new WheelPod(RobotMap.BACK_LEFT);
+			frontright = new WheelPod(RobotMap.FRONT_RIGHT);
+			backright = new WheelPod(RobotMap.BACK_RIGHT);
 
 			instance = new Drive(frontleft.motor(), backleft.motor(), frontright.motor(), backright.motor());
 		}
