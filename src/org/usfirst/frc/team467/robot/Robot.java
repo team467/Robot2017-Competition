@@ -170,10 +170,13 @@ public class Robot extends IterativeRobot {
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
+			case AIM:
+				Actions.aimProcess(vision.targetAngle).run();
+				break;
 			
-		case VECTOR:
-			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
-			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(),        // Field aligned direction
+			case VECTOR:
+				double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
+				drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(),    // Field aligned direction
 					          driveSpeed,                                                  // Robot speed
 					          driveSpeed * driverstation.getVectorTurnDirection());		   // Robot turn speed
 				break;

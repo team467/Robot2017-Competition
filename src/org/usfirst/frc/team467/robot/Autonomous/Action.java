@@ -10,8 +10,7 @@ public class Action {
 		this.condition = condition;
 		this.activity = activity;	
 	}
-
-
+	
 	public boolean isDone() {
 		return condition.isDone();
 	}

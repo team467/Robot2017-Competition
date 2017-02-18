@@ -2,8 +2,7 @@ package org.usfirst.frc.team467.robot.Autonomous;
 
 import org.usfirst.frc.team467.robot.*;
 
-public class Actions {
-	
+public class Actions {	
 	public static Action example1 = new Action("Example 1", new Process.Duration(1), () -> {
 		System.out.println("Running Example Autonomous Action #1: " + System.currentTimeMillis());
 	});
@@ -17,6 +16,12 @@ public class Actions {
 	public static Action aim(double angle) {
 		Drive drive = Drive.getInstance();
 		return new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
+	}
+	
+	public static Process aimProcess(double angle) {
+		Process mode = new Process("Aim");
+		mode.addAction(aim(angle));
+		return mode;
 	}
 	
 	public static Process getBasicProcess()

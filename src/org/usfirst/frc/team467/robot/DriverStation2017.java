@@ -11,6 +11,7 @@ public class DriverStation2017 {
 	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
+	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_START;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
@@ -74,10 +75,14 @@ public class DriverStation2017 {
 	public DriveMode getDriveMode() {
 
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
-
+		
+		if (getDriveJoystick().buttonDown(AIM_BUTTON)) {
+			drivemode = DriveMode.AIM;
+		}
+		
 		// UNWIND takes greatest priority
 		
-		if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
+		else if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
 		} else if (getDriveJoystick().buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
