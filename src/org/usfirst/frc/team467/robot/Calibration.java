@@ -74,11 +74,11 @@ public class Calibration {
 	 * @return int val of which wheel to select
 	 */
 	private static int getWheelStick(int prevSelectedWheel) {
-		Joystick467 joystick = DriverStation2017.getInstance().getCalibrationJoystick();
-		double stickAngle = joystick.getStickAngle();
+		XBoxJoystick467 joystick = DriverStation2017.getInstance().getCalibrationJoystick();
+		double stickAngle = joystick.getLeftStickAngle();
 
 		// Select motor being calibrated
-		if (joystick.getStickDistance() > 0.5) {
+		if (joystick.getLeftStickDistance() > 0.5) {
 			if (stickAngle < 0) {
 				if (stickAngle < -Math.PI / 2) {
 					return RobotMap.BACK_LEFT;
@@ -108,26 +108,11 @@ public class Calibration {
 	 */
 	private static double getCalibrationAngle(double prevCalibrationAngle) {
 
-		// If slow pressed on stick is pressed, slow down wheel calibration.
-		double rateMultiplier = (DriverStation2017.getInstance().getCalibrateSlowTurn()) ? getCalibrationSlowTurnRate()
-				: 1;
-
-		// Drive motor based on twist angle
-		// Increase wheel angle by a small amount based on joystick twist
-		prevCalibrationAngle += (DriverStation2017.getInstance().getCalibrationJoystick().getTwist() / 100.0)
-				* rateMultiplier;
-
+		// Drive motor based on turn angle
+		prevCalibrationAngle += (DriverStation2017.getInstance().getCalibrationJoystick().getRightStickX() / 100.0);
 		return prevCalibrationAngle;
 	}
 
-	/**
-	 * rate of turn slow down modifier
-	 *
-	 * @return
-	 */
-	private static double getCalibrationSlowTurnRate() {
-		return 0.4;
-	}
 
 	// This is a static variable to define the wheel being calibrated.
 	private static int calibrateWheelSelect = 0;

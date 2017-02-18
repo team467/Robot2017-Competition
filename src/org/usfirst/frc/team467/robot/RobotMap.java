@@ -127,4 +127,6 @@ public class RobotMap {
 	public static final double wheelpodRadius = 18.29;
 	/* diameter of wheelpod in inches */
 	public static final double wheeldiameter = 6;
+	
+	public static final double MIN_DRIVE_SPEED = 0.1;
 }

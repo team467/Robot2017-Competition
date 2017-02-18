@@ -23,9 +23,10 @@ import org.apache.log4j.Logger;
  */
 
 public class Robot extends IterativeRobot {
-	private static final double MIN_DRIVE_SPEED = 0.1;
+	private static final double MIN_DRIVE_SPEED = RobotMap.MIN_DRIVE_SPEED;
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 	
+
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
@@ -54,13 +55,14 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-		drive.setSpeedMode();
+		// drive.setSpeedMode();
+		drive.setPercentVoltageBusMode();
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
 		imu = gyro.getIMU();
 		imu.calibrate();
 		imu.reset();
-		
+
 		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
@@ -164,66 +166,39 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
-		drive.setSpeedMode();
 		drive.aiming.reset();
-		
 		DriveMode driveMode = driverstation.getDriveMode();
+
 		switch (driveMode) {
-		case UNWIND:
-			for (Steering wheelpod : Drive.getInstance().steering) {
-				wheelpod.setAbsoluteAngle(0);
-			}
-			break;
-
-		case TURN:
-
-			if (driverstation.getDriveJoystick().isXbox()){
-				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
-			}
-			else{
-				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
-			}
-			break;
-
-		case CRAB:
-			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
-				// Don't start driving until commanded speed greater than
-				// minimum
-				drive.stop();
-			} else {
-				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-						driverstation.getDriveJoystick().getStickDistance());
-			}
-			break;
-		case STRAFE:
-			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
-			break;
-		// case XB_SPLIT:
-		// drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-		// -driverstation.getRightDriveJoystick().getTurn() / 2,
-		// driverstation.getDriveJoystick().getStickDistance());
-		// break;
-		case FIELD_ALIGN:
-			// angle Z is taken from the ADIS 16448 gyrometer
-			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-					driverstation.getDriveJoystick().getStickDistance());
-			break;
+			
 		case VECTOR:
-			drive.setSpeedMode();
-			// drive.vectorDrive(driverstation.getDriveJoystick().getStickX(),
-			// driverstation.getDriveJoystick().getStickY(),
-			// driverstation.getDriveJoystick().getTwist());
-			if (driverstation.getDriveJoystick().isXbox()){
-				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
-			}
-			else {
-				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
-			}
-			break;
-		default:
-			drive.stop(); // If no drive mode specified, don't drive!
-			}
+			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
+			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(),        // Field aligned direction
+					          driveSpeed,                                                  // Robot speed
+					          driveSpeed * driverstation.getVectorTurnDirection());		   // Robot turn speed
+				break;
+				
+			case CRAB:
+				if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
+					// Don't start driving until commanded speed greater than
+					// mininum
+					drive.stop();
+				} 
+				else {
+					drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(),     // Robot aligned direction
+							        driverstation.getDriveJoystick().getLeftStickDistance()); // Robot speed
+				}
+				break;
+				
+			case UNWIND:
+				for (Steering wheelpod : Drive.getInstance().steering) {
+					wheelpod.setAbsoluteAngle(0);
+				}
+				break;
+				
+			default:
+				drive.stop();
+				break;
+		}
 	}
 }
