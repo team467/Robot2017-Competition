@@ -74,8 +74,11 @@ public class Process {
 	public static class Duration implements Action.Condition {
 		private double durationMS;
 		private double actionStartTimeMS = -1;
+		/**
+		 * @param duration in Seconds
+		 */
 		public Duration(double duration) {
-			this.durationMS = duration;
+			durationMS = duration * 1000;
 		}
 		
 		@Override
