@@ -9,7 +9,6 @@ package org.usfirst.frc.team467.robot;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team467.robot.Autonomous.Process;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
@@ -31,7 +30,6 @@ public class Robot extends IterativeRobot {
 	private DriverStation2017 driverstation;
 	private Drive drive;
 	private Process autonomous;
-//	private SendableChooser<Process> chooser = new SendableChooser<>();
 
 	private Joystick467 stick;
 	private CameraStream cam;
@@ -64,12 +62,6 @@ public class Robot extends IterativeRobot {
 		imu.calibrate();
 		imu.reset();
 		
-		// Add autonomous modes
-//		chooser.addDefault("Example Auto", Actions.getExampleProcess());
-		
-		// Put autonomous mode in the SmartDashboard
-//		SmartDashboard.putData("Auto Mode", chooser);
-
 		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
@@ -110,7 +102,6 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		System.out.println("Autonomous reset");
 		autonomous = Actions.getExampleProcess();
-//		autonomous = chooser.getSelected();
 		autonomous.reset();
 	}
 
