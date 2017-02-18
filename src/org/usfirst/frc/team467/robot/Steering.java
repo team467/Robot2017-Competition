@@ -31,7 +31,7 @@ public class Steering {
 	private PIDController steeringPID;
 
 	// Steering motor
-	private Talon steeringMotor;
+	private Spark steeringMotor;
 
 	/**
 	 * Center point of this steering motor. This is the value read from the
@@ -67,7 +67,7 @@ public class Steering {
 	 */
 	Steering(PID pID, int motor, int sensor, double center) {
 		// Make steering motor
-		steeringMotor = new Talon(motor);
+		steeringMotor = new Spark(motor);
 
 		// Make steering sensor
 		steeringSensor = new AnalogInput(sensor);
@@ -112,7 +112,7 @@ public class Steering {
 	 */
 	public double getSetAngle() {
 		return (getSetPoint() * (Math.PI * 2) / LEVELS_PER_ROTATION);
-	}
+ 	}
 
 	/**
 	 * @return The absolute difference between the setPoint and sensorAngle in
@@ -127,7 +127,7 @@ public class Steering {
 	 *
 	 * @return
 	 */
-	public Talon getMotor() {
+	public Spark getMotor() {
 		return steeringMotor;
 	}
 
@@ -139,9 +139,7 @@ public class Steering {
 	 */
 	public double getSteeringAngle() {
 		double sensor = steeringSensor.getAverageValue() - steeringCenter;
-
 		double output = sensor * (Math.PI * 2) / LEVELS_PER_ROTATION;
-
 		if (steeringSensor.getChannel() == RobotMap.FRONT_LEFT_STEERING_SENSOR_CHANNEL) {
 			SmartDashboard.putNumber("Front-Left Angle", output);
 		} else if (steeringSensor.getChannel() == RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL) {

@@ -7,7 +7,9 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = 0.1;
 
+	
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
@@ -26,6 +29,7 @@ public class Robot extends IterativeRobot {
 	private Intake intake;
 	private Shooter shooter;
 	private Agitator agitator;
+	private Steering steering;
 
 	int session;
 
@@ -40,7 +44,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		// Initialize logging framework.
-
+		
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
@@ -58,11 +62,12 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 	}
 
-	public void autonomousInit() {
+	public void autonomousInit() { 
 	}
 
 	public void teleopInit() {
-		driverstation.getDriveJoystick().setXbox();;
+		driverstation.getDriveJoystick();
+//		unwindAllWheelpods();
 	}
 
 	public void testInit() {
@@ -79,6 +84,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		
 		// Read driverstation inputs
 		driverstation.readInputs();
 		
@@ -102,9 +108,7 @@ public class Robot extends IterativeRobot {
 		DriveMode driveMode = driverstation.getDriveMode();
 		switch (driveMode) {
 		case UNWIND:
-			for (Steering wheelpod : Drive.getInstance().steering) {
-				wheelpod.setAbsoluteAngle(0);
-			}
+			unwindAllWheelpods();
 			break;
 
 		case TURN:
@@ -154,6 +158,12 @@ public class Robot extends IterativeRobot {
 
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
+		}
+	}
+
+	private void unwindAllWheelpods() {
+		for (Steering wheelpod : Drive.getInstance().steering) {
+			wheelpod.setAbsoluteAngle(0);
 		}
 	}
 }

@@ -79,6 +79,7 @@ public class Drive extends RobotDrive {
 			// Create Steering Object
 			steering[i] = new Steering(RobotMap.PIDvalues[i], RobotMap.STEERING_MOTOR_CHANNELS[i],
 					RobotMap.STEERING_SENSOR_CHANNELS[i], steeringCenter);
+			System.out.println("Motor" + i + "=" + steering[i].getSteeringAngle());
 		}
 	}
 
@@ -414,6 +415,7 @@ public class Drive extends RobotDrive {
 	public void individualSteeringDrive(double angle, int steeringId) {
 		// Set steering angle
 		steering[steeringId].setAngle(angle);
+		System.out.println("Motor " + (steeringId+1) + " = " + steering[steeringId].getSensorValue());
 	}
 
 	/**
