@@ -31,7 +31,7 @@ public class Steering {
 	private PIDController steeringPID;
 
 	// Steering motor
-	private Talon steeringMotor;
+	private Spark steeringMotor;
 
 	/**
 	 * Center point of this steering motor. This is the value read from the
@@ -67,7 +67,7 @@ public class Steering {
 	 */
 	Steering(PID pID, int motor, int sensor, double center) {
 		// Make steering motor
-		steeringMotor = new Talon(motor);
+		steeringMotor = new Spark(motor);
 
 		// Make steering sensor
 		steeringSensor = new AnalogInput(sensor);
@@ -127,7 +127,7 @@ public class Steering {
 	 *
 	 * @return
 	 */
-	public Talon getMotor() {
+	public Spark getMotor() {
 		return steeringMotor;
 	}
 
