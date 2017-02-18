@@ -48,7 +48,8 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-		drive.setSpeedMode();
+		// drive.setSpeedMode();
+		drive.setPercentVoltageBusMode();
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
 		imu = gyro.getIMU();
@@ -151,11 +152,11 @@ public class Robot extends IterativeRobot {
 	 * system.
 	 */
 	private void updateDrive() {
-		drive.setSpeedMode();
 		drive.aiming.reset();
 		
 		DriveMode driveMode = driverstation.getDriveMode();
 		switch (driveMode) {
+		
 		case UNWIND:
 			for (Steering wheelpod : Drive.getInstance().steering) {
 				wheelpod.setAbsoluteAngle(0);
@@ -165,10 +166,10 @@ public class Robot extends IterativeRobot {
 		case TURN:
 
 			if (driverstation.getDriveJoystick().isXbox()){
-				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
+				drive.turnDrive(driverstation.getDriveJoystick().getTurnStickX() / 2);
 			}
 			else{
-				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
+				drive.turnDrive(driverstation.getDriveJoystick().getTwist() / 2);
 			}
 			break;
 
@@ -182,33 +183,34 @@ public class Robot extends IterativeRobot {
 						driverstation.getDriveJoystick().getStickDistance());
 			}
 			break;
+			
 		case STRAFE:
 			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
 			break;
+			
 		// case XB_SPLIT:
 		// drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
 		// -driverstation.getRightDriveJoystick().getTurn() / 2,
 		// driverstation.getDriveJoystick().getStickDistance());
 		// break;
+			
 		case FIELD_ALIGN:
 			// angle Z is taken from the ADIS 16448 gyrometer
 			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
 					driverstation.getDriveJoystick().getStickDistance());
 			break;
+			
 		case VECTOR:
-			drive.setSpeedMode();
-			// drive.vectorDrive(driverstation.getDriveJoystick().getStickX(),
-			// driverstation.getDriveJoystick().getStickY(),
-			// driverstation.getDriveJoystick().getTwist());
 			if (driverstation.getDriveJoystick().isXbox()){
 				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
 					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
 			}
 			else {
 				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
+				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getVectorTurnSpeed());
 			}
 			break;
+			
 		default:
 			drive.stop(); // If no drive mode specified, don't drive!
 			}

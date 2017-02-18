@@ -13,6 +13,8 @@ public class DriverStation2017 {
 	private static int UNWIND_BUTTON = 10;
 	private static int FIELD_ALIGN_BUTTON = 5;
 	private static int VECTOR_DRIVE_BUTTON = 6;
+	private static int VECTOR_LEFT_BUTTON = 11;
+	private static int VECTOR_RIGHT_BUTTON = 12;
 	private static int XB_SPLIT = 4;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
@@ -103,6 +105,18 @@ public class DriverStation2017 {
 		return drivemode;
 	}
 
+	public double getVectorTurnSpeed() {
+		double turnSpeed = 0.0;
+		if (getDriveJoystick().buttonDown(VECTOR_LEFT_BUTTON))
+		{
+			turnSpeed = -0.3;
+		}
+		else if (getDriveJoystick().buttonDown(VECTOR_RIGHT_BUTTON))
+		{
+			turnSpeed = 0.3;
+		}
+		return turnSpeed;
+	}
 	/**
 	 *
 	 * @return true if button required to enable slow driving mode are pressed
