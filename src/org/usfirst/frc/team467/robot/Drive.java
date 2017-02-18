@@ -4,8 +4,6 @@
  */
 package org.usfirst.frc.team467.robot;
 
-import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
-
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
@@ -31,7 +29,7 @@ public class Drive extends RobotDrive {
 	// Gyroscope
 	private Gyrometer gyro;
 
-	public double[] aimingPIDs = {2.0, 0.0, 0.0, 0.0};
+	public double[] aimingPIDs = { 2.0, 0.0, 0.0, 0.0 };
 	public PIDController aiming;
 
 	// Steering objects
@@ -44,18 +42,12 @@ public class Drive extends RobotDrive {
 	// Length is the wide side
 	private static final double TURN_IN_PLACE_ANGLE = Math.atan(RobotMap.LENGTH / RobotMap.WIDTH);
 
-	// Invert the drive motors to allow for wiring.
-	private static final boolean FRONT_LEFT_DRIVE_INVERT = false;
-	private static final boolean FRONT_RIGHT_DRIVE_INVERT = true;
-	private static final boolean BACK_LEFT_DRIVE_INVERT = false;
-	private static final boolean BACK_RIGHT_DRIVE_INVERT = true;
-
 	// Speed modifier constants
 	// TODO figure out correct values/behavior for vector drive
-//	private static final double SPEED_SLOW_MODIFIER = 0.5;
-//	private static final double SPEED_TURBO_MODIFIER = 2.0;
-//	private static final double SPEED_MAX_MODIFIER = 0.5;
-//	private static final double SPEED_MAX_CHANGE = 0.15;
+	// private static final double SPEED_SLOW_MODIFIER = 0.5;
+	// private static final double SPEED_TURBO_MODIFIER = 2.0;
+	// private static final double SPEED_MAX_MODIFIER = 0.5;
+	// private static final double SPEED_MAX_CHANGE = 0.15;
 
 	// Speed to use for Strafe and Revolve Drive
 	private static final double SPEED_STRAFE = 0.6;
@@ -92,10 +84,10 @@ public class Drive extends RobotDrive {
 						turnDrive(-output);
 					}
 				});
-		aiming.setInputRange(0, 360);		// 4 Gyro units per degree
-		aiming.setContinuous();				// 0º and 360º are the same point
-		aiming.setOutputRange(-1.0, 1.0);	// Max Speed in either direction
-		aiming.setAbsoluteTolerance(1.0);	// 1 degree tolerance
+		aiming.setInputRange(0, 360); // 4 Gyro units per degree
+		aiming.setContinuous(); // 0º and 360º are the same point
+		aiming.setOutputRange(-1.0, 1.0); // Max Speed in either direction
+		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
 	}
 
 	/**
@@ -106,10 +98,10 @@ public class Drive extends RobotDrive {
 	public static Drive getInstance() {
 		if (instance == null) {
 			// First usage - create Drive object
-			frontleft = new WheelPod(RobotMap.FRONT_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_LEFT]);
-			backleft = new WheelPod(RobotMap.BACK_LEFT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_LEFT]);
-			frontright = new WheelPod(RobotMap.FRONT_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.FRONT_RIGHT]);
-			backright = new WheelPod(RobotMap.BACK_RIGHT_MOTOR_CHANNEL, RobotMap.SpeedPIDFvalues[RobotMap.BACK_RIGHT]);
+			frontleft = new WheelPod(RobotMap.FRONT_LEFT);
+			backleft = new WheelPod(RobotMap.BACK_LEFT);
+			frontright = new WheelPod(RobotMap.FRONT_RIGHT);
+			backright = new WheelPod(RobotMap.BACK_RIGHT);
 
 			instance = new Drive(frontleft.motor(), backleft.motor(), frontright.motor(), backright.motor());
 		}
@@ -169,22 +161,27 @@ public class Drive extends RobotDrive {
 
 		switch (controlMode) {
 		case Speed:
-			m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
-			m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
-			m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
-			m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
+			m_frontLeftMotor.set((RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1)
+					* limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
+			m_frontRightMotor.set((RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1)
+					* limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
+			m_rearLeftMotor.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1)
+					* limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
+			m_rearRightMotor.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1)
+					* limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
 			break;
 		case Voltage:
 		case PercentVbus:
 		default:
 			// System.out.println(frontLeftSpeed);
-			m_frontLeftMotor
-			.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
-			m_frontRightMotor
-			.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
-			m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
+			m_frontLeftMotor.set(
+					(RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
+			m_frontRightMotor.set(
+					(RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
+			m_rearLeftMotor
+					.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
 			m_rearRightMotor
-			.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
+					.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
 		}
 
 		if (m_safetyHelper != null) {
@@ -227,12 +224,13 @@ public class Drive extends RobotDrive {
 
 	/**
 	 * Turns to specified angle according to gyro
-	 * @param angle in degrees
-	 * 
+	 *
+	 * @param angle
+	 *            in degrees
+	 *
 	 * @return True when pointing at the angle
 	 */
-	public boolean turnToAngle(double angle)
-	{
+	public boolean turnToAngle(double angle) {
 		aiming.enable();
 		aiming.setSetpoint(angle); // 4 gyro units per degree
 		System.out.println("Turn to Angle: angle=" + angle);
@@ -252,25 +250,27 @@ public class Drive extends RobotDrive {
 	private double limitSpeed(double speed, int wheelID) {
 		// Apply speed modifiers first
 
-// TODO - figure out correct turbo behaviour with speed control mode
-//		if (DriverStation2017.getInstance().getSlow()) {
-//			speed *= SPEED_SLOW_MODIFIER;
-//		} else if (DriverStation2017.getInstance().getTurbo()) {
-//			speed *= SPEED_TURBO_MODIFIER;
-//		} else {
-//			// Limit maximum regular speed to specified Maximum.
-//			speed *= SPEED_MAX_MODIFIER;
-//		}
+		// TODO - figure out correct turbo behaviour with speed control mode
+		// if (DriverStation2017.getInstance().getSlow()) {
+		// speed *= SPEED_SLOW_MODIFIER;
+		// } else if (DriverStation2017.getInstance().getTurbo()) {
+		// speed *= SPEED_TURBO_MODIFIER;
+		// } else {
+		// // Limit maximum regular speed to specified Maximum.
+		// speed *= SPEED_MAX_MODIFIER;
+		// }
 
-//		// Limit the rate at which robot can change speed once driving over 0.6
-//		if (Math.abs(speed - lastSpeed[wheelID]) > SPEED_MAX_CHANGE && Math.abs(lastSpeed[wheelID]) > 0.6) {
-//			if (speed > lastSpeed[wheelID]) {
-//				speed = lastSpeed[wheelID] + SPEED_MAX_CHANGE;
-//			} else {
-//				speed = lastSpeed[wheelID] - SPEED_MAX_CHANGE;
-//			}
-//		}
-//		lastSpeed[wheelID] = speed;
+		// // Limit the rate at which robot can change speed once driving over
+		// 0.6
+		// if (Math.abs(speed - lastSpeed[wheelID]) > SPEED_MAX_CHANGE &&
+		// Math.abs(lastSpeed[wheelID]) > 0.6) {
+		// if (speed > lastSpeed[wheelID]) {
+		// speed = lastSpeed[wheelID] + SPEED_MAX_CHANGE;
+		// } else {
+		// speed = lastSpeed[wheelID] - SPEED_MAX_CHANGE;
+		// }
+		// }
+		// lastSpeed[wheelID] = speed;
 		return (speed);
 	}
 
@@ -297,7 +297,7 @@ public class Drive extends RobotDrive {
 	 * @param speed
 	 *            the speed you want the robot to go, taken from the distance
 	 *            the joystick travels
-	 */	
+	 */
 	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
 		double gyroAngle = gyro.getAngleZRadians();
@@ -318,61 +318,59 @@ public class Drive extends RobotDrive {
 	 *            the speed you want the robot to go, taken from the distance
 	 *            the joystick travels
 	 * @param turnSpeed
-	 * 			  the speed that the robot should turn at
-	 *            takes a value between -1 and 1
+	 *            the speed that the robot should turn at takes a value between
+	 *            -1 and 1
 	 */
 	public void vectorDrive(double driveAngle, double speed, double turnSpeed) {
 		if ((speed == 0) && (turnSpeed == 0)) {
 			stop();
 			return;
 		}
-		// Derive angle of wheels for field aligned 
+		// Derive angle of wheels for field aligned
 		double angleDiff = driveAngle - gyro.getAngleZRadians();
 
 		// vector component of the field aligned part of the motion
-		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed,
-										   LookUpTable.getCos(angleDiff) * speed);
-		
-		// Only need to do math for first turn vector - can use symmetry to generate the rest
+		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed, LookUpTable.getCos(angleDiff) * speed);
+
+		// Only need to do math for first turn vector - can use symmetry to
+		// generate the rest
 		Vector flTurn = new Vector(LookUpTable.getSin(TURN_IN_PLACE_ANGLE) * turnSpeed,
-										 LookUpTable.getCos(TURN_IN_PLACE_ANGLE) * turnSpeed);
-		
-		Vector frTurn = new Vector( flTurn.getX(), -flTurn.getY());
-		Vector blTurn = new Vector(-flTurn.getX(),  flTurn.getY());
+				LookUpTable.getCos(TURN_IN_PLACE_ANGLE) * turnSpeed);
+
+		Vector frTurn = new Vector(flTurn.getX(), -flTurn.getY());
+		Vector blTurn = new Vector(-flTurn.getX(), flTurn.getY());
 		Vector brTurn = new Vector(-flTurn.getX(), -flTurn.getY());
-		
+
 		// add the field aligned and turn vectors
-		
+
 		Vector FL = faVector.Add(flTurn);
 		Vector FR = faVector.Add(frTurn);
 		Vector BL = faVector.Add(blTurn);
 		Vector BR = faVector.Add(brTurn);
 
 		// Figure out corrected angles & speeds for each wheel
-		// Note - correction calculates shortest distance to drive to required angle and will
+		// Note - correction calculates shortest distance to drive to required
+		// angle and will
 		// flip direction by 180 and speed by -1 if that is shorter
-		WheelCorrection flCorrected = wrapAroundCorrect(RobotMap.FRONT_LEFT,  FL.getAngle(), FL.getMagnitude());
+		WheelCorrection flCorrected = wrapAroundCorrect(RobotMap.FRONT_LEFT, FL.getAngle(), FL.getMagnitude());
 		WheelCorrection frCorrected = wrapAroundCorrect(RobotMap.FRONT_RIGHT, FR.getAngle(), FR.getMagnitude());
-		WheelCorrection blCorrected = wrapAroundCorrect(RobotMap.BACK_LEFT,   BL.getAngle(), BL.getMagnitude());
-		WheelCorrection brCorrected = wrapAroundCorrect(RobotMap.BACK_RIGHT,  BR.getAngle(), BR.getMagnitude());
+		WheelCorrection blCorrected = wrapAroundCorrect(RobotMap.BACK_LEFT, BL.getAngle(), BL.getMagnitude());
+		WheelCorrection brCorrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, BR.getAngle(), BR.getMagnitude());
 
 		// if some speed is > 1, divide correspondingly to have max speed = 1
-		double maximumSpd = Math.max(Math.max(Math.abs(brCorrected.speed),  
-											  Math.abs(blCorrected.speed)), 
-									 Math.max(Math.abs(frCorrected.speed),  
-											  Math.abs(flCorrected.speed)));
+		double maximumSpd = Math.max(Math.max(Math.abs(brCorrected.speed), Math.abs(blCorrected.speed)),
+				Math.max(Math.abs(frCorrected.speed), Math.abs(flCorrected.speed)));
 		if (maximumSpd > 1.0) {
 			flCorrected.speed /= maximumSpd;
 			frCorrected.speed /= maximumSpd;
 			blCorrected.speed /= maximumSpd;
 			brCorrected.speed /= maximumSpd;
 		}
-		
+
 		// drive wheelpods
 		fourWheelSteer(flCorrected.angle, frCorrected.angle, blCorrected.angle, brCorrected.angle);
 		fourWheelDrive(flCorrected.speed, frCorrected.speed, blCorrected.speed, brCorrected.speed);
 	}
-
 
 	/**
 	 * strafeDrive
@@ -381,7 +379,7 @@ public class Drive extends RobotDrive {
 	 *            angle of the POV joystick found on top of joystick
 	 */
 
-	public void strafeDrive(int POVangle){
+	public void strafeDrive(int POVangle) {
 		double speed = SPEED_STRAFE;
 		double angle = POVangle * Math.PI / 180;
 		crabDrive(angle, speed);
@@ -398,35 +396,33 @@ public class Drive extends RobotDrive {
 		if (Math.abs(speed) >= RobotMap.MIN_DRIVE_SPEED) {
 			crabDrive(driveAngle, speed);
 			return;
-		}
-		else if (turnSpeed != 0) {
+		} else if (turnSpeed != 0) {
 			turnDrive(turnSpeed);
 			return;
-		}
-		else {
-			System.out.println("Robot is stopped");	
+		} else {
+			System.out.println("Robot is stopped");
 			stop();
 			return;
 		}
 	}
 
-
-	//Zeynep trying out a different kind of xbsplit. do not delete yet
-	//	public void xbSplit(double strafe, double drive, double speed, double turnLeft, double turnRight){
-	//		if (strafe > 0){
-	//			crabDrive(0, speed);
-	//			}
-	//		if (strafe < 0){
-	//			crabDrive(180, speed);
-	//		}
+	// Zeynep trying out a different kind of xbsplit. do not delete yet
+	// public void xbSplit(double strafe, double drive, double speed, double
+	// turnLeft, double turnRight){
+	// if (strafe > 0){
+	// crabDrive(0, speed);
+	// }
+	// if (strafe < 0){
+	// crabDrive(180, speed);
+	// }
 	//
-	//		if (drive != 0){
-	//		crabDrive(drive, speed);
-	//		}
+	// if (drive != 0){
+	// crabDrive(drive, speed);
+	// }
 	//
-	//		turnDrive(turnLeft);
-	//		turnDrive(turnRight);
-	//	}
+	// turnDrive(turnLeft);
+	// turnDrive(turnRight);
+	// }
 	//
 
 	/**
