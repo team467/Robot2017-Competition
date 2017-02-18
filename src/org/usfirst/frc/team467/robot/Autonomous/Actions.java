@@ -9,12 +9,10 @@ public class Actions {
 		System.out.println("Running Example Autonomous Action: " + System.currentTimeMillis());
 	});
 	
-	public static Action moveForward = new Action("Move Forward 1 second", new Process.Duration(1000), () -> {
-		drive.crabDrive(0, 1.0);
-	});
+	public static Action moveForward = new Action("Move Forward 1 second", new Process.Duration(1000), () -> drive.crabDrive(0, 1.0));
 	
 	public static Action aim(double angle) {
-		return new Action("Aim", () -> {return drive.aiming.onTarget();}, () -> {drive.turnToAngle(angle);});
+		return new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
 	}
 	
 	public static Process getExampleProcess()

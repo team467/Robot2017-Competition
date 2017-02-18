@@ -30,25 +30,24 @@ public class Process {
 	 */
 	public void run()
 	{
-//		if (action.condition.condition()) {
-//			System.out.println(action.description);
-//			action.activity.doIt();
-//		} else {
-//			action = agenda.pop();
-//		}
 		if (action == null || action.isDone()) {
 			try {
 				LOGGER.debug("Next action");
-				action = agenda.pop();
+				if (!agenda.isEmpty()) {
+					action = agenda.pop();
+					LOGGER.info("----- Starting action: " + action.description + " -----");
+				} else {
+					// Stop everything forever
+					LOGGER.info("----- Final action completed -----");
+					action = new Action("Process Complete",
+							() -> false,
+							() -> Drive.getInstance().stop());
+				}
 			} catch (NoSuchElementException e) {
-				LOGGER.debug("Ran out of actions");
-				// Stop everything forever
-				action = new Action("Process Complete", () -> {return false;}, () -> { Drive.getInstance().stop();} );
+				LOGGER.error("Ran out of actions!", e);
 			}
-			System.out.println("----- Starting action: " + action.description + " -----");
 		}
 
-		System.out.println(action.description);
 		action.activity.doIt();
 	}
 	
@@ -74,19 +73,19 @@ public class Process {
 	}
 	
 	public static class Duration implements Action.Condition {
-		private double duration;
+		private double durationMS;
 		private double actionStartTimeMS = -1;
 		public Duration(double duration) {
-			this.duration = duration;
+			this.durationMS = duration;
 		}
 		
 		@Override
 		public boolean isDone() {
-			if (actionStartTimeMS == -1) {
+			if (actionStartTimeMS < 0) {
 				actionStartTimeMS = System.currentTimeMillis();
 			}
 			
-			return (System.currentTimeMillis() > duration + actionStartTimeMS);
+			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
 		}
 		
 		public void reset() {
