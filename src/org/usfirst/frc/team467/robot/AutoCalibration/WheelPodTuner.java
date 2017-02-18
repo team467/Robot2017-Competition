@@ -3,7 +3,7 @@
  */
 package org.usfirst.frc.team467.robot.AutoCalibration;
 
-import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
+import org.usfirst.frc.team467.robot.WheelPod;
 
 /**
  *
@@ -20,11 +20,10 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 	 */
 	public WheelPodTuner(WheelPod wheelPod, boolean findVelocityPID) {
 		super(wheelPod, findVelocityPID);
-		wheelPod.pidf(0.0, 0.0, 0.0, 0.0);
+		pidf(0.0, 0.0, 0.0, 0.0);
 		stage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
 		tuneInProgress = false;
 	}
-
 
 	/**
 	 *
@@ -35,13 +34,13 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 
 		case CHECK_SENSORS:
 			System.out.println("Checking Sensors");
-			wheelPod.pidf(2, 0, 0, 3);
+			pidf(2, 0, 0, 3);
 			if (wheelPod.checkSensor()) {
 				stage = TuneStage.ULTIMATE_PROPORTIONAL_TERM;
 			} else {
 				stage = TuneStage.NO_TUNING;
 			}
-			wheelPod.pidf(0, 0, 0, 0);
+			pidf(0, 0, 0, 0);
 			break;
 
 		case ULTIMATE_PROPORTIONAL_TERM:
