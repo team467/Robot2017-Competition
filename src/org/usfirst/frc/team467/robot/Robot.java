@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class Robot extends IterativeRobot {
-	private static final double MIN_DRIVE_SPEED = 0.1;
+	private static final double MIN_DRIVE_SPEED = RobotMap.MIN_DRIVE_SPEED;
 
 	// Robot objects
 	private DriverStation2017 driverstation;
@@ -153,49 +153,77 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 		drive.setSpeedMode();
 		drive.aiming.reset();
-		
-		DriveMode driveMode = driverstation.getDriveMode();
-		switch (driveMode) {
-		case UNWIND:
-			for (Steering wheelpod : Drive.getInstance().steering) {
-				wheelpod.setAbsoluteAngle(0);
-			}
-			break;
-
-		case TURN:
-			drive.turnDrive(-driverstation.getDriveJoystick().getTurn() / 2);
-			break;
-
-		case CRAB:
-			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
-				// Don't start driving until commanded speed greater than
-				// minimum
+		if (driverstation.getDriveJoystick().isXbox()) {
+			DriveMode driveMode = driverstation.getDriveMode();
+			switch (driveMode) {
+			case VECTOR:
+				drive.setSpeedMode();
+				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
+				break;
+			case CRAB:
+				if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
+					// Don't start driving until commanded speed greater than
+					// mininum
+					drive.stop();
+				} else {
+					drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
+							driverstation.getDriveJoystick().getStickDistance());
+				}
+				break;
+			case UNWIND:
+				for (Steering wheelpod : Drive.getInstance().steering) {
+					wheelpod.setAbsoluteAngle(0);
+				}
+				break;
+			case STRAFE:
+				drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+				break;
+			default:
 				drive.stop();
-			} else {
-				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
+				break;
+			}
+		}
+		else {
+			DriveMode driveMode = driverstation.getDriveMode();
+			switch (driveMode) {
+			case UNWIND:
+				for (Steering wheelpod : Drive.getInstance().steering) {
+					wheelpod.setAbsoluteAngle(0);
+				}
+				break;
+	
+			case TURN:
+				drive.turnDrive(-driverstation.getDriveJoystick().getTurn() / 2);
+				break;
+	
+			case CRAB:
+				if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
+					// Don't start driving until commanded speed greater than
+					// minimum
+					drive.stop();
+				} else {
+					drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
+							driverstation.getDriveJoystick().getStickDistance());
+				}
+				break;
+			case STRAFE:
+				drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+				break;
+
+			case FIELD_ALIGN:
+				// angle Z is taken from the ADIS 16448 gyrometer
+				drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
 						driverstation.getDriveJoystick().getStickDistance());
-			}
-			break;
-		case STRAFE:
-			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
-			break;
-		// case XB_SPLIT:
-		// drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-		// -driverstation.getRightDriveJoystick().getTurn() / 2,
-		// driverstation.getDriveJoystick().getStickDistance());
-		// break;
-		case FIELD_ALIGN:
-			// angle Z is taken from the ADIS 16448 gyrometer
-			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-					driverstation.getDriveJoystick().getStickDistance());
-			break;
-		case VECTOR:
-			drive.setSpeedMode();
-			drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
-			break;
-		default:
-			drive.stop(); // If no drive mode specified, don't drive!
-			}
+				break;
+			case VECTOR:
+				drive.setSpeedMode();
+				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
+					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurn() / 2);
+				break;
+			default:
+				drive.stop(); // If no drive mode specified, don't drive!
+				}
+		}
 	}
 }

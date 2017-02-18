@@ -114,7 +114,7 @@ public class Calibration {
 
 		// Drive motor based on twist angle
 		// Increase wheel angle by a small amount based on joystick twist
-		prevCalibrationAngle += (DriverStation2017.getInstance().getCalibrationJoystick().getTwist() / 100.0)
+		prevCalibrationAngle += (DriverStation2017.getInstance().getCalibrationJoystick().getTurn() / 100.0)
 				* rateMultiplier;
 
 		return prevCalibrationAngle;

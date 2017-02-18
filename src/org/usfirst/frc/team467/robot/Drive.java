@@ -340,7 +340,17 @@ public class Drive extends RobotDrive {
 	 */
 	public void vectorDrive(double driveAngle, double speed, double turnSpeed) {
 		if (speed == 0 && turnSpeed == 0) {
+			System.out.println("Robot is stopped");	
 			stop();
+			return;
+		}
+		else if (speed == 0) {
+			turnDrive(turnSpeed);
+			return;
+		}
+		else if (turnSpeed == 0) {
+			System.out.println("field align code from vector drive");
+			fieldAlignDrive(driveAngle, speed);
 			return;
 		}
 		driveAngle *= -1;
@@ -403,13 +413,19 @@ public class Drive extends RobotDrive {
 	 *            the y distance taken from the right joystick (RY)
 	 * @param speed
 	 */
-	public void xbSplit(double turn, double speed) {
-		double driveAngle = -gyro.getAngleZRadians();
-		if (speed == 0){
-			turnDrive(turn);
-		}
-		else if (driveAngle != -1) {
+	public void xbSplit(double driveAngle, double speed, double turnSpeed) {
+		if (Math.abs(speed) >= RobotMap.MIN_DRIVE_SPEED) {
 			crabDrive(driveAngle, speed);
+			return;
+		}
+		else if (turnSpeed != 0) {
+			turnDrive(turnSpeed);
+			return;
+		}
+		else {
+			System.out.println("Robot is stopped");	
+			stop();
+			return;
 		}
 	}
 
