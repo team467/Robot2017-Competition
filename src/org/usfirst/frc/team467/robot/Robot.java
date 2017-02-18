@@ -10,6 +10,9 @@ package org.usfirst.frc.team467.robot;
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.apache.log4j.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,10 +24,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = RobotMap.MIN_DRIVE_SPEED;
+	private static final Logger LOGGER = Logger.getLogger(Robot.class);
+	
 
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
+	private Process autonomous;
 
 	private CameraStream cam;
 	private VisionProcessing vision;
@@ -43,8 +49,9 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
-		// Initialize logging framework.
-
+		// Initialize logging framework
+		Logging.init();
+		
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
@@ -54,7 +61,7 @@ public class Robot extends IterativeRobot {
 		imu = gyro.getIMU();
 		imu.calibrate();
 		imu.reset();
-
+		
 		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
@@ -68,12 +75,15 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 1", "0.0");
 		SmartDashboard.putString("DB/String 2", "0.0");
 		SmartDashboard.putString("DB/String 3", "0.0");
+		LOGGER.debug("Robot Initialized");
 	}
 
 	public void disabledInit() {
+		LOGGER.debug("Disabled Starting");
 	}
 
 	public void disabledPeriodic() {
+//		LOGGER.debug("Disabled Periodic");
 		SmartDashboard.putData("IMU", imu);
 
 		double gyroAngle = gyro.pidGet();
@@ -88,12 +98,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-		imu.reset();
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
-		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
-		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		drive.aiming.setPID(p, i, d, f);
+		System.out.println("Autonomous reset");
+		autonomous = Actions.getExampleProcess();
+		autonomous.reset();
 	}
 
 	public void teleopInit() {
@@ -102,12 +109,15 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testInit() {
+		imu.reset();
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
 	}
 
 	public void testPeriodic() {
-	}
-
-	public void autonomousPeriodic() {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -119,6 +129,10 @@ public class Robot extends IterativeRobot {
 		if (onTarget) {
 			System.out.println("TARGET ACQUIRED");
 		}
+	}
+
+	public void autonomousPeriodic() {
+		autonomous.run();
 	}
 
 	/**

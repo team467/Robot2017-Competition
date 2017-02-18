@@ -104,14 +104,14 @@ public class RobotMap {
 			new PID(-0.015, 0.0, 0.0), // Back Right PID values
 	};
 
-	public static final PIDF[] SpeedPIDFvalues = {
-			new PIDF(0.50, 0.0036, 18.00, 2.35), // Front Left PID values
-			new PIDF(1.35, 0.0027, 168.75, 1.90), // Front Right PID values
-			new PIDF(1.35, 0.0020, 168.75, 2.00), // Back Left PID values
-			new PIDF(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
+	public static final PID[] SpeedPIDFvalues = {
+			new PID(0.50, 0.0036, 18.00, 2.35), // Front Left PID values
+			new PID(1.35, 0.0027, 168.75, 1.90), // Front Right PID values
+			new PID(1.35, 0.0020, 168.75, 2.00), // Back Left PID values
+			new PID(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
 	};
 	
-	public static final PIDF GearDevicePID = new PIDF(0.1, 0.01, 0.001, 0);
+	public static final PID GearDevicePID = new PID(0.1, 0.01, 0.001, 0);
 	
 	//TODO: need actual motor channels 
 	public static final int[] CLIMBER_MOTOR_CHANNELS = { 6, 7 };
