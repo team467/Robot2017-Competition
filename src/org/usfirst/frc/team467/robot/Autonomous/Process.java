@@ -41,7 +41,7 @@ public class Process {
 					LOGGER.info("----- Final action completed -----");
 					action = new Action("Process Complete",
 							() -> false,
-							() -> Drive.getInstance().stop());
+							() -> { /* Do Nothing */ });
 				}
 			} catch (NoSuchElementException e) {
 				LOGGER.error("Ran out of actions!", e);
