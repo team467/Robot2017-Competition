@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.Drive;
 
 /**
  * Runs through a set of actions. <br>
