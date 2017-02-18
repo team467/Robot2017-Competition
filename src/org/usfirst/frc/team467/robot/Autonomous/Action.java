@@ -1,8 +1,5 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
-import org.usfirst.frc.team467.robot.Autonomous.Action.Activity;
-import org.usfirst.frc.team467.robot.Autonomous.Action.Condition;
-
 public class Action {
 	public String description;
 	public Condition condition;

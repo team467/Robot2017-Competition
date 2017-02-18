@@ -100,7 +100,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		System.out.println("Autonomous reset");
-		autonomous = Actions.getExampleProcess();
+		autonomous = Actions.getBasicProcess();
 		autonomous.reset();
 	}
 
