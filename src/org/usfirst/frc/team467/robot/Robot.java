@@ -15,17 +15,14 @@ import org.usfirst.frc.team467.robot.autonomous.Actions;
 import org.usfirst.frc.team467.robot.autonomous.Process;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
+ * IterativeRobot documentation. If you change the name of this class or the package after creating this project, you must also
+ * update the manifest file in the resource directory.
  */
 
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = RobotMap.MIN_DRIVE_SPEED;
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-	
 
 	// Robot objects
 	private DriverStation2017 driverstation;
@@ -45,13 +42,12 @@ public class Robot extends IterativeRobot {
 	double time;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
 		// Initialize logging framework
 		Logging.init();
-		
+
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
@@ -84,7 +80,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
-//		LOGGER.debug("Disabled Periodic");
+		// LOGGER.debug("Disabled Periodic");
 		SmartDashboard.putData("IMU", imu);
 
 		double gyroAngle = gyro.pidGet();
@@ -106,7 +102,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		imu.reset();
-		driverstation.readInputs();	
+		driverstation.readInputs();
 	}
 
 	public void testInit() {
@@ -140,7 +136,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		
+
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", imu.getAngleY() / 4);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -163,21 +159,20 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
-	 * called once per iteration to perform any necessary updates to the drive
-	 * system.
+	 * called once per iteration to perform any necessary updates to the drive system.
 	 */
 	private void updateDrive() {
 		drive.aiming.reset();
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
-			
+
 		case VECTOR:
 			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
 			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
-					driveSpeed,                                                     // Robot speed
-					turnSpeed * driverstation.getVectorTurnDirection());            // Robot turn speed
+					driveSpeed, // Robot speed
+					turnSpeed * driverstation.getVectorTurnDirection()); // Robot turn speed
 			break;
 
 		case CRAB:

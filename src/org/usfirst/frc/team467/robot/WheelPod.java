@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The WheelPod class is used for manually finding the PID values using the
- * SmartDashboard.
+ * The WheelPod class is used for manually finding the PID values using the SmartDashboard.
  */
 public class WheelPod {
 
@@ -21,8 +20,7 @@ public class WheelPod {
 	private static final int POSITION_PID_PROFILE = 1;
 
 	/**
-	 * The top speed for use in speed mode of this wheel pod. The overall robot
-	 * max speed is set in the Robot Map.
+	 * The top speed for use in speed mode of this wheel pod. The overall robot max speed is set in the Robot Map.
 	 */
 	public static final double TOP_SPEED = 300;
 
@@ -70,9 +68,8 @@ public class WheelPod {
 	}
 
 	/**
-	 * Creates a wheel pod with the PID values in the WPILib preferences. If
-	 * there are no values in the preferences matching the wheel pod identifier,
-	 * then it will use the default values.
+	 * Creates a wheel pod with the PID values in the WPILib preferences. If there are no values in the preferences matching the
+	 * wheel pod identifier, then it will use the default values.
 	 *
 	 * @param pod
 	 *            the wheel pod identifier
@@ -111,7 +108,7 @@ public class WheelPod {
 		keyHeader = RobotMap.STEERING_KEYS[id] + "-Drive-PID-";
 		motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		motor.configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
-//		motor.setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+		// motor.setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
 		motor.enableBrakeMode(true);
 	}
 
@@ -170,9 +167,8 @@ public class WheelPod {
 	}
 
 	/**
-	 * Loads the preferences from the WPILib preferences file. If there is no
-	 * entry, it will set it to the default. If you tune using the
-	 * SmartDashboard, it will save to preferences.
+	 * Loads the preferences from the WPILib preferences file. If there is no entry, it will set it to the default. If you tune
+	 * using the SmartDashboard, it will save to preferences.
 	 */
 	private void loadFromPreferences(String header) {
 		prefs = Preferences.getInstance();
@@ -185,9 +181,8 @@ public class WheelPod {
 	}
 
 	/**
-	 * Loads the preferences from the WPILib preferences file. If there is no
-	 * entry, it will set it to the default. If you tune using the
-	 * SmartDashboard, it will save to preferences.
+	 * Loads the preferences from the WPILib preferences file. If there is no entry, it will set it to the default. If you tune
+	 * using the SmartDashboard, it will save to preferences.
 	 */
 	public void loadFromPreferences() {
 		prefs = Preferences.getInstance();
@@ -336,9 +331,8 @@ public class WheelPod {
 	}
 
 	/**
-	 * Checks the SmartDashboard for updated PID values, sets them, and then
-	 * sets the speed or position setting depending on the current mode. This
-	 * should be called from a periodic method in the Robot class.
+	 * Checks the SmartDashboard for updated PID values, sets them, and then sets the speed or position setting depending on the
+	 * current mode. This should be called from a periodic method in the Robot class.
 	 *
 	 * @return current error
 	 */

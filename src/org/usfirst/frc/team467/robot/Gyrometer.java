@@ -20,43 +20,39 @@ public class Gyrometer implements PIDSource {
 		}
 		return instance;
 	}
-	
-	public ADIS16448_IMU getIMU()
-	{
+
+	public ADIS16448_IMU getIMU() {
 		return gyro;
 	}
 
 	// base gyro returns values in degrees - 1440 degrees per rotation
-//	public double getAngleZRadians()
-//	{
-//		return gyro.getAngleZ() * Math.PI / 720;
-//	}
-//	
+	// public double getAngleZRadians()
+	// {
+	// return gyro.getAngleZ() * Math.PI / 720;
+	// }
+	//
 	// base gyro returns values in degrees - 1440 degrees per rotation
-	public double getAngleZDegrees()
-	{
+	public double getAngleZDegrees() {
 		return gyro.getAngleZ() / 4;
 	}
-	
-	public double getAngleXDegrees()
-	{
+
+	public double getAngleXDegrees() {
 		return gyro.getAngleX() / 4;
 	}
-	
-	//on 2017 robot #1 use Y angle to find gyro orientation
-	public double getAngleYDegrees()
-	{
+
+	// on 2017 robot #1 use Y angle to find gyro orientation
+	public double getAngleYDegrees() {
 		return gyro.getAngleY() / 4;
 	}
-	
-	public double getAngleYRadians(){
+
+	public double getAngleYRadians() {
 		return -gyro.getAngleY() * Math.PI / 720;
 	}
-	
+
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		// Sorry I'm just displacement for now :P
-		
+
 	}
 
 	@Override
@@ -73,12 +69,10 @@ public class Gyrometer implements PIDSource {
 		while (angle < -180) {
 			angle += 360;
 		}
-		if (angle == 0)
-		{
+		if (angle == 0) {
 			gyro.reset();
 		}
 		return angle;
 	}
 
 }
-

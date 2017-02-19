@@ -34,8 +34,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Returns the int at the given key. If this table does not have a value for
-	 * that position, then the given backup value will be returned.
+	 * Returns the int at the given key. If this table does not have a value for that position, then the given backup value will be
+	 * returned.
 	 *
 	 * @param key
 	 *            The key.
@@ -48,8 +48,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Returns the double at the given key. If this table does not have a value
-	 * for that position, then the given backup value will be returned.
+	 * Returns the double at the given key. If this table does not have a value for that position, then the given backup value will
+	 * be returned.
 	 *
 	 * @param key
 	 *            The key.
@@ -62,8 +62,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Returns the boolean at the given key. If this table does not have a value
-	 * for that position, then the given backup value will be returned.
+	 * Returns the boolean at the given key. If this table does not have a value for that position, then the given backup value will
+	 * be returned.
 	 *
 	 * @param key
 	 *            The key.
@@ -76,8 +76,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Returns the string at the given key. If this table does not have a value
-	 * for that position, then the given backup value will be returned.
+	 * Returns the string at the given key. If this table does not have a value for that position, then the given backup value will
+	 * be returned.
 	 *
 	 * @param key
 	 *            The key.
@@ -90,8 +90,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Returns the float at the given key. If this table does not have a value
-	 * for that position, then the given backup value will be returned.
+	 * Returns the float at the given key. If this table does not have a value for that position, then the given backup value will
+	 * be returned.
 	 *
 	 * @param key
 	 *            The key.
@@ -104,8 +104,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Returns the long at the given key. If this table does not have a value
-	 * for that position, then the given backup value will be returned.
+	 * Returns the long at the given key. If this table does not have a value for that position, then the given backup value will be
+	 * returned.
 	 *
 	 * @param key
 	 *            The key.
@@ -190,10 +190,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Put an array of integers into the preferences table with the given key
-	 * This doesn't actually store the values as an array, but rather
-	 * individually matches a key to each one based on the given key and stores
-	 * each integer as it's own value.
+	 * Put an array of integers into the preferences table with the given key This doesn't actually store the values as an array,
+	 * but rather individually matches a key to each one based on the given key and stores each integer as it's own value.
 	 *
 	 * @param key
 	 *            The key
@@ -208,10 +206,8 @@ public class DataStorage {
 	}
 
 	/**
-	 * Put an array of doubles into the preferences table with the given keys
-	 * This doesn't actually store the values as an array, but rather
-	 * individually matches a key to each one based on the given key and stores
-	 * each double as it's own value.
+	 * Put an array of doubles into the preferences table with the given keys This doesn't actually store the values as an array,
+	 * but rather individually matches a key to each one based on the given key and stores each double as it's own value.
 	 *
 	 * @param key
 	 *            The key

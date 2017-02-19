@@ -13,7 +13,7 @@ public class Vector {
 	/**
 	 * Add to this vector - return a new vector as the result
 	 *
-	 * @param v 
+	 * @param v
 	 * @return
 	 */
 	Vector Add(Vector v) {
@@ -60,7 +60,7 @@ public class Vector {
 	 * @return The magnitude value of the vector
 	 */
 	double getMagnitude() {
-		double magnitude = Math.sqrt( (vx * vx) + (vy * vy) );
+		double magnitude = Math.sqrt((vx * vx) + (vy * vy));
 		return (magnitude);
 	}
 }
