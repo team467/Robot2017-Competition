@@ -20,11 +20,11 @@ public class Gyrometer implements PIDSource {
 		}
 		return instance;
 	}
-	
+
 	public void reset() {
 		imu.reset();
 	}
-	
+
 	public void calibrate() {
 		imu.calibrate();
 	}
@@ -69,22 +69,6 @@ public class Gyrometer implements PIDSource {
 
 	public double getAngleYDegrees() {
 		return imu.getAngleY() / 4;
-	}
-
-	public double getAngleXRadians() {
-		return -gyro.getAngleX() * Math.PI / 720;
-	}
-
-	public double getAngleXDegrees() {
-		return gyro.getAngleX() / 4;
-	}
-	
-	public double getAngleYRadians() {
-		return -gyro.getAngleY() * Math.PI / 720;
-	}
-	
-	public double getAngleYDegrees() {
-		return gyro.getAngleY() / 4;
 	}
 
 	@Override

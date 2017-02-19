@@ -6,6 +6,8 @@ package org.usfirst.frc.team467.robot;
 public class RobotMap {
 	// Global robot constants
 
+	public static final boolean ROBOT_2015 = true;  // set to true for 2015 chassis
+	
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static final double MAX_SPEED = 300.0;
 
