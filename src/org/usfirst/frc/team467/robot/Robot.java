@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
 	private DriverStation2017 driverstation;
 	private Drive drive;
 	private Climber climber;
-	private Intake intake;
+	private BallIntake intake;
 	private Shooter shooter;
 	private Agitator agitator;
 	private Steering steering;
