@@ -95,8 +95,8 @@ public class RobotMap {
 
 	// Length is front to back, Width side to side
 	// Measured on 2015 robot
-	public static final double LENGTH = 31.5; // inches btw the wheels
-	public static final double WIDTH = 18.5; // inches btw the wheels
+	public static final double LENGTH = 18.5; // inches btw the wheels front to back
+	public static final double WIDTH = 22.5;  // inches btw the wheels left to right
 
 	// Steering motor constant array
 	public static final int[] STEERING_MOTOR_CHANNELS = { 
@@ -124,10 +124,10 @@ public class RobotMap {
 
 	// PID array
 	public static final PID[] PIDvalues = {
-			new PID(-0.013, 0.0, 0.0), // Front Left PID values
-			new PID(-0.013, 0.0, 0.0), // Front Right PID values
-			new PID(-0.013, 0.0, 0.0), // Back Left PID values
-			new PID(-0.015, 0.0, 0.0), // Back Right PID values
+			new PID(-0.025, 0.0, 0.0), // Front Left PID values
+			new PID(-0.025, 0.0, 0.0), // Front Right PID values
+			new PID(-0.025, 0.0, 0.0), // Back Left PID values
+			new PID(-0.025, 0.0, 0.0), // Back Right PID values
 	};
 
 	public static final PID[] SpeedPIDFvalues = {
