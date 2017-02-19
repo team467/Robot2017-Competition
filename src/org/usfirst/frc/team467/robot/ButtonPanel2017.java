@@ -14,7 +14,11 @@ public class ButtonPanel2017 {
         INTAKE_OUT(6),
         //agitator will not have buttons
         AGITATOR_SHOOT(7),
-        AGITATOR_REVERSE(8);
+        AGITATOR_REVERSE(8),
+		GEAR_GET(9),
+		GEAR_SCOOP(10),
+		GEAR_PLACE(11),
+		GEAR_UP(12);
 		
 		public final int id;
 		
