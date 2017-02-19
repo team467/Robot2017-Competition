@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
+
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.PIDController;
@@ -60,6 +62,55 @@ public class GearDevice {
     }
     
     private void updateMode() {
+    	if (buttonPanel.buttonDown(Buttons.GEAR_UP)) {
+    		mode = Mode.UP;
+    	}
+    	else if (buttonPanel.buttonDown(Buttons.GEAR_SCOOP)) {
+    		if (mode == Mode.SCOOP) {
+    			mode = Mode.UP;
+    		}
+    		else {
+    			mode = Mode.SCOOP;
+    		}
+    	}
+    	else if (buttonPanel.buttonDown(Buttons.GEAR_GET)) {
+    		if (mode == Mode.GET) {
+    			mode = Mode.UP;
+    		}
+    		else {
+    			mode = Mode.GET;
+    		}
+    	}
+    	else if (buttonPanel.buttonDown(Buttons.GEAR_PLACE)) {
+    		if (mode == Mode.PLACE) {
+    			mode = Mode.UP;
+    		}
+    		else {
+    			mode = Mode.PLACE;
+    		}
+    	}
+    	
+    }
+    
+    public void update() {
+    	updateMode();
+    	switch (mode) {
+    	case SCOOP:
+    		scoop();
+    		break;
+    	case GET:
+    		getGear();
+    		break;
+    	case PLACE:
+    		placeGear();
+    		break;
+    	case UP:
+    		goUp();
+    		break;
+    	default:
+    		goUp();
+    		break;
+    	}
     	
     }
     
