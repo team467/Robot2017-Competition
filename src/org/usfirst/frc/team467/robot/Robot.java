@@ -96,7 +96,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		System.out.println("Autonomous reset");
-		autonomous = Actions.getBasicProcess();
+		autonomous = driverstation.getAutonomous();
 		autonomous.reset();
 	}
 
@@ -151,6 +151,8 @@ public class Robot extends IterativeRobot {
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
+		} else if (!driverstation.getAutonomous().isComplete()) {
+			driverstation.getAutonomous().run();
 		} else {
 			// Drive Mode
 			updateDrive();
@@ -163,15 +165,11 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 		drive.aiming.reset();
 		DriveMode driveMode = driverstation.getDriveMode();
-		
-		if (!Actions.getBasicProcess().isComplete()) {
-			Actions.getBasicProcess().run();
-			return; // Takes over until completion
-		} else if (driveMode == DriveMode.AUTONOMOUS) {
-			Actions.getExampleProcess().reset();
-		}
 
 		switch (driveMode) {
+		case AUTONOMOUS:
+			driverstation.getAutonomous().reset();
+			break;
 		case AIM:
 			Actions.aimProcess(vision.targetAngle).run();
 			break;

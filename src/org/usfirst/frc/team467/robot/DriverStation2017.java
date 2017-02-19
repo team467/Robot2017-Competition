@@ -1,5 +1,8 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.Process;
+
 public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
 
@@ -77,17 +80,17 @@ public class DriverStation2017 {
 
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
 		
-		if (getDriveJoystick().buttonDown(AUTO_BUTTON)) {
+		if (driverJoy.buttonDown(AUTO_BUTTON)) {
 			drivemode = DriveMode.AUTONOMOUS;
 		}
-		else if (getDriveJoystick().buttonDown(AIM_BUTTON)) {
+		else if (driverJoy.buttonDown(AIM_BUTTON)) {
 			drivemode = DriveMode.AIM;
 		}
 		
 		// UNWIND takes greatest priority
-		else if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
+		else if (driverJoy.buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
-		} else if (getDriveJoystick().buttonDown(CRAB_DRIVE)) {
+		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
 		}
 		return drivemode;
@@ -116,6 +119,10 @@ public class DriverStation2017 {
 	 */
 	public boolean getCalibrate() {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
+	}
+	
+	public Process getAutonomous() {
+		return Actions.getBasicProcess(); // TODO Get multiple options
 	}
 
 	public boolean getGyroReset() {
