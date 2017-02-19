@@ -168,7 +168,7 @@ public class Robot extends IterativeRobot {
 
 		case VECTOR:
 			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
-			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance();
+			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
 			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
 					driveSpeed, // Robot speed
 					turnSpeed * driverstation.getVectorTurnDirection()); // Robot turn speed
