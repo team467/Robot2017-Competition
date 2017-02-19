@@ -6,6 +6,8 @@ package org.usfirst.frc.team467.robot;
 public class RobotMap {
 	// Global robot constants
 
+	public static final boolean ROBOT_2015 = false;
+	
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static final double MAX_SPEED = 300.0;
 
@@ -68,13 +70,12 @@ public class RobotMap {
 	//
 	// Analog Inputs
 	//
-
+	
 	// Steering sensors - roboRio
 	public static final int FRONT_LEFT_STEERING_SENSOR_CHANNEL = 0;
 	public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 1;
 	public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 2;
 	public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 3;
-
 	//
 	// Robot Dimensions
 	//
@@ -149,7 +150,7 @@ public class RobotMap {
 	 */
 	public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
 
-	// The circumference of the wheels for use in determining distance in position mode.
+	// The circumference of the wheels for use in determining distance in position mode
 	public static final double WHEELPOD_CIRCUMFERENCE = 18.85;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;

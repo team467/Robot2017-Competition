@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class Gyrometer implements PIDSource {
 
-	private ADIS16448_IMU gyro = null;
+	private ADIS16448_IMU imu = null;
 	private static Gyrometer instance;
 
 	private Gyrometer() {
-		gyro = new ADIS16448_IMU();
+		imu = new ADIS16448_IMU();
 	}
 
 	public static Gyrometer getInstance() {
@@ -20,35 +20,55 @@ public class Gyrometer implements PIDSource {
 		}
 		return instance;
 	}
+	
+	public void reset() {
+		imu.reset();
+	}
+	
+	public void calibrate() {
+		imu.calibrate();
+	}
 
-	public ADIS16448_IMU getIMU() {
-		return gyro;
+	public double getRobotAngleRadians() {
+		if (RobotMap.ROBOT_2015) {
+			return getAngleZRadians();
+		} else {
+			return getAngleYRadians();
+		}
+	}
+
+	public double getRobotAngleDegrees() {
+		if (RobotMap.ROBOT_2015) {
+			return getAngleZDegrees();
+		} else {
+			return getAngleYDegrees();
+		}
 	}
 
 	// base gyro returns values in degrees - 1440 degrees per rotation
 	public double getAngleZRadians() {
-		return gyro.getAngleZ() * Math.PI / 720;
+		return imu.getAngleZ() * Math.PI / 720;
 	}
 
 	// base gyro returns values in degrees - 1440 degrees per rotation
 	public double getAngleZDegrees() {
-		return gyro.getAngleZ() / 4;
+		return imu.getAngleZ() / 4;
 	}
 
 	public double getAngleXRadians() {
-		return -gyro.getAngleX() * Math.PI / 720;
+		return -imu.getAngleX() * Math.PI / 720;
 	}
 
 	public double getAngleXDegrees() {
-		return gyro.getAngleX() / 4;
+		return imu.getAngleX() / 4;
 	}
-	
+
 	public double getAngleYRadians() {
-		return -gyro.getAngleY() * Math.PI / 720;
+		return -imu.getAngleY() * Math.PI / 720;
 	}
-	
+
 	public double getAngleYDegrees() {
-		return gyro.getAngleY() / 4;
+		return imu.getAngleY() / 4;
 	}
 
 	@Override
@@ -64,7 +84,7 @@ public class Gyrometer implements PIDSource {
 
 	@Override
 	public double pidGet() {
-		double angle = gyro.getAngleZ() / 4;
+		double angle = imu.getAngleZ() / 4;
 		while (angle > 180) {
 			angle -= 360;
 		}
@@ -72,7 +92,7 @@ public class Gyrometer implements PIDSource {
 			angle += 360;
 		}
 		if (angle == 0) {
-			gyro.reset();
+			imu.reset();
 		}
 		return angle;
 	}

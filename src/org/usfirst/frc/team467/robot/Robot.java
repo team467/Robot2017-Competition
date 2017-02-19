@@ -55,18 +55,13 @@ public class Robot extends IterativeRobot {
 		drive.setPercentVoltageBusMode();
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
-		imu = gyro.getIMU();
-		imu.calibrate();
-		imu.reset();
+		gyro.calibrate();
+		gyro.reset();
 
 		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
-		gyro = Gyrometer.getInstance();
-		imu = gyro.getIMU();
-		imu.calibrate();
-		imu.reset();
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
@@ -116,7 +111,7 @@ public class Robot extends IterativeRobot {
 
 	public void testPeriodic() {
 		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
+		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 		driverstation.readInputs();
