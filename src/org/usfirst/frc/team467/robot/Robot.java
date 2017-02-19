@@ -129,6 +129,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		driverstation.readInputs();
 		updateAutonomous(autonomous);
 	}
 
