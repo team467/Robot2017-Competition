@@ -41,6 +41,7 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
+		//buttonPanel = new ButtonPanel2017(1);
 	}
 	
 	/**
@@ -48,7 +49,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
-//		buttonPanel.readInputs();
+		buttonPanel.readInputs();
 	}
 
 	/**
@@ -82,11 +83,9 @@ public class DriverStation2017 {
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
-
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
 
 		// UNWIND takes greatest priority
-
 		if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
 
@@ -140,38 +139,6 @@ public class DriverStation2017 {
 	/*--GAME PIECE CODE--*/
 	//Currently all code just has one for each action that needs to be held down
 	//Can change based on preferences 
-	
-//	public void getNavigation(){
-//		if (climberUp()){
-//			climber.climb();
-//		}
-//		if (climberDown()){
-//			climber.descend();
-//		}
-//		if (shooterFailSafe()){
-//			shooter.failsafe();
-//		}
-//		if (shooterSpinning()){
-//			shooter.spin();
-//		}
-//		if (intakeIn()){
-//			intake.in();
-//		}
-//		if (intakeOut()){
-//			intake.out();
-//		}
-//		if (agitatorShoot()){
-//			agitator.shoot();
-//		}
-//		if (agitatorReverse()){
-//			agitator.reverse();
-//		} else {
-//			climber.stop();
-//			shooter.stop();
-//			intake.stop();
-//			agitator.stop();
-//		}
-//	}
 	
 	//Which direction should climber go?
 		public GamePieceDirection getClimberDirection(){

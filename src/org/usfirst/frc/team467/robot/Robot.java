@@ -61,6 +61,7 @@ public class Robot extends IterativeRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
+		
 
 		LookUpTable.init();
 
@@ -152,7 +153,9 @@ public class Robot extends IterativeRobot {
 			// Drive Mode
 //			driverstation.getNavigation();
 			updateDrive();
+			climber.update();
 		}
+		
 	}
 
 	/**
@@ -186,9 +189,7 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case UNWIND:
-			for (Steering wheelpod : Drive.getInstance().steering) {
-				wheelpod.setAbsoluteAngle(0);
-			}
+			unwindAllWheelpods();
 			break;
 
 		default:
