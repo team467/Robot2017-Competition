@@ -10,9 +10,9 @@ package org.usfirst.frc.team467.robot;
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team467.robot.Autonomous.Process;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.Autonomous.Process;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -136,7 +136,6 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", imu.getAngleY() / 4);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
