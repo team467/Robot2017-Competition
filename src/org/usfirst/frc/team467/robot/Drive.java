@@ -287,7 +287,6 @@ public class Drive extends RobotDrive {
 	 */
 	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
-		// double gyroAngle = gyro.getAngleZRadians();
 		double gyroAngle = gyro.getAngleYRadians();
 		// the angle that the wheels need to turn to
 		double angleDiff = driveAngle - gyroAngle;
@@ -388,24 +387,6 @@ public class Drive extends RobotDrive {
 			return;
 		}
 	}
-
-	// Zeynep trying out a different kind of xbsplit. do not delete yet
-	// public void xbSplit(double strafe, double drive, double speed, double turnLeft, double turnRight){
-	// if (strafe > 0){
-	// crabDrive(0, speed);
-	// }
-	// if (strafe < 0){
-	// crabDrive(180, speed);
-	// }
-	//
-	// if (drive != 0){
-	// crabDrive(drive, speed);
-	// }
-	//
-	// turnDrive(turnLeft);
-	// turnDrive(turnRight);
-	// }
-	//
 
 	/**
 	 * Individually controls a specific steering motor
