@@ -278,24 +278,6 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Field align drive
-	 *
-	 * @param driveAngle
-	 *            the angle you want the robot to drive, taken from the angle of the joystick this is passed in in radians
-	 * @param speed
-	 *            the speed you want the robot to go, taken from the distance the joystick travels
-	 */
-	public void fieldAlignDrive(double driveAngle, double speed) {
-		// convert the angle of the robot from native units to radians
-		double gyroAngle = gyro.getAngleZRadians();
-		// the angle that the wheels need to turn to
-		double angleDiff = driveAngle - gyroAngle;
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
-		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-	}
-
-	/**
 	 * Vector drive
 	 *
 	 * @param driveAngle
@@ -311,7 +293,7 @@ public class Drive extends RobotDrive {
 			return;
 		}
 		// Derive angle of wheels for field aligned
-		double angleDiff = driveAngle - gyro.getAngleZRadians();
+		double angleDiff = driveAngle - gyro.getRobotAngleRadians();
 
 		// vector component of the field aligned part of the motion
 		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed, LookUpTable.getCos(angleDiff) * speed);
