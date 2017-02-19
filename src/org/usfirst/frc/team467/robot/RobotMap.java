@@ -52,11 +52,14 @@ public class RobotMap {
 	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 4;	//TalonSRX #4
 
 	// Game pieces motor channels
+	public static final int AGITATOR_MOTOR = 11;	//Spike #1
     public static final int SHOOTER_MOTOR_1 = 12;	//TalonSRX #5
     public static final int SHOOTER_MOTOR_2 = 13;	//TalonSRX #6
     public static final int CLIMBER_MOTOR_1 = 14;	//Spark #5
     public static final int CLIMBER_MOTOR_2 = 15;	//SPark #6
-    public static final int AGITATOR_MOTOR = 11;	//Spike #1
+    public static final int GEAR_MOTOR = 16;
+    public static final int INTAKE_MOTOR = 17;
+ 
 
 	//
 	// Digital Inputs
@@ -96,7 +99,10 @@ public class RobotMap {
 			RobotMap.BACK_RIGHT_STEERING_SENSOR_CHANNEL, 
 			RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL 
 			};
-
+	
+	public static final int GEAR_SENSOR = 5;
+	
+	
 	// Data keys (names used when saving centers to robot)
 	public static final String[] STEERING_KEYS = new String[] { "FrontLeft", "BackLeft", "BackRight", "FrontRight" };
 
@@ -119,6 +125,8 @@ public class RobotMap {
 			new PIDF(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
 			new PIDF(1.35, 0.0027, 168.75, 1.90), // Front Right PID values
 	};
+	
+	public static final PID GEAR_PID = new PID(0.1, 0.01, 0.01);
 	
 	/* distance from the center of the robot to the wheelpod in inches */
 	public static final double wheelpodRadius = 18.29;
