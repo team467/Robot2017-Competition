@@ -3,7 +3,6 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.first.wpilibj.Spark;
 
 public class Climber {
-<<<<<<< HEAD
 	  private static Climber instance;
 	  private static Spark motorLeft;
 	  private static Spark motorRight;

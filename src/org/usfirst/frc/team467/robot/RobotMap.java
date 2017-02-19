@@ -1,4 +1,5 @@
 package org.usfirst.frc.team467.robot;
+import org.usfirst.frc.team467.robot.PID;
 
 /**
  *
@@ -144,7 +145,7 @@ public class RobotMap {
 	};
 	// @formatter:on
 
-	public static final PID GearDevicePID = new PID(0.1, 0.01, 0.001, 0);
+	public static final PID GEAR_PID = new PID(0.1, 0.01, 0.001, 0);
 
 	// TODO: need actual motor channels
 	public static final int[] CLIMBER_MOTOR_CHANNELS = { 6, 7 };

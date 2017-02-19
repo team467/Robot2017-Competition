@@ -108,7 +108,8 @@ public class WheelPod {
 		keyHeader = RobotMap.STEERING_KEYS[id] + "-Drive-PID-";
 		motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		motor.configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
-		motor.setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+		//TODO: fix
+		//motor.setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
 		motor.enableBrakeMode(true);
 	}
 

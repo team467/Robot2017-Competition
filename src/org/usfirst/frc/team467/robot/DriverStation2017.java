@@ -59,6 +59,10 @@ public class DriverStation2017 {
 	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
 	}
+	
+	public ButtonPanel2017 getButtonPanel() {
+		return buttonPanel;
+	}
 
 	/**
 	 * Get joystick instance used for calibration.
@@ -117,9 +121,9 @@ public class DriverStation2017 {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
 
-//	public boolean getGyroReset() {
-//		return driverJoy.buttonDown(GYRO_RESET_BUTTON);
-//	}
+	public boolean getGyroReset() {
+		return driverJoy.buttonDown(GYRO_RESET_BUTTON);
+	}
 
 	/**
 	 * @return true if button to confirm calibration selection is pressed
@@ -132,11 +136,7 @@ public class DriverStation2017 {
 	 *
 	 * @return true if button to enable calibration slow turn mode is pressed
 	 */
-	public boolean getCalibrateSlowTurn() {
-		return getCalibrationJoystick().buttonDown(CALIBRATE_SLOW_BUTTON);
-	}
-	
-	
+		
 	/*--GAME PIECE CODE--*/
 	//Currently all code just has one for each action that needs to be held down
 	//Can change based on preferences 
