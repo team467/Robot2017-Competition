@@ -143,45 +143,38 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Drives each of the four wheels at different speeds using invert constants
-	 * to account for wiring.
+	 * Drives each of the four wheels at different speeds using invert constants to account for wiring.
 	 *
 	 * @param frontLeftSpeed
 	 * @param frontRightSpeed
 	 * @param backLeftSpeed
 	 * @param backRightSpeed
 	 */
-	private void fourWheelDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed,
-			double backRightSpeed) {
+	private void fourWheelDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed) {
 		// If any of the motors doesn't exist then exit
-		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null
-				|| m_frontRightMotor == null) {
+		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
 		}
 
 		switch (controlMode) {
 		case Speed:
-			m_frontLeftMotor.set((RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1)
-					* limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
-			m_frontRightMotor.set((RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1)
-					* limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
-			m_rearLeftMotor.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1)
-					* limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
-			m_rearRightMotor.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1)
-					* limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
+			m_frontLeftMotor.set((RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT)
+					* RobotMap.MAX_SPEED);
+			m_frontRightMotor.set((RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT)
+					* RobotMap.MAX_SPEED);
+			m_rearLeftMotor.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT)
+					* RobotMap.MAX_SPEED);
+			m_rearRightMotor.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT)
+					* RobotMap.MAX_SPEED);
 			break;
 		case Voltage:
 		case PercentVbus:
 		default:
 			// System.out.println(frontLeftSpeed);
-			m_frontLeftMotor.set(
-					(RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
-			m_frontRightMotor.set(
-					(RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
-			m_rearLeftMotor
-					.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
-			m_rearRightMotor
-					.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
+			m_frontLeftMotor.set((RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
+			m_frontRightMotor.set((RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
+			m_rearLeftMotor.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
+			m_rearRightMotor.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
 		}
 
 		if (m_safetyHelper != null) {
@@ -204,8 +197,7 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Set angles in "turn in place" position Wrap around will check whether the
-	 * closest angle is facing forward or backward
+	 * Set angles in "turn in place" position Wrap around will check whether the closest angle is facing forward or backward
 	 *
 	 * Front Left- / \ - Front Right<br>
 	 * Back Left - \ / - Back Right
@@ -239,9 +231,8 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Limit the rate at which the robot can change speed once driving fast.
-	 * This is to prevent causing mechanical damage - or tipping the robot
-	 * through stopping too quickly.
+	 * Limit the rate at which the robot can change speed once driving fast. This is to prevent causing mechanical damage - or
+	 * tipping the robot through stopping too quickly.
 	 *
 	 * @param speed
 	 *            desired speed for robot
@@ -292,11 +283,9 @@ public class Drive extends RobotDrive {
 	 * Field align drive
 	 *
 	 * @param driveAngle
-	 *            the angle you want the robot to drive, taken from the angle of
-	 *            the joystick this is passed in in radians
+	 *            the angle you want the robot to drive, taken from the angle of the joystick this is passed in in radians
 	 * @param speed
-	 *            the speed you want the robot to go, taken from the distance
-	 *            the joystick travels
+	 *            the speed you want the robot to go, taken from the distance the joystick travels
 	 */
 	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
@@ -312,14 +301,11 @@ public class Drive extends RobotDrive {
 	 * Vector drive
 	 *
 	 * @param driveAngle
-	 *            the angle you want the robot to drive, taken from the angle of
-	 *            the joystick this is passed in in radians
+	 *            the angle you want the robot to drive, taken from the angle of the joystick this is passed in in radians
 	 * @param speed
-	 *            the speed you want the robot to go, taken from the distance
-	 *            the joystick travels
+	 *            the speed you want the robot to go, taken from the distance the joystick travels
 	 * @param turnSpeed
-	 *            the speed that the robot should turn at takes a value between
-	 *            -1 and 1
+	 *            the speed that the robot should turn at takes a value between -1 and 1
 	 */
 	public void vectorDrive(double driveAngle, double speed, double turnSpeed) {
 		if ((speed == 0) && (turnSpeed == 0)) {
@@ -441,8 +427,7 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Does not drive drive motors and keeps steering angle at previous
-	 * position.
+	 * Does not drive drive motors and keeps steering angle at previous position.
 	 */
 	public void stop() {
 		this.fourWheelDrive(0, 0, 0, 0);// no drive for you!
@@ -481,8 +466,7 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Function to determine the wrapped around difference from the joystick
-	 * angle to the steering angle.
+	 * Function to determine the wrapped around difference from the joystick angle to the steering angle.
 	 *
 	 * @param value1
 	 *            - The first angle to check against

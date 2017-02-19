@@ -6,17 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 /**
  * Class to control steering mechanism on Team467 Robot Uses WPI PID controller
  *
- * There are 2 adjustments that may be necessary in this code to adjust for
- * electronics or mechanical issues.
+ * There are 2 adjustments that may be necessary in this code to adjust for electronics or mechanical issues.
  *
- * 1. If the steering motors are driving in the wrong direction (due to wiring
- * or gearing changes) - invert the sign of the steering PID - defined in
- * RobotMap.java
+ * 1. If the steering motors are driving in the wrong direction (due to wiring or gearing changes) - invert the sign of the steering
+ * PID - defined in RobotMap.java
  *
- * 2. If the steering sensors are reading in the wrong direction - invert the
- * value read from the sensor by changing the value returned from
- * getSensorValue() to be (RobotMap.STEERING_RANGE -
- * steeringSensor.getAverageValue())
+ * 2. If the steering sensors are reading in the wrong direction - invert the value read from the sensor by changing the value
+ * returned from getSensorValue() to be (RobotMap.STEERING_RANGE - steeringSensor.getAverageValue())
  *
  */
 public class Steering {
@@ -34,8 +30,8 @@ public class Steering {
 	private Talon steeringMotor;
 
 	/**
-	 * Center point of this steering motor. This is the value read from the
-	 * sensor when the wheels are in the normal (zero turn) forward position
+	 * Center point of this steering motor. This is the value read from the sensor when the wheels are in the normal (zero turn)
+	 * forward position
 	 */
 	private double steeringCenter;
 
@@ -115,8 +111,7 @@ public class Steering {
 	}
 
 	/**
-	 * @return The absolute difference between the setPoint and sensorAngle in
-	 *         radians
+	 * @return The absolute difference between the setPoint and sensorAngle in radians
 	 */
 	public double getAngleDelta() {
 		return Math.abs(getSetPoint() - steeringSensor.getAverageValue()) * (Math.PI * 2) / LEVELS_PER_ROTATION;
@@ -132,8 +127,7 @@ public class Steering {
 	}
 
 	/**
-	 * Get the sensor angle. Implements the steering center point to give an
-	 * angle accurate to the robot's alignment.
+	 * Get the sensor angle. Implements the steering center point to give an angle accurate to the robot's alignment.
 	 *
 	 * @return - steering angle
 	 */
@@ -182,8 +176,7 @@ public class Steering {
 	}
 
 	/**
-	 * Set angle of front steering. A value of 0.0 corresponds to normally
-	 * forward position.
+	 * Set angle of front steering. A value of 0.0 corresponds to normally forward position.
 	 *
 	 * @param requestedAngle
 	 *            - any value between -PI and +PI
@@ -205,9 +198,8 @@ public class Steering {
 	}
 
 	/**
-	 * Set absolute angle of front steering. A value of 0.0 corresponds to
-	 * normally forward position with the rotation sensor in the center position
-	 * also.
+	 * Set absolute angle of front steering. A value of 0.0 corresponds to normally forward position with the rotation sensor in the
+	 * center position also.
 	 *
 	 * @param requestedAngle
 	 *            - any value between -PI and +PI
