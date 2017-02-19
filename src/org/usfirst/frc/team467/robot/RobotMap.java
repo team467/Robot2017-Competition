@@ -5,7 +5,7 @@ package org.usfirst.frc.team467.robot;
  */
 public class RobotMap {
 	// Global robot constants
-	
+
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static final double MAX_SPEED = 300.0;
 
@@ -60,7 +60,7 @@ public class RobotMap {
 			BACK_RIGHT_DRIVE_INVERT 
 			};
 	// @formatter:on
-	
+
 	//
 	// Digital Inputs
 	//
@@ -108,7 +108,7 @@ public class RobotMap {
 			"BackRight" 
 			};
 	// @formatter:on
-	
+
 	/**
 	 * Number of increments on the steering sensor (12-bit A/D)
 	 */
@@ -130,7 +130,7 @@ public class RobotMap {
 			new PID(1.35, 0.0027, 168.75, 2.00), // Back Right PID values
 	};
 	// @formatter:on
-	
+
 	public static final PID GearDevicePID = new PID(0.1, 0.01, 0.001, 0);
 
 	// TODO: need actual motor channels
@@ -146,16 +146,12 @@ public class RobotMap {
 	public static final int WHEELPOD_ENCODER_CODES_PER_REVOLUTION = 256;
 
 	/**
-	 * Used to ensure that all Talon SRX outputs are relative to a fixed value.
-	 * If the available voltage is below the nominal and a value about that is
-	 * requested, the output will be 100%.
+	 * Used to ensure that all Talon SRX outputs are relative to a fixed value. If the available voltage is below the nominal and a
+	 * value about that is requested, the output will be 100%.
 	 */
 	public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
 
-	/**
-	 * The circumference of the wheels for use in determining distance in
-	 * position mode.
-	 */
+	// The circumference of the wheels for use in determining distance in
 	public static final double WHEELPOD_CIRCUMFERENCE = 18.85;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
