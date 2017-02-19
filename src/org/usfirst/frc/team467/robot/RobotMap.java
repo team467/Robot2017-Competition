@@ -151,7 +151,7 @@ public class RobotMap {
 	 */
 	public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
 
-	// The circumference of the wheels for use in determining distance in
+	// The circumference of the wheels for use in determining distance in position mode
 	public static final double WHEELPOD_CIRCUMFERENCE = 18.85;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
