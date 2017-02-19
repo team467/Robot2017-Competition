@@ -1,4 +1,4 @@
-package org.usfirst.frc.team467.robot.autonomous;
+package org.usfirst.frc.team467.robot.Autonomous;
 
 public class Action {
 	public String description;

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team467.robot.autonomous;
+package org.usfirst.frc.team467.robot.Autonomous;
 
 import org.usfirst.frc.team467.robot.Drive;
 
