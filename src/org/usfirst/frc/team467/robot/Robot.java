@@ -152,6 +152,9 @@ public class Robot extends IterativeRobot {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
 		} else if (!driverstation.getAutonomous().isComplete()) {
+			if (driverstation.getTerminateAuto()) {
+				driverstation.getAutonomous().terminate();
+			}
 			driverstation.getAutonomous().run();
 		} else {
 			// Drive Mode

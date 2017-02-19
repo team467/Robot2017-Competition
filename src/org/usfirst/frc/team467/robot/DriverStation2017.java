@@ -14,8 +14,9 @@ public class DriverStation2017 {
 	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
-	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_START;
-	private static int AUTO_BUTTON = XBoxJoystick467.BUTTON_BACK;
+	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_LEFT;
+	private static int AUTO_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
+	private static int TERMINATE_BUTTON = XBoxJoystick467.BUTTON_BACK;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
@@ -121,6 +122,9 @@ public class DriverStation2017 {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
 	
+	public boolean getTerminateAuto() {
+		return driverJoy.buttonDown(TERMINATE_BUTTON);
+	}
 	public Process getAutonomous() {
 		return Actions.getBasicProcess(); // TODO Get multiple options
 	}

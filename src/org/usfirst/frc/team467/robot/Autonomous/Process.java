@@ -50,6 +50,10 @@ public class Process {
 	public boolean isComplete() {
 		return agenda.isEmpty();
 	}
+	
+	public void terminate() {
+		agenda.clear();
+	}
 
 	public void addAction(Action action) {
 		master.add(action);
