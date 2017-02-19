@@ -10,8 +10,8 @@ package org.usfirst.frc.team467.robot;
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.Process;
 
 /**

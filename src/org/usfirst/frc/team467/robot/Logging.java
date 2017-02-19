@@ -11,6 +11,7 @@ import org.apache.log4j.RollingFileAppender;
 public class Logging {
 	public static void init() {
 		setupDefaultLogging();
+
 		// Enable extra logging for classes you want to debug
 		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
 		// Logger.getLogger(Steering.class).setLevel(Level.INFO);
@@ -33,7 +34,11 @@ public class Logging {
 			rollingFileAppender.rollOver();
 			Logger.getRootLogger().addAppender(rollingFileAppender);
 		} catch (IOException e) {
-			System.out.println("Failed to create log file appender: " + e.getMessage());
-		}
-	}
+	           System.out.println("Failed to create log file appender: " + e.getMessage());
+        }
+
+
+        // Set the default log level to INFO.
+        Logger.getRootLogger().setLevel(Level.INFO); // changing log level
+    }
 }
