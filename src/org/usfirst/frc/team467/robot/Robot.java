@@ -84,7 +84,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		
+				
 		// Read driverstation inputs
 		driverstation.readInputs();
 		
@@ -110,7 +110,6 @@ public class Robot extends IterativeRobot {
 		case UNWIND:
 			unwindAllWheelpods();
 			break;
-
 		case TURN:
 			if (driverstation.getDriveJoystick().getXbox()){
 				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
