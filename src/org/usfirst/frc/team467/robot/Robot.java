@@ -186,7 +186,7 @@ public class Robot extends IterativeRobot {
 
 		case CRAB:
 			if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
-				// Don't start driving until commanded speed greater than mininum
+				// Don't start driving until commanded speed greater than minimum
 				drive.stop();
 			} else {
 				drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Robot aligned direction
