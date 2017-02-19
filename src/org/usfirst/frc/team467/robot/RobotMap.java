@@ -6,7 +6,7 @@ package org.usfirst.frc.team467.robot;
 public class RobotMap {
 	// Global robot constants
 
-	public static final boolean ROBOT_2015 = true;  // set to true for 2015 chassis
+	public static final boolean ROBOT_2015 = false;
 	
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static final double MAX_SPEED = 300.0;
@@ -17,49 +17,49 @@ public class RobotMap {
 
 	// Steering motor ids in array (DO NOT ALTER)
 	public static final int FRONT_LEFT = 0;
-	public static final int FRONT_RIGHT = 1;
-	public static final int BACK_LEFT = 2;
-	public static final int BACK_RIGHT = 3;
+	public static final int BACK_LEFT = 1;
+	public static final int BACK_RIGHT = 2;
+	public static final int FRONT_RIGHT = 3;
 
 	//
 	// PWM IDs
 	//
 
-	// Steering motors - Talon, roboRio
+	// Steering motor channels - Sparks
 	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 0;
-	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 1;
-	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 2;
-	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 3;
+	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 1;
+	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 2;
+	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 3;
 
 	//
 	// CAN IDs
 	//
 
-	// Drive motors - CAN, CANTalons
-	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 1;
-	public static final int FRONT_LEFT_MOTOR_CHANNEL = 2;
-	public static final int BACK_LEFT_MOTOR_CHANNEL = 3;
-	public static final int BACK_RIGHT_MOTOR_CHANNEL = 4;
+	// Drive motors - TalonSRX
+	public static final int FRONT_LEFT_MOTOR_CHANNEL = 1;
+	public static final int BACK_LEFT_MOTOR_CHANNEL = 2;
+	public static final int BACK_RIGHT_MOTOR_CHANNEL = 3;
+	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 4;
 
 	// @formatter:off
 	public static final int[] DRIVING_MOTOR_CHANNELS = { 
 			FRONT_LEFT_MOTOR_CHANNEL, 
-			FRONT_RIGHT_MOTOR_CHANNEL,
-			BACK_LEFT_MOTOR_CHANNEL, 
-			BACK_RIGHT_MOTOR_CHANNEL 
+			BACK_LEFT_MOTOR_CHANNEL,
+			BACK_RIGHT_MOTOR_CHANNEL, 
+			FRONT_RIGHT_MOTOR_CHANNEL 
 			};
 
 	// Invert the drive motors to allow for wiring.
 	public static final boolean FRONT_LEFT_DRIVE_INVERT = false;
-	public static final boolean FRONT_RIGHT_DRIVE_INVERT = true;
 	public static final boolean BACK_LEFT_DRIVE_INVERT = false;
 	public static final boolean BACK_RIGHT_DRIVE_INVERT = true;
+	public static final boolean FRONT_RIGHT_DRIVE_INVERT = true;
 
 	public static final boolean[] IS_DRIVE_MOTOR_INVERTED = { 
 			FRONT_LEFT_DRIVE_INVERT, 
-			FRONT_RIGHT_DRIVE_INVERT,
-			BACK_LEFT_DRIVE_INVERT, 
-			BACK_RIGHT_DRIVE_INVERT 
+			BACK_LEFT_DRIVE_INVERT,
+			BACK_RIGHT_DRIVE_INVERT, 
+			FRONT_RIGHT_DRIVE_INVERT 
 			};
 	// @formatter:on
 
@@ -70,59 +70,56 @@ public class RobotMap {
 	//
 	// Analog Inputs
 	//
-
+	
 	// Steering sensors - roboRio
 	public static final int FRONT_LEFT_STEERING_SENSOR_CHANNEL = 0;
-	public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 1;
-	public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 2;
-	public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 3;
-
+	public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 1;
+	public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 2;
+	public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 3;
 	//
 	// Robot Dimensions
 	//
 
 	// Length is front to back, Width side to side
-	public static final double LENGTH = 31.5; // inches btw the wheels
-	public static final double WIDTH = 18.5; // inches btw the wheels
+	public static final double LENGTH = 18.5; // inches btw the wheels front to back
+	public static final double WIDTH = 22.5; // inches btw the wheels left to right
 
 	// Steering motor constant array
 	// @formatter:off
 	public static final int[] STEERING_MOTOR_CHANNELS = { 
 			RobotMap.FRONT_LEFT_STEERING_MOTOR_CHANNEL,
+			RobotMap.BACK_LEFT_STEERING_MOTOR_CHANNEL, 
+			RobotMap.BACK_RIGHT_STEERING_MOTOR_CHANNEL,
 			RobotMap.FRONT_RIGHT_STEERING_MOTOR_CHANNEL, 
-			RobotMap.BACK_LEFT_STEERING_MOTOR_CHANNEL,
-			RobotMap.BACK_RIGHT_STEERING_MOTOR_CHANNEL 
 			};
 
 	// Steering sensor constant array
 	public static final int[] STEERING_SENSOR_CHANNELS = { 
 			RobotMap.FRONT_LEFT_STEERING_SENSOR_CHANNEL,
-			RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL, 
-			RobotMap.BACK_LEFT_STEERING_SENSOR_CHANNEL,
-			RobotMap.BACK_RIGHT_STEERING_SENSOR_CHANNEL 
+			RobotMap.BACK_LEFT_STEERING_SENSOR_CHANNEL, 
+			RobotMap.BACK_RIGHT_STEERING_SENSOR_CHANNEL,
+			RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL 
 			};
 
 	// Data keys (names used when saving centers to robot)
 	public static final String[] STEERING_KEYS = new String[] { 
 			"FrontLeft", 
-			"FrontRight", 
 			"BackLeft", 
-			"BackRight" 
+			"BackRight", 
+			"FrontRight" 
 			};
 	// @formatter:on
 
-	/**
-	 * Number of increments on the steering sensor (12-bit A/D)
-	 */
+	// Number of increments on the steering sensor (12-bit A/D)
 	public static final double STEERING_RANGE = 4095;
 
 	// PID array
 	// @formatter:off
 	public static final PID[] PIDvalues = { 
-			new PID(-0.013, 0.0, 0.0), // Front Left PID values
-			new PID(-0.013, 0.0, 0.0), // Front Right PID values
-			new PID(-0.013, 0.0, 0.0), // Back Left PID values
-			new PID(-0.015, 0.0, 0.0), // Back Right PID values
+			new PID(-0.025, 0.0, 0.0), // Front Left PID values
+			new PID(-0.025, 0.0, 0.0), // Front Right PID values
+			new PID(-0.025, 0.0, 0.0), // Back Left PID values
+			new PID(-0.025, 0.0, 0.0), // Back Right PID values
 	};
 
 	public static final PID[] SpeedPIDFvalues = { 
