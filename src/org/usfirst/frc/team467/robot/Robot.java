@@ -129,7 +129,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		autonomous.run();
+		updateAutonomous(autonomous);
 	}
 
 	/**
@@ -152,13 +152,18 @@ public class Robot extends IterativeRobot {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
 		} else if (!driverstation.getAutonomous().isComplete()) {
-			if (driverstation.getTerminateAuto()) {
-				driverstation.getAutonomous().terminate();
-			}
-			driverstation.getAutonomous().run();
+			updateAutonomous(driverstation.getAutonomous());
 		} else {
 			// Drive Mode
 			updateDrive();
+		}
+	}
+
+	public void updateAutonomous(Process auto) {
+		if (driverstation.getTerminateAuto()) {
+			auto.terminate();
+		} else {
+			auto.run();
 		}
 	}
 
