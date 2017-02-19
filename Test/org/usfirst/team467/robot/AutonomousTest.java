@@ -1,8 +1,8 @@
 package org.usfirst.team467.robot;
 
 import org.junit.Test;
-import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.autonomous.Actions;
+import org.usfirst.frc.team467.robot.autonomous.Process;
 
 public class AutonomousTest {
 	private Process autonomous = Actions.getExampleProcess();

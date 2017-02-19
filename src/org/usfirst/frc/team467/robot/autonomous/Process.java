@@ -1,4 +1,4 @@
-package org.usfirst.frc.team467.robot.Autonomous;
+package org.usfirst.frc.team467.robot.autonomous;
 
 import java.util.LinkedList;
 import java.util.List;

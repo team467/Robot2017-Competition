@@ -298,7 +298,8 @@ public class Drive extends RobotDrive {
 	 */	
 	public void fieldAlignDrive(double driveAngle, double speed) {
 		// convert the angle of the robot from native units to radians
-		double gyroAngle = gyro.getAngleZRadians();
+//		double gyroAngle = gyro.getAngleZRadians();
+		double gyroAngle = gyro.getAngleYRadians();
 		// the angle that the wheels need to turn to
 		double angleDiff = driveAngle - gyroAngle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
@@ -325,8 +326,7 @@ public class Drive extends RobotDrive {
 			return;
 		}
 		// Derive angle of wheels for field aligned 
-		// double angleDiff = driveAngle - gyro.getAngleZRadians();
-		double angleDiff = driveAngle;
+		 double angleDiff = driveAngle - gyro.getAngleYRadians();
 
 		// vector component of the field aligned part of the motion
 		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed,

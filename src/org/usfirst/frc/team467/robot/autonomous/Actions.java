@@ -1,6 +1,6 @@
-package org.usfirst.frc.team467.robot.Autonomous;
+package org.usfirst.frc.team467.robot.autonomous;
 
-import org.usfirst.frc.team467.robot.*;
+import org.usfirst.frc.team467.robot.Drive;
 
 public class Actions {
 	
