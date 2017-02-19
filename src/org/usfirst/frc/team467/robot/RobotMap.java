@@ -36,22 +36,20 @@ public class RobotMap {
 	//
 	
 	// Steering motor channels - Sparks, roboRio
-	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 0;	//Spark #1 PWM	
-	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 1;	//Spark #2 PWM
-	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 2;	//Spark #3 PWM
-	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 3;	//Spark #4 PWMs
+	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 0;	
+	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 1;	
+	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 2;	
+	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 3;	
 
 	//
 	// CAN IDs
 	//
-
-	
 	
 	// Drive motors - TalonSRX
-	public static final int FRONT_LEFT_MOTOR_CHANNEL = 1;	//TalonSRX #3
-	public static final int BACK_LEFT_MOTOR_CHANNEL = 2;	//TalonSRX #1
-	public static final int BACK_RIGHT_MOTOR_CHANNEL = 3;	//TalonSRX #2
-	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 4;	//TalonSRX #4
+	public static final int FRONT_LEFT_MOTOR_CHANNEL = 1;	
+	public static final int BACK_LEFT_MOTOR_CHANNEL = 2;	
+	public static final int BACK_RIGHT_MOTOR_CHANNEL = 3;	
+	public static final int FRONT_RIGHT_MOTOR_CHANNEL = 4;	
 
 	public static final int[] DRIVING_MOTOR_CHANNELS = { 
 			FRONT_LEFT_MOTOR_CHANNEL, 
@@ -84,10 +82,10 @@ public class RobotMap {
 	//
 
     // Steering sensors - roboRio
-    public static final int FRONT_LEFT_STEERING_SENSOR_CHANNEL = 0;	//Aln2 Steering sensor #3	
-    public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 1;	//Aln0 Steering sensor #1
-    public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 2;	//Aln1 Steering sensor #2
-    public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 3;//Aln3 Steering sensor #4
+    public static final int FRONT_LEFT_STEERING_SENSOR_CHANNEL = 0;	
+    public static final int BACK_LEFT_STEERING_SENSOR_CHANNEL = 1;	
+    public static final int BACK_RIGHT_STEERING_SENSOR_CHANNEL = 2;
+    public static final int FRONT_RIGHT_STEERING_SENSOR_CHANNEL = 3;
 
     	//
 	// Robot Dimensions
