@@ -2,21 +2,27 @@ package org.usfirst.frc.team467.robot;
 
 import com.ctre.CANTalon;
 
-public class Shooter
-{
-    private CANTalon motorRight;
-    private CANTalon motorLeft;
+public class Shooter {
+	private static Shooter instance = null;
+	
+    private static CANTalon motorRight;
+    private static CANTalon motorLeft;
+    
+    public static Shooter getInstance() {
+    	if (instance == null) {
+    		instance = new Shooter();
+    	}
+    	return instance;
+    }
     
     private int motorSpeed = 1;
     
-    public Shooter(int motorChannelRight, int motorChannelLeft, DriverStation2017 driverstation) 
-    {
-        motorRight = new CANTalon(motorChannelRight);
-        motorLeft = new CANTalon(motorChannelLeft);
+    private Shooter() {
+        motorRight = new CANTalon(RobotMap.SHOOTER_MOTOR_1);
+        motorLeft = new CANTalon(RobotMap.SHOOTER_MOTOR_2);
     }
     
-    public void spin() 
-    {
+    public void shoot() {
         motorRight.set(motorSpeed);
         motorLeft.set(-motorSpeed);
         
@@ -26,15 +32,13 @@ public class Shooter
         //TODO: make sure they also spin at the same speed
     }
     
-    public void failsafe()
-    {
+    public void failsafe() {
         //spins backwards to dislodge balls
         motorRight.set(-motorSpeed);
         motorLeft.set(motorSpeed);
     }
     
-    public void stop()
-    {
+    public void stop() {
         motorRight.set(0.0);
         motorLeft.set(0.0);
     }
