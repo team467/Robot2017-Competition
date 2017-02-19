@@ -144,12 +144,11 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 			int peakIncreaseCount = peakIncreaseCount();
 			int cycleTimeIncreaseCount = cycleTimeIncreaseCount();
 			long averageCycleTime = averageCycleTime();
-			System.out.println(wheelPod.name() + " P: " + currentValue + " Error: " + wheelPod.error() + " Reading: "
-					+ reading + " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount
-					+ " Ave Cycle Times: " + averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount
-					+ " Number of Cycles: " + numberCycles);
-			if (Math.abs(peakIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
-					&& Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && numberCycles > 2 && reading > 0) {
+			System.out.println(wheelPod.name() + " P: " + currentValue + " Error: " + wheelPod.error() + " Reading: " + reading
+					+ " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount + " Ave Cycle Times: "
+					+ averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount + " Number of Cycles: " + numberCycles);
+			if (Math.abs(peakIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
+					&& numberCycles > 2 && reading > 0) {
 				System.out.println("Cycle times are stable");
 				velocityMaxStableProportionalTerm(currentValue);
 				velocityMaxStableCycleTime(averageCycleTime());
