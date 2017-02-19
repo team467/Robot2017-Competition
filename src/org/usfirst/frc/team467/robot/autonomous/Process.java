@@ -16,19 +16,18 @@ public class Process {
 	private LinkedList<Action> agenda;
 	private final LinkedList<Action> master;
 	private Action action = null;
-	
+
 	public Process(String name) {
 		this.name = name;
 		master = new LinkedList<>();
 		agenda = new LinkedList<>();
 		reset();
 	}
-	
+
 	/**
 	 * Run periodically to perform the Actions
 	 */
-	public void run()
-	{
+	public void run() {
 		if (action == null || action.isDone()) {
 			try {
 				LOGGER.debug("Next action");
@@ -38,9 +37,8 @@ public class Process {
 				} else {
 					// Stop everything forever
 					LOGGER.info("----- Final action completed -----");
-					action = new Action("Process Complete",
-							() -> false,
-							() -> { /* Do Nothing */ });
+					action = new Action("Process Complete", () -> false, () -> {
+						/* Do Nothing */ });
 				}
 			} catch (NoSuchElementException e) {
 				LOGGER.error("Ran out of actions!", e);
@@ -49,17 +47,17 @@ public class Process {
 
 		action.activity.doIt();
 	}
-	
+
 	public void addAction(Action action) {
 		master.add(action);
 		reset();
 	}
-	
+
 	public void addActions(List<Action> actions) {
 		master.addAll(actions);
 		reset();
 	}
-	
+
 	public void reset() {
 		for (Action act : master) {
 			if (act.condition == (Duration) act.condition) {
@@ -70,31 +68,33 @@ public class Process {
 		agenda = new LinkedList<>(master);
 		action = null;
 	}
-	
+
 	public static class Duration implements Action.Condition {
 		private double durationMS;
 		private double actionStartTimeMS = -1;
+
 		/**
-		 * @param duration in Seconds
+		 * @param duration
+		 *            in Seconds
 		 */
 		public Duration(double duration) {
 			durationMS = duration * 1000;
 		}
-		
+
 		@Override
 		public boolean isDone() {
 			if (actionStartTimeMS < 0) {
 				actionStartTimeMS = System.currentTimeMillis();
 			}
-			
+
 			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
 		}
-		
+
 		public void reset() {
 			actionStartTimeMS = -1;
 		}
 	}
-	
+
 	public String getName() {
 		return name;
 	}
