@@ -15,17 +15,14 @@ import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
+ * IterativeRobot documentation. If you change the name of this class or the package after creating this project, you must also
+ * update the manifest file in the resource directory.
  */
 
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = RobotMap.MIN_DRIVE_SPEED;
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-	
 
 	// Robot objects
 	private DriverStation2017 driverstation;
@@ -45,13 +42,12 @@ public class Robot extends IterativeRobot {
 	double time;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
 		// Initialize logging framework
 		Logging.init();
-		
+
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
@@ -84,7 +80,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
-//		LOGGER.debug("Disabled Periodic");
+		// LOGGER.debug("Disabled Periodic");
 		SmartDashboard.putData("IMU", imu);
 
 		double gyroAngle = gyro.pidGet();
@@ -106,7 +102,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		imu.reset();
-		driverstation.readInputs();	
+		driverstation.readInputs();
 	}
 
 	public void testInit() {
@@ -162,8 +158,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
-	 * called once per iteration to perform any necessary updates to the drive
-	 * system.
+	 * called once per iteration to perform any necessary updates to the drive system.
 	 */
 	private void updateDrive() {
 		drive.aiming.reset();
@@ -177,38 +172,38 @@ public class Robot extends IterativeRobot {
 		}
 
 		switch (driveMode) {
-			case AIM:
-				Actions.aimProcess(vision.targetAngle).run();
-				break;
-			
-			case VECTOR:
-				double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
-				drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(),    // Field aligned direction
-					          driveSpeed,                                                  // Robot speed
-					          driveSpeed * driverstation.getVectorTurnDirection());		   // Robot turn speed
-				break;
-				
-			case CRAB:
-				if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
-					// Don't start driving until commanded speed greater than
-					// mininum
-					drive.stop();
-				} 
-				else {
-					drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(),     // Robot aligned direction
-							        driverstation.getDriveJoystick().getLeftStickDistance()); // Robot speed
-				}
-				break;
-				
-			case UNWIND:
-				for (Steering wheelpod : Drive.getInstance().steering) {
-					wheelpod.setAbsoluteAngle(0);
-				}
-				break;
-				
-			default:
+		case AIM:
+			Actions.aimProcess(vision.targetAngle).run();
+			break;
+
+		case VECTOR:
+			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
+			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance();
+			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
+					driveSpeed, // Robot speed
+					turnSpeed * driverstation.getVectorTurnDirection()); // Robot turn speed
+			break;
+
+		case CRAB:
+			if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
+				// Don't start driving until commanded speed greater than
+				// mininum
 				drive.stop();
-				break;
+			} else {
+				drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Robot aligned direction
+						driverstation.getDriveJoystick().getLeftStickDistance()); // Robot speed
+			}
+			break;
+
+		case UNWIND:
+			for (Steering wheelpod : Drive.getInstance().steering) {
+				wheelpod.setAbsoluteAngle(0);
+			}
+			break;
+
+		default:
+			drive.stop();
+			break;
 		}
 	}
 }

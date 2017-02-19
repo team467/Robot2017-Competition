@@ -13,7 +13,7 @@ public class Vector {
 	/**
 	 * Add to this vector - return a new vector as the result
 	 *
-	 * @param v 
+	 * @param v
 	 * @return
 	 */
 	Vector Add(Vector v) {
@@ -42,7 +42,9 @@ public class Vector {
 		// avoid divide by zero issues
 		if (vy == 0.0) {
 			if (vx < 0) {
-				angle = -Math.PI;
+				angle = -Math.PI / 2;
+			} else {
+				angle = Math.PI / 2;
 			}
 		} else if (vy > 0.0) {
 			angle = LookUpTable.getArcTan(vx / vy);
@@ -58,7 +60,7 @@ public class Vector {
 	 * @return The magnitude value of the vector
 	 */
 	double getMagnitude() {
-		double magnitude = Math.sqrt( (vx * vx) + (vy * vy) );
+		double magnitude = Math.sqrt((vx * vx) + (vy * vy));
 		return (magnitude);
 	}
 }

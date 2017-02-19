@@ -6,7 +6,7 @@ public class DriverStation2017 {
 	XBoxJoystick467 driverJoy = null;
 
 	// Mapping of functions to Joystick Buttons for normal operation
-	
+
 	private static int GYRO_RESET_BUTTON = XBoxJoystick467.BUTTON_Y;
 	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
@@ -68,8 +68,8 @@ public class DriverStation2017 {
 	// All button mappings are accessed through the functions below
 
 	/**
-	 * returns the current drive mode. Modes lower in the function will override
-	 * those higher up. only 1 mode can be active at any time
+	 * returns the current drive mode. Modes lower in the function will override those higher up. only 1 mode can be active at any
+	 * time
 	 *
 	 * @return currently active drive mode.
 	 */
@@ -85,7 +85,6 @@ public class DriverStation2017 {
 		}
 		
 		// UNWIND takes greatest priority
-		
 		else if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
 		} else if (getDriveJoystick().buttonDown(CRAB_DRIVE)) {
@@ -116,7 +115,7 @@ public class DriverStation2017 {
 	 * @return true if calibration mode selected
 	 */
 	public boolean getCalibrate() {
-			return driverJoy.buttonDown(CALIBRATE_BUTTON);
+		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
 
 	public boolean getGyroReset() {

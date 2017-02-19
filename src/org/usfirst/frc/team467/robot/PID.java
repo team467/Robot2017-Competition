@@ -2,8 +2,7 @@ package org.usfirst.frc.team467.robot;
 
 public class PID {
 	/**
-	 * Proportional control term. It is the base term for getting to the target
-	 * point.
+	 * Proportional control term. It is the base term for getting to the target point.
 	 */
 	public final double p;
 
@@ -23,8 +22,7 @@ public class PID {
 	public final double f;
 
 	/*
-	 * The values may only be set in the constructor as they are final.
-	 * Default feed forward (f) value is 0.0;
+	 * The values may only be set in the constructor as they are final. Default feed forward (f) value is 0.0;
 	 */
 	public PID(double p, double i, double d) {
 		this.p = p;

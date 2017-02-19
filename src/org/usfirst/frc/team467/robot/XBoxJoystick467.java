@@ -14,19 +14,15 @@ import edu.wpi.first.wpilibj.Joystick;
 public class XBoxJoystick467 {
 	private static final int NUM_BUTTONS = 10;
 	private Joystick joystick;
-	private boolean[] buttons = new boolean[NUM_BUTTONS];     // array of current button states
-	private boolean[] prevButtons = new boolean[NUM_BUTTONS]; // array of previous button states
-														      // used for debouncing
+	private boolean[] buttons = new boolean[NUM_BUTTONS]; // array of current button states
+	private boolean[] prevButtons = new boolean[NUM_BUTTONS]; // array of previous button states used for debouncing
 	private double leftStickX = 0.0;
 	private double leftStickY = 0.0;
-	private double stickRX = 0.0;
-	private double stickRY = 0.0;
-	
 	private double rightStickX = 0.0;
 	private double rightStickY = 0.0;
 	private double leftTrigger = 0.0;
 	private double rightTrigger = 0.0;
-	
+
 	private static final double DEADZONE = 0.1;
 
 	public static final int BUTTON_A = 1;
@@ -39,14 +35,14 @@ public class XBoxJoystick467 {
 	public static final int BUTTON_START = 8;
 	public static final int BUTTON_LEFT = 9;
 	public static final int BUTTON_RIGHT = 10;
-	
+
 	private static final int AXIS_LEFT_X = 0;
 	private static final int AXIS_LEFT_Y = 1;
 	private static final int AXIS_LEFT_TRIGGER = 2;
 	private static final int AXIS_RIGHT_TRIGGER = 3;
 	private static final int AXIS_RIGHT_X = 4;
-	private static final int AXIS_RIGHT_Y = 5;		
-	
+	private static final int AXIS_RIGHT_Y = 5;
+
 	/**
 	 * Create a new joystick on a given channel
 	 *
@@ -81,14 +77,14 @@ public class XBoxJoystick467 {
 
 		rightStickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_X));
 		rightStickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_Y));
-		
+
 		leftTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_LEFT_TRIGGER));
 		rightTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_TRIGGER));
 	}
-	
+
 	/**
-	 * Check if a specific button is being held down. Ignores first button
-	 * press, but the robot loops too quickly for this to matter.
+	 * Check if a specific button is being held down. Ignores first button press, but the robot loops too quickly for this to
+	 * matter.
 	 *
 	 * @param button
 	 * @return
@@ -118,37 +114,35 @@ public class XBoxJoystick467 {
 	}
 
 	/**
-	 * Gets the X position of the stick. Left to right ranges from -1.0 to 1.0,
-	 * with 0.0 in the middle. This value is accelerated.
+	 * Gets the X position of the stick. Left to right ranges from -1.0 to 1.0, with 0.0 in the middle. This value is accelerated.
 	 *
 	 * @return
 	 */
 	public double getLeftStickX() {
 		return leftStickX;
 	}
-	
+
 	public double getRightStickX() {
 		return rightStickX;
 	}
 
 	/**
-	 * Gets the Y position of the stick. Up to down ranges from -1.0 to 1.0,
-	 * with 0.0 in the middle. This value is accelerated.
+	 * Gets the Y position of the stick. Up to down ranges from -1.0 to 1.0, with 0.0 in the middle. This value is accelerated.
 	 *
 	 * @return
 	 */
 	public double getLeftStickY() {
 		return leftStickY;
 	}
-	
-	public double getRightStickY(){
+
+	public double getRightStickY() {
 		return rightStickY;
 	}
-	
+
 	public double getLeftTrigger() {
 		return leftTrigger;
 	}
-	
+
 	public double getRightTrigger() {
 		return rightTrigger;
 	}
@@ -161,24 +155,19 @@ public class XBoxJoystick467 {
 	public double getLeftStickDistance() {
 		return Math.sqrt((leftStickX * leftStickX) + (leftStickY * leftStickY));
 	}
-	
+
 	public double getRightStickDistance() {
 		return Math.sqrt((rightStickX * rightStickX) + (rightStickY * rightStickY));
 	}
 
-	public double getRStickDistance() {
-		return Math.sqrt((stickRX * stickRX) + (stickRY * stickRY));
-	}
-
-	private double calculateStickAngle(double stickX, double stickY)
-	{
+	private double calculateStickAngle(double stickX, double stickY) {
 		if (stickY == 0.0) {
 			// In Y deadzone avoid divide by zero error
 			return (stickX > 0.0) ? Math.PI / 2 : -Math.PI / 2;
 		}
 
 		// Return value in range -PI to PI
-		double stickAngle = LookUpTable.getArcTan(stickX / - stickY);
+		double stickAngle = LookUpTable.getArcTan(stickX / -stickY);
 
 		if (stickY > 0) {
 			stickAngle += (stickX > 0) ? Math.PI : -Math.PI;
@@ -186,7 +175,7 @@ public class XBoxJoystick467 {
 
 		return (stickAngle);
 	}
-	
+
 	/**
 	 * Calculate the angle of this joystick.
 	 *
@@ -195,14 +184,13 @@ public class XBoxJoystick467 {
 	public double getLeftStickAngle() {
 		return (calculateStickAngle(leftStickX, leftStickY));
 	}
-	
-	public double getrightStickAngle() {
+
+	public double getRightStickAngle() {
 		return (calculateStickAngle(rightStickX, rightStickY));
 	}
 
 	/**
-	 * Implement a dead zone for Joystick centering - and a non-linear
-	 * acceleration as the user moves away from the zero position.
+	 * Implement a dead zone for Joystick centering - and a non-linear acceleration as the user moves away from the zero position.
 	 *
 	 * @param input
 	 * @return processed input
@@ -216,5 +204,5 @@ public class XBoxJoystick467 {
 		// ensuring that the sign of the input is preserved
 		return (input * Math.abs(input));
 	}
-	
+
 }

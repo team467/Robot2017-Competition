@@ -5,8 +5,7 @@
 package org.usfirst.frc.team467.robot;
 
 /**
- * This class contains only static variables and functions, and simply acts as a
- * container for all the calibration code.
+ * This class contains only static variables and functions, and simply acts as a container for all the calibration code.
  */
 public class Calibration {
 	// Creates objects
@@ -112,7 +111,6 @@ public class Calibration {
 		prevCalibrationAngle += (DriverStation2017.getInstance().getCalibrationJoystick().getRightStickX() / 100.0);
 		return prevCalibrationAngle;
 	}
-
 
 	// This is a static variable to define the wheel being calibrated.
 	private static int calibrateWheelSelect = 0;

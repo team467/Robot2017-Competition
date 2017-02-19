@@ -16,8 +16,7 @@ package org.usfirst.frc.team467.robot;
 public class RobotMap {
 	// Global robot constants
 	/**
-	 * The maximum revolutions per minute (RPM) of a wheel when in speed control
-	 * mode.
+	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	 */
 	public static final double MAX_SPEED = 300.0;
 
@@ -140,8 +139,7 @@ public class RobotMap {
 	public static final double wheeldiameter = 6;
 
 	/**
-	 * The number of encoder ticks per one revolution of the wheel. This is used
-	 * for correctly determining RPM and position.
+	 * The number of encoder ticks per one revolution of the wheel. This is used for correctly determining RPM and position.
 	 */
 	public static final int WHEELPOD_ENCODER_CODES_PER_REVOLUTION = 256;
 
