@@ -316,8 +316,7 @@ public class Drive extends RobotDrive {
 		// vector component of the field aligned part of the motion
 		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed, LookUpTable.getCos(angleDiff) * speed);
 
-		// Only need to do math for first turn vector - can use symmetry to
-		// generate the rest
+		// Only need to do math for first turn vector - can use symmetry to generate the rest
 		Vector flTurn = new Vector(LookUpTable.getSin(TURN_IN_PLACE_ANGLE) * turnSpeed,
 				LookUpTable.getCos(TURN_IN_PLACE_ANGLE) * turnSpeed);
 
@@ -333,8 +332,7 @@ public class Drive extends RobotDrive {
 		Vector BR = faVector.Add(brTurn);
 
 		// Figure out corrected angles & speeds for each wheel
-		// Note - correction calculates shortest distance to drive to required
-		// angle and will
+		// Note - correction calculates shortest distance to drive to required angle and will
 		// flip direction by 180 and speed by -1 if that is shorter
 		WheelCorrection flCorrected = wrapAroundCorrect(RobotMap.FRONT_LEFT, FL.getAngle(), FL.getMagnitude());
 		WheelCorrection frCorrected = wrapAroundCorrect(RobotMap.FRONT_RIGHT, FR.getAngle(), FR.getMagnitude());
@@ -389,25 +387,6 @@ public class Drive extends RobotDrive {
 			return;
 		}
 	}
-
-	// Zeynep trying out a different kind of xbsplit. do not delete yet
-	// public void xbSplit(double strafe, double drive, double speed, double
-	// turnLeft, double turnRight){
-	// if (strafe > 0){
-	// crabDrive(0, speed);
-	// }
-	// if (strafe < 0){
-	// crabDrive(180, speed);
-	// }
-	//
-	// if (drive != 0){
-	// crabDrive(drive, speed);
-	// }
-	//
-	// turnDrive(turnLeft);
-	// turnDrive(turnRight);
-	// }
-	//
 
 	/**
 	 * Individually controls a specific steering motor
