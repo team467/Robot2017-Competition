@@ -62,8 +62,7 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 				increaseValue();
 			}
 			lastAverageError = averageError;
-			if ((Math.abs(averageError()) < FEED_FORWARD_ALLOWABLE_ERROR)
-					|| (factorDecreaseCount > MAX_FACTOR_DECREASE_COUNT)) {
+			if ((Math.abs(averageError()) < FEED_FORWARD_ALLOWABLE_ERROR) || (factorDecreaseCount > MAX_FACTOR_DECREASE_COUNT)) {
 				feedForward(currentValue);
 				wheelPod.percentVoltageBusMode();
 				return true;

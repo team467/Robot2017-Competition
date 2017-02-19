@@ -44,8 +44,7 @@ public class PIDTuningCycleCharacteristics extends BaseTuner implements Tuner {
 			} else if (Math.abs((lastPeak - setpoint)) < 3) {
 				set(0);
 				wheelPod.percentVoltageBusMode();
-				System.out.println(wheelPod.name() + " Max Overshoot: " + maxAmplitude + " Converge Time: "
-						+ ((time - startTime)));
+				System.out.println(wheelPod.name() + " Max Overshoot: " + maxAmplitude + " Converge Time: " + ((time - startTime)));
 				isComplete = true;
 				return isComplete;
 			} else if (count >= HOLD_PERIOD) {
