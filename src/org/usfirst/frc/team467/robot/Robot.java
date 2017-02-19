@@ -7,7 +7,6 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team467.robot.Autonomous.Process;
@@ -57,6 +56,7 @@ public class Robot extends IterativeRobot {
 		gyro.calibrate();
 		gyro.reset();
 
+		// Initialize math lookup table
 		LookUpTable.init();
 
 		cam = CameraStream.getInstance();
@@ -128,18 +128,17 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", gyro.getAngleYDegrees());
-		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
 
 		drive.aiming.reset();
-		// System.out.println("-------Teleop Periodic-------");
+
 		// Read driverstation inputs
 		driverstation.readInputs();
 
 		if (driverstation.getGyroReset()) {
 			gyro.reset();
 		}
+
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
@@ -153,30 +152,31 @@ public class Robot extends IterativeRobot {
 	 * called once per iteration to perform any necessary updates to the drive system.
 	 */
 	private void updateDrive() {
-		drive.aiming.reset();
+
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
 
 		case VECTOR:
-			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
-			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
-					driveSpeed, // Robot speed
-					turnSpeed * driverstation.getVectorTurnDirection()); // Robot turn speed
+			// @formatter:off
+			drive.vectorDrive(
+					driverstation.getDriveJoystick().getLeftStickAngle(),     // Field aligned direction
+					driverstation.getDriveJoystick().getLeftStickDistance(),  // Robot speed
+					turnSpeed * driverstation.getVectorTurnDirection());      // Robot turn speed
+			// @formatter:on
 			break;
 
 		case CRAB:
 			if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
-				// Don't start driving until commanded speed greater than
-				// mininum
+				// Don't start driving until commanded speed greater than minimum
 				drive.stop();
 			} else {
-				drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Robot
-																						// aligned
-																						// direction
-						driverstation.getDriveJoystick().getLeftStickDistance()); // Robot
-																					// speed
+				// @formatter:off
+				drive.crabDrive(
+						driverstation.getDriveJoystick().getLeftStickAngle(),     // Robot aligned direction
+						driverstation.getDriveJoystick().getLeftStickDistance()); // Robot speed
+				// @formatter:on
 			}
 			break;
 
