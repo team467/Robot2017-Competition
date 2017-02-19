@@ -13,7 +13,10 @@ public class ButtonPanel2017 {
         INTAKE_IN(5),
         INTAKE_OUT(6),
         AGITATOR_SHOOT(7),
-        AGITATOR_REVERSE(8);
+        AGITATOR_REVERSE(8),
+		GEAR_GET(9),
+		GEAR_SCOOP(10),
+		GEAR_PLACE(11);
 		
 		public final int id;
 		
