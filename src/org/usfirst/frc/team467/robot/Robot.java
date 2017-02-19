@@ -7,29 +7,38 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-import edu.wpi.first.wpilibj.AnalogInput;
+import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.apache.log4j.Logger;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
+ * IterativeRobot documentation. If you change the name of this class or the package after creating this project, you must also
+ * update the manifest file in the resource directory.
  */
+
 public class Robot extends IterativeRobot {
-	private static final double MIN_DRIVE_SPEED = 0.1;
+	private static final double MIN_DRIVE_SPEED = RobotMap.MIN_DRIVE_SPEED;
+	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
+
 	private Climber climber;
 	private BallIntake intake;
 	private Shooter shooter;
 	private Agitator agitator;
 	private Steering steering;
-
+	private Process autonomous;
+	private CameraStream cam;
+	private VisionProcessing vision;
+	private Gyrometer gyro;
+	private ADIS16448_IMU imu;
+	
 	int session;
 
 	/**
@@ -38,55 +47,107 @@ public class Robot extends IterativeRobot {
 	double time;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
-		// Initialize logging framework.
-		
+		// Initialize logging framework
+		Logging.init();
+
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-//		climber = new Climber(RobotMap.CLIMBER_MOTOR_1, RobotMap.CLIMBER_MOTOR_2, driverstation);
-		//TODO: add in the other game pieces when the motor position is leaerned
+		// drive.setSpeedMode();
+		drive.setPercentVoltageBusMode();
 		Calibration.init();
+		gyro = Gyrometer.getInstance();
+		gyro.calibrate();
+		gyro.reset();
 
 		LookUpTable.init();
 
+		cam = CameraStream.getInstance();
+		vision = VisionProcessing.getInstance();
+
+		SmartDashboard.putString("DB/String 0", "1.0");
+		SmartDashboard.putString("DB/String 1", "0.0");
+		SmartDashboard.putString("DB/String 2", "0.0");
+		SmartDashboard.putString("DB/String 3", "0.0");
+		LOGGER.debug("Robot Initialized");
 	}
 
 	public void disabledInit() {
+		LOGGER.debug("Disabled Starting");
 	}
 
 	public void disabledPeriodic() {
+		// LOGGER.debug("Disabled Periodic");
+		SmartDashboard.putData("IMU", imu);
+
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", gyroAngle);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
+		vision.update();
 	}
 
-	public void autonomousInit() { 
+	public void autonomousInit() {
+		System.out.println("Autonomous reset");
+		autonomous = Actions.getBasicProcess();
+		autonomous.reset();
 	}
 
 	public void teleopInit() {
-		driverstation.getDriveJoystick();
-//		unwindAllWheelpods();
+		imu.reset();
+		driverstation.readInputs();
 	}
 
 	public void testInit() {
+		imu.reset();
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
 	}
 
 	public void testPeriodic() {
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		vision.update();
+		driverstation.readInputs();
+		// double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+		// drive.crabDrive(driveAngle, 0.0);
+		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to gyro
+		if (onTarget) {
+			System.out.println("TARGET ACQUIRED");
+		}
 	}
 
 	public void autonomousPeriodic() {
-		driverstation.readInputs();
+		autonomous.run();
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-				
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", imu.getAngleY() / 4);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+
+		drive.aiming.reset();
+		// System.out.println("-------Teleop Periodic-------");
 		// Read driverstation inputs
 		driverstation.readInputs();
-		
+
+		if (driverstation.getGyroReset()) {
+			imu.reset();
+		}
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
@@ -98,64 +159,44 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
-	 * called once per iteration to perform any necessary updates to the drive
-	 * system.
+	 * called once per iteration to perform any necessary updates to the drive system.
 	 */
 	private void updateDrive() {
-		drive.setSpeedMode();
-
+		drive.aiming.reset();
 		DriveMode driveMode = driverstation.getDriveMode();
+
 		switch (driveMode) {
-		case UNWIND:
-			unwindAllWheelpods();
-			break;
-		case TURN:
-			if (driverstation.getDriveJoystick().getXbox()){
-				drive.turnDrive(-driverstation.getDriveJoystick().getTurnStickX() / 2);
-			}
-			else{
-				drive.turnDrive(-driverstation.getDriveJoystick().getTwist() / 2);
-			}
+		case VECTOR:
+			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
+			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
+			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
+					driveSpeed, // Robot speed
+					turnSpeed * driverstation.getVectorTurnDirection()); // Robot turn speed
 			break;
 
 		case CRAB:
-			if (driverstation.getDriveJoystick().getStickDistance() < MIN_DRIVE_SPEED) {
+			if (driverstation.getDriveJoystick().getLeftStickDistance() < MIN_DRIVE_SPEED) {
 				// Don't start driving until commanded speed greater than
-				// minimum
+				// mininum
 				drive.stop();
 			} else {
-				drive.crabDrive(driverstation.getDriveJoystick().getStickAngle(),
-							    driverstation.getDriveJoystick().getStickDistance());
+				drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Robot
+																						// aligned
+																						// direction
+						driverstation.getDriveJoystick().getLeftStickDistance()); // Robot
+																					// speed
 			}
 			break;
 
-		case STRAFE:
-			drive.strafeDrive(driverstation.getDriveJoystick().getPOV());
+		case UNWIND:
+			for (Steering wheelpod : Drive.getInstance().steering) {
+				wheelpod.setAbsoluteAngle(0);
+			}
 			break;
 
-//		case FIELD_ALIGN:
-//			drive.fieldAlignDrive(driverstation.getDriveJoystick().getStickAngle(),
-//						    driverstation.getDriveJoystick().getStickDistance());
-//			break;
-//
-//		case VECTOR:
-//			if (driverstation.getDriveJoystick().getXbox()){
-//				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-//					    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTurnStickX());
-//			}
-//			else {
-//				drive.vectorDrive(driverstation.getDriveJoystick().getStickAngle(),
-//				    driverstation.getDriveJoystick().getStickDistance(), driverstation.getDriveJoystick().getTwist());
-//			}
-//			break;
-//	        	drive.xbSplit(driverstation.getDriveJoystick().getStickAngle(),
-//	    				driverstation.getDriveJoystick().getStickDistance(),
-//	    				-driverstation.getDriveJoystick().getTwist() / 2);
-//			}
-//			break;
-
 		default:
-			drive.stop(); // If no drive mode specified, don't drive!
+			drive.stop();
+			break;
 		}
 	}
 

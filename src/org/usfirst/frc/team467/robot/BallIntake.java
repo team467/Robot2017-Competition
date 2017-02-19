@@ -14,16 +14,17 @@ public class BallIntake {
 	}
 
 	private BallIntake() {
-		spark = new Spark(RobotMap.INTAKE_MOTOR);
+		spark = new Spark(RobotMap.BALL_INTAKE_MOTOR_CHANNEL);
 	}
 
-	public void startIntake() {
+	public static void startIntake() {
 		spark.set(1.0);
 	}
 
-	public void reverse() {
+	public static void reverse() {
 		// reverse should be slower than intake
 		spark.set(-0.1);
 	}
 
 }
+

@@ -3,7 +3,7 @@
  */
 package org.usfirst.frc.team467.robot.AutoCalibration;
 
-import org.usfirst.frc.team467.robot.PIDCalibration.WheelPod;
+import org.usfirst.frc.team467.robot.WheelPod;
 
 /**
  *

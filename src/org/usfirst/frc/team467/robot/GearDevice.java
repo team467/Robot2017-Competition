@@ -50,5 +50,5 @@ public class GearDevice {
         //too complex for now
     }
     
-    
 }
+
