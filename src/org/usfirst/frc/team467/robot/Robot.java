@@ -32,7 +32,6 @@ public class Robot extends IterativeRobot {
 	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
-	private ADIS16448_IMU imu;
 
 	int session;
 
@@ -76,8 +75,6 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
-		SmartDashboard.putData("IMU", imu);
-
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -96,12 +93,12 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		imu.reset();
+		gyro.reset();
 		driverstation.readInputs();
 	}
 
 	public void testInit() {
-		imu.reset();
+		gyro.reset();
 		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
 		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
 		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
@@ -132,7 +129,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", imu.getAngleY() / 4);
+		SmartDashboard.putNumber("gyro", gyro.getAngleYDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 
 		drive.aiming.reset();
@@ -141,7 +138,7 @@ public class Robot extends IterativeRobot {
 		driverstation.readInputs();
 
 		if (driverstation.getGyroReset()) {
-			imu.reset();
+			gyro.reset();
 		}
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
