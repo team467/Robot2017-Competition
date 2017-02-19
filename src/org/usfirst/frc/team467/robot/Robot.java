@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	private static final double MIN_DRIVE_SPEED = 0.1;
 
-	
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
