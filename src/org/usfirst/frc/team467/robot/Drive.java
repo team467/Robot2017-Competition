@@ -251,10 +251,8 @@ public class Drive extends RobotDrive {
 		// speed *= SPEED_MAX_MODIFIER;
 		// }
 
-		// // Limit the rate at which robot can change speed once driving over
-		// 0.6
-		// if (Math.abs(speed - lastSpeed[wheelID]) > SPEED_MAX_CHANGE &&
-		// Math.abs(lastSpeed[wheelID]) > 0.6) {
+		// // Limit the rate at which robot can change speed once driving over 0.6
+		// if (Math.abs(speed - lastSpeed[wheelID]) > SPEED_MAX_CHANGE && Math.abs(lastSpeed[wheelID]) > 0.6) {
 		// if (speed > lastSpeed[wheelID]) {
 		// speed = lastSpeed[wheelID] + SPEED_MAX_CHANGE;
 		// } else {
