@@ -26,27 +26,29 @@ public class Gyrometer implements PIDSource {
 	}
 
 	// base gyro returns values in degrees - 1440 degrees per rotation
-	// public double getAngleZRadians()
-	// {
-	// return gyro.getAngleZ() * Math.PI / 720;
-	// }
-	//
+	public double getAngleZRadians() {
+		return gyro.getAngleZ() * Math.PI / 720;
+	}
+
 	// base gyro returns values in degrees - 1440 degrees per rotation
 	public double getAngleZDegrees() {
 		return gyro.getAngleZ() / 4;
 	}
 
+	public double getAngleXRadians() {
+		return -gyro.getAngleX() * Math.PI / 720;
+	}
+
 	public double getAngleXDegrees() {
 		return gyro.getAngleX() / 4;
 	}
-
-	// on 2017 robot #1 use Y angle to find gyro orientation
-	public double getAngleYDegrees() {
-		return gyro.getAngleY() / 4;
-	}
-
+	
 	public double getAngleYRadians() {
 		return -gyro.getAngleY() * Math.PI / 720;
+	}
+	
+	public double getAngleYDegrees() {
+		return gyro.getAngleY() / 4;
 	}
 
 	@Override

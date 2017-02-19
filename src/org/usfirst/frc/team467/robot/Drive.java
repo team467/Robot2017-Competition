@@ -42,12 +42,6 @@ public class Drive extends RobotDrive {
 	// Length is the wide side
 	private static final double TURN_IN_PLACE_ANGLE = Math.atan(RobotMap.LENGTH / RobotMap.WIDTH);
 
-	// Invert the drive motors to allow for wiring.
-	private static final boolean FRONT_LEFT_DRIVE_INVERT = false;
-	private static final boolean FRONT_RIGHT_DRIVE_INVERT = true;
-	private static final boolean BACK_LEFT_DRIVE_INVERT = false;
-	private static final boolean BACK_RIGHT_DRIVE_INVERT = true;
-
 	// Speed modifier constants
 	// TODO figure out correct values/behavior for vector drive
 	// private static final double SPEED_SLOW_MODIFIER = 0.5;
@@ -164,23 +158,23 @@ public class Drive extends RobotDrive {
 
 		switch (controlMode) {
 		case Speed:
-			m_frontLeftMotor
-					.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
-			m_frontRightMotor.set(
-					(FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
-			m_rearLeftMotor
-					.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
-			m_rearRightMotor
-					.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
+			m_frontLeftMotor.set((RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT)
+					* RobotMap.MAX_SPEED);
+			m_frontRightMotor.set((RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT)
+					* RobotMap.MAX_SPEED);
+			m_rearLeftMotor.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT)
+					* RobotMap.MAX_SPEED);
+			m_rearRightMotor.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT)
+					* RobotMap.MAX_SPEED);
 			break;
 		case Voltage:
 		case PercentVbus:
 		default:
 			// System.out.println(frontLeftSpeed);
-			m_frontLeftMotor.set((FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
-			m_frontRightMotor.set((FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
-			m_rearLeftMotor.set((BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
-			m_rearRightMotor.set((BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
+			m_frontLeftMotor.set((RobotMap.FRONT_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
+			m_frontRightMotor.set((RobotMap.FRONT_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
+			m_rearLeftMotor.set((RobotMap.BACK_LEFT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
+			m_rearRightMotor.set((RobotMap.BACK_RIGHT_DRIVE_INVERT ? -1 : 1) * limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
 		}
 
 		if (m_safetyHelper != null) {
