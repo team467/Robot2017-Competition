@@ -13,7 +13,7 @@ public class Gyrometer implements PIDSource {
 	private ADIS16448_IMU imu = null;
 	private static Gyrometer instance;
 
-	/* 
+	/*
 	 * private constructor (singleton pattern)
 	 */
 	private Gyrometer() {
@@ -21,7 +21,7 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns a single instance of the gyro object. 
+	 * Returns a single instance of the gyro object.
 	 */
 	public static Gyrometer getInstance() {
 		if (instance == null) {
@@ -30,7 +30,7 @@ public class Gyrometer implements PIDSource {
 		return instance;
 	}
 
-	/* 
+	/*
 	 * Reset gyro
 	 */
 	public void reset() {
@@ -45,8 +45,8 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the angle of the robot orientation in Radians.
-	 * Robot is assumed to be pointing forward at 0.0. Clockwise rotation is positive, counter clockwise rotation is negative
+	 * Returns the angle of the robot orientation in Radians. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
+	 * positive, counter clockwise rotation is negative
 	 *
 	 * @return the robot angle
 	 */
@@ -59,8 +59,8 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the angle of the robot orientation in Degrees.
-	 * Robot is assumed to be pointing forward at 0.0. Clockwise rotation is positive, counter clockwise rotation is negative
+	 * Returns the angle of the robot orientation in Degrees. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
+	 * positive, counter clockwise rotation is negative
 	 *
 	 * @return the robot angle
 	 */
@@ -73,28 +73,25 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the Z angle of the gyro in Radians.
-	 * Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the Z angle of the gyro in Radians. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
-	 */	
+	 */
 	public double getAngleZRadians() {
 		return imu.getAngleZ() * Math.PI / 720;
 	}
 
 	/**
-	 * Returns the Z angle of the gyro in Degrees.
-	 * Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the Z angle of the gyro in Degrees. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
-	 */	
+	 */
 	public double getAngleZDegrees() {
 		return imu.getAngleZ() / 4;
 	}
 
 	/**
-	 * Returns the X angle of the gyro in Radians.
-	 * Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the X angle of the gyro in Radians. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
 	 */
@@ -103,8 +100,7 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the X angle of the gyro in Degrees.
-	 * Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the X angle of the gyro in Degrees. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
 	 */
@@ -113,8 +109,7 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the Y angle of the gyro in Radians.
-	 * Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the Y angle of the gyro in Radians. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
 	 */
@@ -123,8 +118,7 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the Y angle of the gyro in Degrees.
-	 * Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the Y angle of the gyro in Degrees. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
 	 */
