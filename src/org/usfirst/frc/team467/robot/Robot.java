@@ -66,6 +66,8 @@ public class Robot extends IterativeRobot {
 		vision = VisionProcessing.getInstance();
 		ultra = new Ultrasonic(0, 1);
 		gyro = Gyrometer.getInstance();
+		
+		autonomous = driverstation.getActionGroup();
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
@@ -94,14 +96,15 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		System.out.println("Autonomous reset");
-		autonomous = driverstation.getAutonomous();
-		autonomous.reset();
+		autonomous = driverstation.getActionGroup();
+		autonomous.enable();
 	}
 
 	public void teleopInit() {
 		gyro.reset();
 		driverstation.readInputs();
-		driverstation.getAutonomous().terminate();
+		autonomous.terminate();
+		autonomous = driverstation.getActionGroup();
 	}
 
 	public void testInit() {
@@ -128,7 +131,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		updateAutonomous();
+		autonomous.run();
 	}
 
 	/**
@@ -136,7 +139,6 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
-
 		drive.aiming.reset();
 
 		// Read driverstation inputs
@@ -146,22 +148,22 @@ public class Robot extends IterativeRobot {
 			gyro.reset();
 		}
 		
-		if (driverstation.getCalibrate()) {
+		if (!autonomous.isComplete()) {
+			updateAutonomous(autonomous);
+		} else if (driverstation.isInCalibrateMode()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
-		} else if (!driverstation.getAutonomous().isComplete()) {
-			updateAutonomous();
-		} else if (driverstation.getStartAuto()) {
-			LOGGER.debug("AUTONOMOUS");
-			driverstation.getAutonomous().reset();
 		} else {
+			autonomous = driverstation.getActionGroup();
 			// Drive Mode
 			updateDrive();
 		}
 	}
 
-	public void updateAutonomous() {
-		ActionGroup auto = driverstation.getAutonomous();
+	/**
+	 * @param auto - ActionGroup to run
+	 */
+	private void updateAutonomous(ActionGroup auto) {
 		driverstation.readInputs();
 		LOGGER.debug("getTerminateAuto=" + driverstation.getTerminateAuto());
 		if (driverstation.getTerminateAuto()) {

@@ -39,14 +39,15 @@ public class Actions {
 	}
 	
 	// Private method makes process, but for only one public variable
-	private static ActionGroup getBasicProcess() {
+	public static ActionGroup newBasicProcess() {
 		ActionGroup mode = new ActionGroup("Basic Auto");
 		mode.addAction(example1);
 		mode.addAction(moveForward);
 		mode.addAction(moveBackward);
+		mode.enable();
 		return mode;
 	}
-	public static ActionGroup basicProcess = getBasicProcess();
+	public static final ActionGroup basicProcess = newBasicProcess();
 
 	private static ActionGroup getExampleProcess() {
 		ActionGroup mode = new ActionGroup("Example Auto");

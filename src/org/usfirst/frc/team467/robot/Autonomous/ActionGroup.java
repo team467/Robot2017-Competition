@@ -66,7 +66,7 @@ public class ActionGroup {
 		master.addAll(actions);
 	}
 
-	public void reset() {
+	public void enable() {
 		LOGGER.debug("Resetting Process");
 		for (Action act : master) {
 			if (act.condition == (Duration) act.condition) {

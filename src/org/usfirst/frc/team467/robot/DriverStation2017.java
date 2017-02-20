@@ -8,6 +8,7 @@ public class DriverStation2017 {
 
 	XBoxJoystick467 driverJoy = null;
 	ButtonPanel2017 buttonPanel = null;
+	ActionGroup autonomous = null;
 
 	// Mapping of functions to Joystick Buttons for normal operation
 
@@ -16,7 +17,7 @@ public class DriverStation2017 {
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
 	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_LEFT;
-	private static int AUTO_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
+	private static int BASIC_PROCESS_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
 	private static int TERMINATE_BUTTON = XBoxJoystick467.BUTTON_BACK;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
@@ -43,6 +44,7 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
+		autonomous = Actions.basicProcess; // Default
 		// buttonPanel = new ButtonPanel2017(1);
 	}
 
@@ -118,18 +120,21 @@ public class DriverStation2017 {
 	 *
 	 * @return true if calibration mode selected
 	 */
-	public boolean getCalibrate() {
+	public boolean isInCalibrateMode() {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
 	
-	public boolean getStartAuto() {
-		return driverJoy.buttonDown(AUTO_BUTTON); // TODO Make navigator button
-	}
 	public boolean getTerminateAuto() {
 		return driverJoy.buttonDown(TERMINATE_BUTTON);
 	}
-	public ActionGroup getAutonomous() {
-		return Actions.basicProcess; // TODO Get multiple options
+	public ActionGroup getActionGroup() {
+		if (driverJoy.buttonDown(BASIC_PROCESS_BUTTON)) {
+			autonomous = Actions.newBasicProcess();
+		}
+//		} else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
+//			autonomous = Actions.foo;
+//		}
+		return autonomous; // TODO Get multiple options
 	}
 
 	public boolean getGyroReset() {
