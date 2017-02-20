@@ -122,13 +122,9 @@ public class RobotMap {
 	// Gear
 	public static boolean hasGear = false; // default to no gear mechanism
 	public static final PID GEAR_PID = new PID(0.1, 0.01, 0.001, 0);
-	// TODO: need actual motor channels
-	public static final int GEAR_DEVICE_MOTOR_CHANNEL = 9;
-	// TODO: need actual input device channel
-	public static final int GEAR_SENSOR_CHANNEL = 5;
 	// TODO confirm channel for these pieces
-	public static final int GEAR_MOTOR = 16;
-	public static final int GEAR_SENSOR = 5;
+	public static final int GEAR_MOTOR = 7;
+	public static final int GEAR_SENSOR = 1;
 
 	// Climber
 	public static boolean hasClimber = false; // default to no climber
@@ -136,20 +132,18 @@ public class RobotMap {
 	// TODO - test climber
 	public static final int CLIMBER_MOTOR_1 = 5;
 	public static final int CLIMBER_MOTOR_2 = 6;
-	public static final int[] CLIMBER_MOTOR_CHANNELS = { 6, 7 };
 
 	// Ball Intake
 	public static boolean hasBallIntake = false;
 	// TODO: need actual motor channels
-	public static final int BALL_INTAKE_MOTOR_CHANNEL = 8;
-	public static final int INTAKE_MOTOR = 17;
+	public static final int INTAKE_MOTOR = 8;
 
 	// Shooter
 	public static boolean hasShooter = false;
 	// TODO - test shooter motor
 	public static final int SHOOTER_MOTOR_1 = 5;
 	public static final int SHOOTER_MOTOR_2 = 6;
-	public static final int AGITATOR_MOTOR = 11;
+	public static final int AGITATOR_MOTOR = 1;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used for correctly determining RPM and position.
 	public static final int WHEELPOD_ENCODER_CODES_PER_REVOLUTION = 256;
