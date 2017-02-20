@@ -2,10 +2,10 @@ package org.usfirst.team467.robot;
 
 import org.junit.Test;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 public class AutonomousTest {
-	private Process autonomous = Actions.getExampleProcess();
+	private ActionGroup autonomous = Actions.exampleProcess;
 
 	@Test
 	public void autonomousTest() {

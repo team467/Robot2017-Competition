@@ -1,5 +1,8 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+
 public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
 
@@ -12,6 +15,9 @@ public class DriverStation2017 {
 	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
+	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_LEFT;
+	private static int AUTO_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
+	private static int TERMINATE_BUTTON = XBoxJoystick467.BUTTON_BACK;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
@@ -79,12 +85,14 @@ public class DriverStation2017 {
 	 */
 	public DriveMode getDriveMode() {
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
-
+		
 		// UNWIND takes greatest priority
-		if (getDriveJoystick().buttonDown(UNWIND_BUTTON)) {
+		if (driverJoy.buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
-		} else if (getDriveJoystick().buttonDown(CRAB_DRIVE)) {
+		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
+		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+			drivemode = DriveMode.AIM;
 		}
 		return drivemode;
 	}
@@ -112,6 +120,16 @@ public class DriverStation2017 {
 	 */
 	public boolean getCalibrate() {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
+	}
+	
+	public boolean getStartAuto() {
+		return driverJoy.buttonDown(AUTO_BUTTON); // TODO Make navigator button
+	}
+	public boolean getTerminateAuto() {
+		return driverJoy.buttonDown(TERMINATE_BUTTON);
+	}
+	public ActionGroup getAutonomous() {
+		return Actions.basicProcess; // TODO Get multiple options
 	}
 
 	public boolean getGyroReset() {
