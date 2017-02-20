@@ -1,6 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
+import com.analog.adis16448.frc.PiGyro;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  */
 public class Gyrometer implements PIDSource {
 
-	private ADIS16448_IMU imu = null;
+	private PiGyro imu = null;
 	private static Gyrometer instance;
 
 	/*
 	 * private constructor (singleton pattern)
 	 */
 	private Gyrometer() {
-		imu = new ADIS16448_IMU();
+		imu = new PiGyro();
 	}
 
 	/**
@@ -54,7 +54,9 @@ public class Gyrometer implements PIDSource {
 		if (RobotMap.robotID == RobotMap.RobotID.ROBOT2015) {
 			return getAngleZRadians();
 		} else {
-			return getAngleYRadians();
+			//no idea what
+			System.out.println("HILOO");
+			return getAngleZRadians();
 		}
 	}
 
