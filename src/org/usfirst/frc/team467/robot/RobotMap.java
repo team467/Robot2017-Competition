@@ -30,6 +30,10 @@ public class RobotMap {
 	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 1;
 	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 2;
 	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 3;
+	
+    // TODO - test climber
+	public static final int CLIMBER_MOTOR_1 = 5;	
+    public static final int CLIMBER_MOTOR_2 = 6;	
 
 	//
 	// CAN IDs
@@ -41,6 +45,10 @@ public class RobotMap {
 	public static final int BACK_LEFT_MOTOR_CHANNEL = 3;
 	public static final int BACK_RIGHT_MOTOR_CHANNEL = 4;
 
+    // TODO - test shooter motor
+	public static final int SHOOTER_MOTOR_1 = 5;	
+    public static final int SHOOTER_MOTOR_2 = 6;	
+	
 	// @formatter:off
 	public static final int[] DRIVING_MOTOR_CHANNELS = { 
 			FRONT_LEFT_MOTOR_CHANNEL, 
@@ -63,6 +71,13 @@ public class RobotMap {
 			};
 	// @formatter:on
 
+	// Game pieces motor channels
+	// TODO confirm channel for these pieces
+	public static final int AGITATOR_MOTOR = 11;
+    public static final int GEAR_MOTOR = 16;
+    public static final int INTAKE_MOTOR = 17;
+
+	
 	//
 	// Digital Inputs
 	//
@@ -110,6 +125,7 @@ public class RobotMap {
 			"BackRight" 
 			};
 	// @formatter:on
+	public static final int GEAR_SENSOR = 5;
 
 	/**
 	 * Number of increments on the steering sensor (12-bit A/D)
@@ -133,7 +149,7 @@ public class RobotMap {
 	};
 	// @formatter:on
 
-	public static final PID GearDevicePID = new PID(0.1, 0.01, 0.001, 0);
+	public static final PID GEAR_PID = new PID(0.1, 0.01, 0.001, 0);
 
 	// TODO: need actual motor channels
 	public static final int[] CLIMBER_MOTOR_CHANNELS = { 6, 7 };

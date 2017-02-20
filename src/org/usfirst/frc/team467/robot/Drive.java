@@ -42,16 +42,6 @@ public class Drive extends RobotDrive {
 	// Length is the wide side
 	private static final double TURN_IN_PLACE_ANGLE = Math.atan(RobotMap.LENGTH / RobotMap.WIDTH);
 
-	// Speed modifier constants
-	// TODO figure out correct values/behavior for vector drive
-	// private static final double SPEED_SLOW_MODIFIER = 0.5;
-	// private static final double SPEED_TURBO_MODIFIER = 2.0;
-	// private static final double SPEED_MAX_MODIFIER = 0.5;
-	// private static final double SPEED_MAX_CHANGE = 0.15;
-
-	// Speed to use for Strafe and Revolve Drive
-	private static final double SPEED_STRAFE = 0.6;
-
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
@@ -239,27 +229,7 @@ public class Drive extends RobotDrive {
 	 * @return returns rate-limited speed
 	 */
 	private double limitSpeed(double speed, int wheelID) {
-		// Apply speed modifiers first
-
-		// TODO - figure out correct turbo behaviour with speed control mode
-		// if (DriverStation2017.getInstance().getSlow()) {
-		// speed *= SPEED_SLOW_MODIFIER;
-		// } else if (DriverStation2017.getInstance().getTurbo()) {
-		// speed *= SPEED_TURBO_MODIFIER;
-		// } else {
-		// // Limit maximum regular speed to specified Maximum.
-		// speed *= SPEED_MAX_MODIFIER;
-		// }
-
-		// // Limit the rate at which robot can change speed once driving over 0.6
-		// if (Math.abs(speed - lastSpeed[wheelID]) > SPEED_MAX_CHANGE && Math.abs(lastSpeed[wheelID]) > 0.6) {
-		// if (speed > lastSpeed[wheelID]) {
-		// speed = lastSpeed[wheelID] + SPEED_MAX_CHANGE;
-		// } else {
-		// speed = lastSpeed[wheelID] - SPEED_MAX_CHANGE;
-		// }
-		// }
-		// lastSpeed[wheelID] = speed;
+		// TODO - do we need to introduce any rate limiting this year?
 		return (speed);
 	}
 
@@ -334,40 +304,6 @@ public class Drive extends RobotDrive {
 		// drive wheelpods
 		fourWheelSteer(flCorrected.angle, frCorrected.angle, blCorrected.angle, brCorrected.angle);
 		fourWheelDrive(flCorrected.speed, frCorrected.speed, blCorrected.speed, brCorrected.speed);
-	}
-
-	/**
-	 * strafeDrive
-	 *
-	 * @param POVangle
-	 *            angle of the POV joystick found on top of joystick
-	 */
-
-	public void strafeDrive(int POVangle) {
-		double speed = SPEED_STRAFE;
-		double angle = POVangle * Math.PI / 180;
-		crabDrive(angle, speed);
-	}
-
-	/**
-	 * @param x
-	 *            the x distance taken from the right joystick (RX)
-	 * @param y
-	 *            the y distance taken from the right joystick (RY)
-	 * @param speed
-	 */
-	public void xbSplit(double driveAngle, double speed, double turnSpeed) {
-		if (Math.abs(speed) >= RobotMap.MIN_DRIVE_SPEED) {
-			crabDrive(driveAngle, speed);
-			return;
-		} else if (turnSpeed != 0) {
-			turnDrive(turnSpeed);
-			return;
-		} else {
-			System.out.println("Robot is stopped");
-			stop();
-			return;
-		}
 	}
 
 	/**
