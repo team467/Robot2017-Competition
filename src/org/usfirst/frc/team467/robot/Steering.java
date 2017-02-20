@@ -210,8 +210,7 @@ public class Steering {
 		// Limit range to -6PI to +6PI
 		outputAngle = limitRange(outputAngle);
 
-		// Calculate desired setpoint for PID based on known center position and
-		// requested angle
+		// Calculate desired setpoint for PID based on known center position and requested angle
 		int setPoint = (int) (steeringCenter + (outputAngle * LEVELS_PER_ROTATION / (Math.PI * 2)));
 
 		steeringPID.setSetpoint(setPoint);
