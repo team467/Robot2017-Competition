@@ -86,18 +86,15 @@ public class DriverStation2017 {
 	public DriveMode getDriveMode() {
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
 		
-		if (driverJoy.buttonDown(AUTO_BUTTON)) {
-			drivemode = DriveMode.AUTONOMOUS;
-		}
-		else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			drivemode = DriveMode.AIM;
-		}
-		
 		// UNWIND takes greatest priority
-		else if (driverJoy.buttonDown(UNWIND_BUTTON)) {
+		if (driverJoy.buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
+		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+			drivemode = DriveMode.AIM;
+		} else if (driverJoy.buttonDown(AUTO_BUTTON)) {
+			drivemode = DriveMode.AUTONOMOUS;
 		}
 		return drivemode;
 	}
