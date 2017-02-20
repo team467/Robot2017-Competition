@@ -82,7 +82,7 @@ public class WheelPod {
 		velocityMaxStableCycleTime = 0.0;
 		velocityMaxForwardSpeed = 0.0;
 		velocityMaxBackwardSpeed = 0.0;
-		motor = new CANTalon(RobotMap.DRIVING_MOTOR_CHANNELS[id]);
+		motor = new CANTalon(RobotMap.driveMotorChannel[id]);
 		setTalonParameters();
 		motor.changeControlMode(TalonControlMode.PercentVbus);
 		initSmartDashboard();
@@ -230,7 +230,7 @@ public class WheelPod {
 	}
 
 	public boolean checkReversed() {
-		if (RobotMap.IS_DRIVE_MOTOR_INVERTED[id]) {
+		if (RobotMap.isDriveMotorInverted[id]) {
 			motor.reverseOutput(true);
 			motor.reverseSensor(true);
 			return true;
