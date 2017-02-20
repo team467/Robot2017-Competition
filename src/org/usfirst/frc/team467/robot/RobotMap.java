@@ -29,7 +29,7 @@ public class RobotMap {
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON };
 			steeringSensorChannel = new int[] { 0, 1, 2, 3 };
-			driveMotorChannel = new int[] { 1, 2, 3, 4 };
+			driveMotorChannel = new int[] { 2, 1, 3, 4 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 31.5; // front to back - in inches
 			width = 18.5; // side to side in inches
