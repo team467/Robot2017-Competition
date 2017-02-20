@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
  *
  */
 public class Steering {
+	public enum PWMType {SPARK, TALON };
+	
 	private final double LEVELS_PER_ROTATION = 610;
 
 	private static final double MAX_TURNS = 2.0;
@@ -27,7 +29,8 @@ public class Steering {
 	private PIDController steeringPID;
 
 	// Steering motor
-	private Spark steeringMotor;
+	private Talon steeringMotorTalon;
+	private Spark steeringMotorSpark;
 
 	/**
 	 * Center point of this steering motor. This is the value read from the sensor when the wheels are in the normal (zero turn)
@@ -61,39 +64,32 @@ public class Steering {
 	 * @param center
 	 *            - sensor reading when wheels point forward
 	 */
-	Steering(PID pID, int motor, int sensor, double center) {
-		// Make steering motor
-		steeringMotor = new Spark(motor);
-
+	Steering(PWMType type, PID pID, int motor, int sensor, double center) {
 		// Make steering sensor
 		steeringSensor = new AnalogInput(sensor);
 
 		// Set steering center
 		steeringCenter = center;
 
-		// Make PID Controller
-		steeringPID = new PIDController(pID.p, pID.i, pID.d, new SteeringPIDSource(), steeringMotor);
+		// Make steering motor
+		switch (type)
+		{
+		case TALON:
+			steeringMotorTalon = new Talon(motor);
+			steeringPID = new PIDController(pID.p, pID.i, pID.d, new SteeringPIDSource(), steeringMotorTalon);
+			break;
+			
+		case SPARK:
+			steeringMotorSpark = new Spark(motor);
+			steeringPID = new PIDController(pID.p, pID.i, pID.d, new SteeringPIDSource(), steeringMotorSpark);
+			break;
+		}
 
 		// Set PID Controller settings
 		steeringPID.setInputRange(0.0, RobotMap.STEERING_RANGE);
 		steeringPID.setSetpoint(steeringCenter);
 		steeringPID.setContinuous(false);
 		steeringPID.enable();
-	}
-
-	/**
-	 * Enables the PID for the steering.
-	 */
-	public void enablePID() {
-		steeringPID.enable();
-	}
-
-	/**
-	 * Disables the PID for the steering.
-	 */
-	public void disablePID() {
-		steeringPID.disable();
-		steeringMotor.set(0.0);
 	}
 
 	/**
@@ -118,15 +114,6 @@ public class Steering {
 	}
 
 	/**
-	 * Get the Talon motor of this steering object
-	 *
-	 * @return
-	 */
-	public Spark getMotor() {
-		return steeringMotor;
-	}
-
-	/**
 	 * Get the sensor angle. Implements the steering center point to give an angle accurate to the robot's alignment.
 	 *
 	 * @return - steering angle
@@ -136,13 +123,13 @@ public class Steering {
 
 		double output = sensor * (Math.PI * 2) / LEVELS_PER_ROTATION;
 
-		if (steeringSensor.getChannel() == RobotMap.FRONT_LEFT_STEERING_SENSOR_CHANNEL) {
+		if (steeringSensor.getChannel() == RobotMap.steeringSensorChannel[RobotMap.FRONT_LEFT]) {
 			SmartDashboard.putNumber("Front-Left Angle", output);
-		} else if (steeringSensor.getChannel() == RobotMap.FRONT_RIGHT_STEERING_SENSOR_CHANNEL) {
+		} else if (steeringSensor.getChannel() == RobotMap.steeringSensorChannel[RobotMap.FRONT_RIGHT]) {
 			SmartDashboard.putNumber("Front-Right Angle", output);
-		} else if (steeringSensor.getChannel() == RobotMap.BACK_LEFT_STEERING_SENSOR_CHANNEL) {
+		} else if (steeringSensor.getChannel() == RobotMap.steeringSensorChannel[RobotMap.BACK_LEFT]) {
 			SmartDashboard.putNumber("Back-Left Angle", output);
-		} else if (steeringSensor.getChannel() == RobotMap.BACK_RIGHT_STEERING_SENSOR_CHANNEL) {
+		} else if (steeringSensor.getChannel() == RobotMap.steeringSensorChannel[RobotMap.BACK_RIGHT]) {
 			SmartDashboard.putNumber("Back-Right Angle", output);
 		}
 		return output;

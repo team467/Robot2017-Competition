@@ -8,8 +8,9 @@
 package org.usfirst.frc.team467.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
 
@@ -26,10 +27,11 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
-	private Process autonomous;
+	private ActionGroup autonomous;
 
 	private VisionProcessing vision;
 	private Gyrometer gyro;
+	private Ultrasonic ultra;
 
 	int session;
 
@@ -42,6 +44,9 @@ public class Robot extends IterativeRobot {
 	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
+		
+		RobotMap.init(RobotMap.RobotID.ROBOT2015);
+		
 		// Initialize logging framework
 		Logging.init();
 
@@ -59,6 +64,8 @@ public class Robot extends IterativeRobot {
 		LookUpTable.init();
 
 		vision = VisionProcessing.getInstance();
+		ultra = new Ultrasonic(0, 1);
+		gyro = Gyrometer.getInstance();
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
@@ -73,6 +80,7 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
+		SmartDashboard.putData("Ultrasonic", ultra);
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -86,13 +94,14 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		System.out.println("Autonomous reset");
-		autonomous = Actions.getBasicProcess();
+		autonomous = driverstation.getAutonomous();
 		autonomous.reset();
 	}
 
 	public void teleopInit() {
 		gyro.reset();
 		driverstation.readInputs();
+		driverstation.getAutonomous().terminate();
 	}
 
 	public void testInit() {
@@ -119,7 +128,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		autonomous.run();
+		updateAutonomous();
 	}
 
 	/**
@@ -136,13 +145,29 @@ public class Robot extends IterativeRobot {
 		if (driverstation.getGyroReset()) {
 			gyro.reset();
 		}
-
+		
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
+		} else if (!driverstation.getAutonomous().isComplete()) {
+			updateAutonomous();
+		} else if (driverstation.getStartAuto()) {
+			LOGGER.debug("AUTONOMOUS");
+			driverstation.getAutonomous().reset();
 		} else {
 			// Drive Mode
 			updateDrive();
+		}
+	}
+
+	public void updateAutonomous() {
+		ActionGroup auto = driverstation.getAutonomous();
+		driverstation.readInputs();
+		LOGGER.debug("getTerminateAuto=" + driverstation.getTerminateAuto());
+		if (driverstation.getTerminateAuto()) {
+			auto.terminate();
+		} else {
+			auto.run();
 		}
 	}
 
@@ -154,6 +179,9 @@ public class Robot extends IterativeRobot {
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
+		case AIM:
+			Actions.aimProcess(vision.targetAngle).run();
+			break;
 
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;

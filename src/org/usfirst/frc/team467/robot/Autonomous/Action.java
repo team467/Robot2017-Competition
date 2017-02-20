@@ -28,4 +28,9 @@ public class Action {
 	public static interface Activity {
 		public void doIt();
 	}
+	
+	@Override
+	public String toString() {
+		return "Action [description=" + description + ", isDone=" + isDone() + "]";
+	}
 }
