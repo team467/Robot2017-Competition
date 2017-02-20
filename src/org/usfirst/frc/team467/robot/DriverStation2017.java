@@ -93,8 +93,6 @@ public class DriverStation2017 {
 			drivemode = DriveMode.CRAB;
 		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
 			drivemode = DriveMode.AIM;
-		} else if (driverJoy.buttonDown(AUTO_BUTTON)) {
-			drivemode = DriveMode.AUTONOMOUS;
 		}
 		return drivemode;
 	}
@@ -124,6 +122,9 @@ public class DriverStation2017 {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
 	
+	public boolean getStartAuto() {
+		return driverJoy.buttonDown(AUTO_BUTTON); // TODO Make navigator button
+	}
 	public boolean getTerminateAuto() {
 		return driverJoy.buttonDown(TERMINATE_BUTTON);
 	}

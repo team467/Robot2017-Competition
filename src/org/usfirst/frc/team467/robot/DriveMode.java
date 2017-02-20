@@ -1,7 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
 public enum DriveMode {
-	AUTONOMOUS, // Autonomous Subroutine takes over
 	AIM, // Aim at target
 	CRAB, // Crab Drive
 	TURN, // Turn in Place

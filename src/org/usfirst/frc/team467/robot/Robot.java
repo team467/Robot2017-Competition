@@ -142,12 +142,15 @@ public class Robot extends IterativeRobot {
 		if (driverstation.getGyroReset()) {
 			gyro.reset();
 		}
-
+		
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
 		} else if (!driverstation.getAutonomous().isComplete()) {
 			updateAutonomous();
+		} else if (driverstation.getStartAuto()) {
+			LOGGER.debug("AUTONOMOUS");
+			driverstation.getAutonomous().reset();
 		} else {
 			// Drive Mode
 			updateDrive();
@@ -173,10 +176,6 @@ public class Robot extends IterativeRobot {
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
-		case AUTONOMOUS:
-			LOGGER.debug("AUTONOMOUS");
-			driverstation.getAutonomous().reset();
-			break;
 		case AIM:
 			Actions.aimProcess(vision.targetAngle).run();
 			break;
