@@ -28,17 +28,17 @@ public class Climber {
 		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
-	private void stop() {
+	public void stop() {
 		motorLeft.set(0.0);
 		motorRight.set(0.0);
 	}
 
-	private void climb() {
+	public void climb() {
 		motorLeft.set(motorSpeed);
 		motorRight.set(motorSpeed);
 	}
 
-	private void descend() {
+	public void descend() {
 		motorLeft.set(-motorSpeed);
 		motorRight.set(-motorSpeed);
 	}
