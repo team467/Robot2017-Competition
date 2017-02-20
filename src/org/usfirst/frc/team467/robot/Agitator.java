@@ -21,17 +21,17 @@ public class Agitator {
 		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
-	private void shoot() {
+	public void shoot() {
 		motor.setDirection(Relay.Direction.kForward);
 		motor.set(Relay.Value.kOn);
 	}
 
-	private void failsafe() {
+	public void reverse() {
 		motor.setDirection(Relay.Direction.kReverse);
 		motor.set(Relay.Value.kOn);
 	}
 
-	private void stop() {
+	public void stop() {
 		motor.set(Relay.Value.kOff);
 	}
 
@@ -39,7 +39,7 @@ public class Agitator {
 		if (buttonPanel.buttonDown(Buttons.SHOOTER_SPIN)) {
 			shoot();
 		} else if (buttonPanel.buttonDown(Buttons.SHOOTER_FAILSAFE)) {
-			failsafe();
+			reverse();
 		} else {
 			stop();
 		}
