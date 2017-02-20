@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 public class DriverStation2017 {
@@ -26,6 +27,17 @@ public class DriverStation2017 {
 		SLOW, FAST
 	}
 
+	enum GearMode {
+		CARRY, SCOOP, GET, PLACE;
+	}
+	
+	enum IntakeMode {
+		ON, OFF, REVERSE;
+	}
+	
+	private static GearMode gearMode = GearMode.CARRY;
+	private static IntakeMode intakeMode = IntakeMode.OFF;
+
 	/**
 	 * Singleton instance of the object.
 	 *
@@ -43,7 +55,7 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
-		// buttonPanel = new ButtonPanel2017(1);
+		buttonPanel = new ButtonPanel2017(1);
 	}
 
 	/**
@@ -51,6 +63,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
+		buttonPanel.readInputs();
 	}
 
 	/**
@@ -78,14 +91,14 @@ public class DriverStation2017 {
 	// All button mappings are accessed through the functions below
 
 	/**
-	 * returns the current drive mode. Modes lower in the function will override those higher up. only 1 mode can be active at any
-	 * time
+	 * returns the current drive mode. Modes lower in the function will override
+	 * those higher up. only 1 mode can be active at any time
 	 *
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
-		
+
 		// UNWIND takes greatest priority
 		if (driverJoy.buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
@@ -121,13 +134,15 @@ public class DriverStation2017 {
 	public boolean getCalibrate() {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
-	
+
 	public boolean getStartAuto() {
 		return driverJoy.buttonDown(AUTO_BUTTON); // TODO Make navigator button
 	}
+
 	public boolean getTerminateAuto() {
 		return driverJoy.buttonDown(TERMINATE_BUTTON);
 	}
+
 	public ActionGroup getAutonomous() {
 		return Actions.basicProcess; // TODO Get multiple options
 	}
@@ -142,4 +157,68 @@ public class DriverStation2017 {
 	public boolean getCalibrateConfirmSelection() {
 		return getCalibrationJoystick().buttonDown(CALIBRATE_CONFIRM_BUTTON);
 	}
+
+	public boolean isShooting() {
+		return buttonPanel.buttonDown(Buttons.SHOOTER_SPIN);
+	}
+
+	public boolean isShootingReverse() {
+		return buttonPanel.buttonDown(Buttons.SHOOTER_FAILSAFE);
+	}
+	
+	public boolean isClimbing() {
+		return buttonPanel.buttonDown(Buttons.CLIMBER_UP);
+	}
+	
+	public boolean isClimbingReverse() {
+		return buttonPanel.buttonDown(Buttons.CLIMBER_DOWN);
+	}
+	
+	public GearMode getGearMode() {
+		if (buttonPanel.buttonDown(Buttons.GEAR_UP)) {
+			gearMode = GearMode.CARRY;
+		} else if (buttonPanel.buttonDown(Buttons.GEAR_SCOOP)) {
+			if (gearMode == GearMode.SCOOP) {
+				gearMode = GearMode.CARRY;
+			} else {
+				gearMode = GearMode.SCOOP;
+			}
+		} else if (buttonPanel.buttonDown(Buttons.GEAR_GET)) {
+			if (gearMode == GearMode.GET) {
+				gearMode = GearMode.CARRY;
+			} else {
+				gearMode = GearMode.GET;
+			}
+		} else if (buttonPanel.buttonDown(Buttons.GEAR_PLACE)) {
+			if (gearMode == GearMode.PLACE) {
+				gearMode = GearMode.CARRY;
+			} else {
+				gearMode = GearMode.PLACE;
+			}
+		}
+		
+		return gearMode;
+	}
+	
+	public IntakeMode getIntakeMode() {
+		if (buttonPanel.buttonDown(Buttons.INTAKE_IN)) {
+			if (intakeMode == IntakeMode.ON) {
+				intakeMode = IntakeMode.OFF;
+			} else {
+				intakeMode = IntakeMode.ON;
+			}
+		} 
+		else if (buttonPanel.buttonDown(Buttons.INTAKE_OUT)) {
+			if (intakeMode == IntakeMode.REVERSE) {
+				intakeMode = IntakeMode.OFF;
+			} else {
+				intakeMode = IntakeMode.REVERSE;
+			}
+		}
+		
+		return intakeMode;
+	}
+	
+	
+
 }

@@ -1,14 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
-import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
-
 import edu.wpi.first.wpilibj.Spark;
 
 public class Climber {
 	private static Climber instance;
 	private static Spark motorLeft;
 	private static Spark motorRight;
-	private static ButtonPanel2017 buttonPanel;
 
 	private static double motorSpeed = 0.7;
 
@@ -25,7 +22,6 @@ public class Climber {
 	public Climber() {
 		motorLeft = new Spark(RobotMap.CLIMBER_MOTOR_1);
 		motorRight = new Spark(RobotMap.CLIMBER_MOTOR_2);
-		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
 	public void stop() {
@@ -38,19 +34,10 @@ public class Climber {
 		motorRight.set(motorSpeed);
 	}
 
-	public void descend() {
+	public void reverse() {
 		motorLeft.set(-motorSpeed);
 		motorRight.set(-motorSpeed);
 	}
 
-	public void update() {
-		if (buttonPanel.buttonDown(Buttons.CLIMBER_UP)) {
-			climb();
-		} else if (buttonPanel.buttonDown(Buttons.CLIMBER_DOWN)) {
-			descend();
-		} else {
-			stop();
-		}
-	}
 	  
 }
