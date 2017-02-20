@@ -10,9 +10,9 @@ public class RobotMap {
 
 	// Steering motor ids in array (DO NOT ALTER)
 	public static final int FRONT_LEFT = 0;
-	public static final int BACK_LEFT = 1;
-	public static final int BACK_RIGHT = 2;
-	public static final int FRONT_RIGHT = 3;
+	public static final int FRONT_RIGHT = 1;
+	public static final int BACK_LEFT = 2;
+	public static final int BACK_RIGHT = 3;
 
 	// Initialize robot map. Returns false if robot ID not defined
 	public static void init(RobotID id) {
@@ -45,11 +45,11 @@ public class RobotMap {
 
 		case ROBOT2017A:
 			robotID = RobotID.ROBOT2017A;
-			steeringMotorChannel = new int[] { 0, 3, 2, 1 };
-			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.SPARK, Steering.PWMType.SPARK, Steering.PWMType.SPARK,
-					Steering.PWMType.SPARK };
-			steeringSensorChannel = new int[] { 0, 3, 2, 1 };
-			driveMotorChannel = new int[] { 1, 4, 3, 2 };
+			steeringMotorChannel = new int[] { 0, 3, 1, 2 };
+			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON, Steering.PWMType.TALON,
+					Steering.PWMType.TALON };
+			steeringSensorChannel = new int[] { 0, 3, 1, 2 };
+			driveMotorChannel = new int[] { 1, 4, 2, 3 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 18.5; // front to back - in inches
 			width = 22.5; // side to side in inches
