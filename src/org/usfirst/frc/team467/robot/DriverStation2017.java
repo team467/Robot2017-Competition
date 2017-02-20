@@ -55,7 +55,7 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
-		buttonPanel = new ButtonPanel2017(1);
+		//buttonPanel = new ButtonPanel2017(1);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
-		buttonPanel.readInputs();
+		//buttonPanel.readInputs();
 	}
 
 	/**

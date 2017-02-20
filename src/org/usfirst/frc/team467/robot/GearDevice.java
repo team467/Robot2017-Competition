@@ -3,11 +3,12 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
 
 public class GearDevice {
 	private static GearDevice instance = null;
 	private static Spark spark;
-	private static AnalogPotentiometer sensor;
+	private static PIDSource sensor;
 	private static PIDController controller;
 	ButtonPanel2017 buttonPanel;
 
@@ -28,7 +29,7 @@ public class GearDevice {
 	private GearDevice() {
 		spark = new Spark(RobotMap.GEAR_MOTOR);
 		// MUST CHANGE
-		sensor = new AnalogPotentiometer(RobotMap.GEAR_SENSOR, 360, 30);
+		sensor = new GearPIDSource();
 		controller = new PIDController(RobotMap.GEAR_PID.p, RobotMap.GEAR_PID.d, RobotMap.GEAR_PID.f, sensor, spark);
 		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}

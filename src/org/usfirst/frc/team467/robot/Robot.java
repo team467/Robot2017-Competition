@@ -40,6 +40,8 @@ public class Robot extends IterativeRobot {
 	private BallLoader loader;
 	private GearDevice geardevice;
 	private Shooter shooter;
+	
+	private GearPIDSource source;
 
 	int session;
 
@@ -70,11 +72,11 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 
 		// game pieces
-		climber = Climber.getInstance();
-		intake = BallIntake.getInstance();
-		loader = BallLoader.getInstance();
-		geardevice = GearDevice.getInstance();
-		shooter = Shooter.getInstance();
+//		climber = Climber.getInstance();
+//		intake = BallIntake.getInstance();
+//		loader = BallLoader.getInstance();
+//		geardevice = GearDevice.getInstance();
+//		shooter = Shooter.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -121,27 +123,32 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testInit() {
-		gyro.reset();
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
-		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
-		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		drive.aiming.setPID(p, i, d, f);
+		source = new GearPIDSource();
+//		gyro.reset();
+//		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+//		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+//		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+//		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+//		drive.aiming.setPID(p, i, d, f);
 	}
 
 	public void testPeriodic() {
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
-		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		vision.update();
-		driverstation.readInputs();
-		// double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
-		// drive.crabDrive(driveAngle, 0.0);
-		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
-													// gyro
-		if (onTarget) {
-			System.out.println("TARGET ACQUIRED");
-		}
+//		double gyroAngle = gyro.pidGet();
+//		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
+//		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+//		vision.update();
+//		driverstation.readInputs();
+//		// double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+//		// drive.crabDrive(driveAngle, 0.0);
+//		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
+//													// gyro
+//		if (onTarget) {
+//			System.out.println("TARGET ACQUIRED");
+//		}
+		
+		System.out.println(source.pidGet());
+		
+		
 	}
 
 	public void autonomousPeriodic() {
@@ -174,7 +181,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			// Drive Mode
 			updateDrive();
-			updateNavigation();
+			//updateNavigation();
 		}
 	}
 
