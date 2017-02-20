@@ -7,6 +7,7 @@ public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
 
 	XBoxJoystick467 driverJoy = null;
+	ButtonPanel2017 buttonPanel = null;
 
 	// Mapping of functions to Joystick Buttons for normal operation
 
@@ -42,6 +43,7 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
+		// buttonPanel = new ButtonPanel2017(1);
 	}
 
 	/**
@@ -58,6 +60,10 @@ public class DriverStation2017 {
 	 */
 	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
+	}
+
+	public ButtonPanel2017 getButtonPanel() {
+		return buttonPanel;
 	}
 
 	/**
@@ -78,7 +84,6 @@ public class DriverStation2017 {
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
-
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
 		
 		if (driverJoy.buttonDown(AUTO_BUTTON)) {
@@ -139,5 +144,4 @@ public class DriverStation2017 {
 	public boolean getCalibrateConfirmSelection() {
 		return getCalibrationJoystick().buttonDown(CALIBRATE_CONFIRM_BUTTON);
 	}
-
 }

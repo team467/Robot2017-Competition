@@ -1,45 +1,56 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
+
 import edu.wpi.first.wpilibj.Spark;
 
 public class Climber {
-	private static Climber climber = null;
+	private static Climber instance;
+	private static Spark motorLeft;
+	private static Spark motorRight;
+	private static ButtonPanel2017 buttonPanel;
 
-	private static Spark[] sparks;
+	private static double motorSpeed = 0.7;
 
 	public static Climber getInstance() {
-		if (climber == null) {
-			climber = new Climber();
-
+		if (instance == null) {
+			instance = new Climber();
 		}
-		return climber;
+		return instance;
 	}
 
-	private Climber() {
-		sparks = new Spark[2];
-		System.out.println("Warning: update climber-spark motor values if needed");
-		sparks[0] = new Spark(RobotMap.CLIMBER_MOTOR_CHANNELS[0]);
-		sparks[1] = new Spark(RobotMap.CLIMBER_MOTOR_CHANNELS[1]);
+	// TODO: add current sensor to stop if current is too high
+	// TODO: add touch sensor that light up led when at top?
+	// TODO: current burnout sensor?
+	public Climber() {
+		motorLeft = new Spark(RobotMap.CLIMBER_MOTOR_1);
+		motorRight = new Spark(RobotMap.CLIMBER_MOTOR_2);
+		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
-	public static void update(boolean goForward) {
-		if (goForward) {
-			for (Spark s : sparks) {
-				s.set(1.0);
-			}
+	private void stop() {
+		motorLeft.set(0.0);
+		motorRight.set(0.0);
+	}
+
+	private void climb() {
+		motorLeft.set(motorSpeed);
+		motorRight.set(motorSpeed);
+	}
+
+	private void descend() {
+		motorLeft.set(-motorSpeed);
+		motorRight.set(-motorSpeed);
+	}
+
+	public void update() {
+		if (buttonPanel.buttonDown(Buttons.CLIMBER_UP)) {
+			climb();
+		} else if (buttonPanel.buttonDown(Buttons.CLIMBER_DOWN)) {
+			descend();
+		} else {
+			stop();
 		}
-
-		else {
-			for (Spark s : sparks) {
-				s.set(0.0);
-			}
-		}
-		antiBurnoutSafetyPrecautions();
 	}
-
-	// TODO: add anti burnout protection
-	private static void antiBurnoutSafetyPrecautions() {
-		System.out.println("will change later if necessary");
-		return;
-	}
+	  
 }

@@ -42,16 +42,6 @@ public class Drive extends RobotDrive {
 	// Length is the wide side
 	private static final double TURN_IN_PLACE_ANGLE = Math.atan(RobotMap.LENGTH / RobotMap.WIDTH);
 
-	// Speed modifier constants
-	// TODO figure out correct values/behavior for vector drive
-	// private static final double SPEED_SLOW_MODIFIER = 0.5;
-	// private static final double SPEED_TURBO_MODIFIER = 2.0;
-	// private static final double SPEED_MAX_MODIFIER = 0.5;
-	// private static final double SPEED_MAX_CHANGE = 0.15;
-
-	// Speed to use for Strafe and Revolve Drive
-	private static final double SPEED_STRAFE = 0.6;
-
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
@@ -239,29 +229,7 @@ public class Drive extends RobotDrive {
 	 * @return returns rate-limited speed
 	 */
 	private double limitSpeed(double speed, int wheelID) {
-		// Apply speed modifiers first
-
-		// TODO - figure out correct turbo behaviour with speed control mode
-		// if (DriverStation2017.getInstance().getSlow()) {
-		// speed *= SPEED_SLOW_MODIFIER;
-		// } else if (DriverStation2017.getInstance().getTurbo()) {
-		// speed *= SPEED_TURBO_MODIFIER;
-		// } else {
-		// // Limit maximum regular speed to specified Maximum.
-		// speed *= SPEED_MAX_MODIFIER;
-		// }
-
-		// // Limit the rate at which robot can change speed once driving over
-		// 0.6
-		// if (Math.abs(speed - lastSpeed[wheelID]) > SPEED_MAX_CHANGE &&
-		// Math.abs(lastSpeed[wheelID]) > 0.6) {
-		// if (speed > lastSpeed[wheelID]) {
-		// speed = lastSpeed[wheelID] + SPEED_MAX_CHANGE;
-		// } else {
-		// speed = lastSpeed[wheelID] - SPEED_MAX_CHANGE;
-		// }
-		// }
-		// lastSpeed[wheelID] = speed;
+		// TODO - do we need to introduce any rate limiting this year?
 		return (speed);
 	}
 
@@ -275,24 +243,6 @@ public class Drive extends RobotDrive {
 	 */
 	public void crabDrive(double angle, double speed) {
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
-		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-	}
-
-	/**
-	 * Field align drive
-	 *
-	 * @param driveAngle
-	 *            the angle you want the robot to drive, taken from the angle of the joystick this is passed in in radians
-	 * @param speed
-	 *            the speed you want the robot to go, taken from the distance the joystick travels
-	 */
-	public void fieldAlignDrive(double driveAngle, double speed) {
-		// convert the angle of the robot from native units to radians
-		double gyroAngle = gyro.getAngleZRadians();
-		// the angle that the wheels need to turn to
-		double angleDiff = driveAngle - gyroAngle;
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angleDiff, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
 	}
@@ -313,13 +263,12 @@ public class Drive extends RobotDrive {
 			return;
 		}
 		// Derive angle of wheels for field aligned
-		double angleDiff = driveAngle - gyro.getAngleZRadians();
+		double angleDiff = driveAngle - gyro.getRobotAngleRadians();
 
 		// vector component of the field aligned part of the motion
 		Vector faVector = new Vector(LookUpTable.getSin(angleDiff) * speed, LookUpTable.getCos(angleDiff) * speed);
 
-		// Only need to do math for first turn vector - can use symmetry to
-		// generate the rest
+		// Only need to do math for first turn vector - can use symmetry to generate the rest
 		Vector flTurn = new Vector(LookUpTable.getSin(TURN_IN_PLACE_ANGLE) * turnSpeed,
 				LookUpTable.getCos(TURN_IN_PLACE_ANGLE) * turnSpeed);
 
@@ -335,8 +284,7 @@ public class Drive extends RobotDrive {
 		Vector BR = faVector.Add(brTurn);
 
 		// Figure out corrected angles & speeds for each wheel
-		// Note - correction calculates shortest distance to drive to required
-		// angle and will
+		// Note - correction calculates shortest distance to drive to required angle and will
 		// flip direction by 180 and speed by -1 if that is shorter
 		WheelCorrection flCorrected = wrapAroundCorrect(RobotMap.FRONT_LEFT, FL.getAngle(), FL.getMagnitude());
 		WheelCorrection frCorrected = wrapAroundCorrect(RobotMap.FRONT_RIGHT, FR.getAngle(), FR.getMagnitude());
@@ -357,59 +305,6 @@ public class Drive extends RobotDrive {
 		fourWheelSteer(flCorrected.angle, frCorrected.angle, blCorrected.angle, brCorrected.angle);
 		fourWheelDrive(flCorrected.speed, frCorrected.speed, blCorrected.speed, brCorrected.speed);
 	}
-
-	/**
-	 * strafeDrive
-	 *
-	 * @param POVangle
-	 *            angle of the POV joystick found on top of joystick
-	 */
-
-	public void strafeDrive(int POVangle) {
-		double speed = SPEED_STRAFE;
-		double angle = POVangle * Math.PI / 180;
-		crabDrive(angle, speed);
-	}
-
-	/**
-	 * @param x
-	 *            the x distance taken from the right joystick (RX)
-	 * @param y
-	 *            the y distance taken from the right joystick (RY)
-	 * @param speed
-	 */
-	public void xbSplit(double driveAngle, double speed, double turnSpeed) {
-		if (Math.abs(speed) >= RobotMap.MIN_DRIVE_SPEED) {
-			crabDrive(driveAngle, speed);
-			return;
-		} else if (turnSpeed != 0) {
-			turnDrive(turnSpeed);
-			return;
-		} else {
-			System.out.println("Robot is stopped");
-			stop();
-			return;
-		}
-	}
-
-	// Zeynep trying out a different kind of xbsplit. do not delete yet
-	// public void xbSplit(double strafe, double drive, double speed, double
-	// turnLeft, double turnRight){
-	// if (strafe > 0){
-	// crabDrive(0, speed);
-	// }
-	// if (strafe < 0){
-	// crabDrive(180, speed);
-	// }
-	//
-	// if (drive != 0){
-	// crabDrive(drive, speed);
-	// }
-	//
-	// turnDrive(turnLeft);
-	// turnDrive(turnRight);
-	// }
-	//
 
 	/**
 	 * Individually controls a specific steering motor

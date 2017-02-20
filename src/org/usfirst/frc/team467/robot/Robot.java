@@ -7,7 +7,6 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,10 +29,8 @@ public class Robot extends IterativeRobot {
 	private Drive drive;
 	private ActionGroup autonomous;
 
-	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
-	private ADIS16448_IMU imu;
 	private Ultrasonic ultra;
 
 	int session;
@@ -57,19 +54,15 @@ public class Robot extends IterativeRobot {
 		drive.setPercentVoltageBusMode();
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
-		imu = gyro.getIMU();
-		imu.calibrate();
-		imu.reset();
+		gyro.calibrate();
+		gyro.reset();
 
+		// Initialize math lookup table
 		LookUpTable.init();
 
-		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
 		ultra = new Ultrasonic(0, 1);
 		gyro = Gyrometer.getInstance();
-		imu = gyro.getIMU();
-		imu.calibrate();
-		imu.reset();
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
@@ -84,7 +77,6 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
-		SmartDashboard.putData("IMU", imu);
 		SmartDashboard.putData("Ultrasonic", ultra);
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
@@ -104,13 +96,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		imu.reset();
+		gyro.reset();
 		driverstation.readInputs();
 		driverstation.getAutonomous().terminate();
 	}
 
 	public void testInit() {
-		imu.reset();
+		gyro.reset();
 		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
 		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
 		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
@@ -120,7 +112,7 @@ public class Robot extends IterativeRobot {
 
 	public void testPeriodic() {
 		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
+		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 		driverstation.readInputs();
@@ -140,18 +132,17 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", imu.getAngleZ() / 4);
-		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
 
 		drive.aiming.reset();
-		// System.out.println("-------Teleop Periodic-------");
+
 		// Read driverstation inputs
 		driverstation.readInputs();
 
 		if (driverstation.getGyroReset()) {
-			imu.reset();
+			gyro.reset();
 		}
+
 		if (driverstation.getCalibrate()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
@@ -178,7 +169,7 @@ public class Robot extends IterativeRobot {
 	 * called once per iteration to perform any necessary updates to the drive system.
 	 */
 	private void updateDrive() {
-		drive.aiming.reset();
+
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
@@ -191,11 +182,13 @@ public class Robot extends IterativeRobot {
 			break;
 
 		case VECTOR:
-			double driveSpeed = driverstation.getDriveJoystick().getLeftStickDistance();
-			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance();
-			drive.vectorDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Field aligned direction
-					driveSpeed, // Robot speed
-					turnSpeed * driverstation.getVectorTurnDirection()); // Robot turn speed
+			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
+			// @formatter:off
+			drive.vectorDrive(
+					driverstation.getDriveJoystick().getLeftStickAngle(),     // Field aligned direction
+					driverstation.getDriveJoystick().getLeftStickDistance(),  // Robot speed
+					turnSpeed * driverstation.getVectorTurnDirection());      // Robot turn speed
+			// @formatter:on
 			break;
 
 		case CRAB:
@@ -203,8 +196,11 @@ public class Robot extends IterativeRobot {
 				// Don't start driving until commanded speed greater than minimum
 				drive.stop();
 			} else {
-				drive.crabDrive(driverstation.getDriveJoystick().getLeftStickAngle(), // Robot aligned direction
+				// @formatter:off
+				drive.crabDrive(
+						driverstation.getDriveJoystick().getLeftStickAngle(),     // Robot aligned direction
 						driverstation.getDriveJoystick().getLeftStickDistance()); // Robot speed
+				// @formatter:on
 			}
 			break;
 
