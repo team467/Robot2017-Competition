@@ -1,7 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
@@ -125,8 +125,8 @@ public class DriverStation2017 {
 	public boolean getTerminateAuto() {
 		return driverJoy.buttonDown(TERMINATE_BUTTON);
 	}
-	public Process getAutonomous() {
-		return Actions.getBasicProcess(); // TODO Get multiple options
+	public ActionGroup getAutonomous() {
+		return Actions.basicProcess; // TODO Get multiple options
 	}
 
 	public boolean getGyroReset() {

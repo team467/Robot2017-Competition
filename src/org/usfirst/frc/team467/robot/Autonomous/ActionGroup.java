@@ -10,14 +10,14 @@ import org.apache.log4j.Logger;
  * Runs through a set of actions. <br>
  * Can be used in Autonomous and also Teleop routines.
  */
-public class Process {
-	private static final Logger LOGGER = Logger.getLogger(Process.class);
+public class ActionGroup {
+	private static final Logger LOGGER = Logger.getLogger(ActionGroup.class);
 	private String name;
 	private LinkedList<Action> agenda;
 	private final LinkedList<Action> master;
 	private Action action = null;
 
-	public Process(String name) {
+	public ActionGroup(String name) {
 		this.name = name;
 		master = new LinkedList<>();
 		agenda = new LinkedList<>();
@@ -36,38 +36,41 @@ public class Process {
 				} else {
 					// Stop everything forever
 					LOGGER.info("----- Final action completed -----");
-					action = new Action("Process Complete", () -> false, () -> {
-						/* Do Nothing */ });
+					action = null;
+					return;
 				}
 			} catch (NoSuchElementException e) {
 				LOGGER.error("Ran out of actions!", e);
 			}
 		}
-
-		action.activity.doIt();
+		
+		LOGGER.info("run " + action);
+		action.doIt();
 	}
 	
 	public boolean isComplete() {
-		return agenda.isEmpty();
+		return action == null && agenda.isEmpty();
 	}
 	
 	public void terminate() {
+		LOGGER.debug("Terminating Process");
 		agenda.clear();
+		action = null;
 	}
 
 	public void addAction(Action action) {
 		master.add(action);
-		reset();
 	}
 
 	public void addActions(List<Action> actions) {
 		master.addAll(actions);
-		reset();
 	}
 
 	public void reset() {
+		LOGGER.debug("Resetting Process");
 		for (Action act : master) {
 			if (act.condition == (Duration) act.condition) {
+				LOGGER.debug("Resetting Duration");
 				((Duration) act.condition).reset();
 			}
 		}

@@ -9,8 +9,9 @@ package org.usfirst.frc.team467.robot;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team467.robot.Autonomous.Process;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
 
@@ -27,12 +28,13 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation2017 driverstation;
 	private Drive drive;
-	private Process autonomous;
+	private ActionGroup autonomous;
 
 	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
 	private ADIS16448_IMU imu;
+	private Ultrasonic ultra;
 
 	int session;
 
@@ -63,6 +65,7 @@ public class Robot extends IterativeRobot {
 
 		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
+		ultra = new Ultrasonic(0, 1);
 		gyro = Gyrometer.getInstance();
 		imu = gyro.getIMU();
 		imu.calibrate();
@@ -82,7 +85,7 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
 		SmartDashboard.putData("IMU", imu);
-
+		SmartDashboard.putData("Ultrasonic", ultra);
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -103,6 +106,7 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		imu.reset();
 		driverstation.readInputs();
+		driverstation.getAutonomous().terminate();
 	}
 
 	public void testInit() {
@@ -129,8 +133,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		driverstation.readInputs();
-		updateAutonomous(autonomous);
+		updateAutonomous();
 	}
 
 	/**
@@ -153,14 +156,17 @@ public class Robot extends IterativeRobot {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
 		} else if (!driverstation.getAutonomous().isComplete()) {
-			updateAutonomous(driverstation.getAutonomous());
+			updateAutonomous();
 		} else {
 			// Drive Mode
 			updateDrive();
 		}
 	}
 
-	public void updateAutonomous(Process auto) {
+	public void updateAutonomous() {
+		ActionGroup auto = driverstation.getAutonomous();
+		driverstation.readInputs();
+		LOGGER.debug("getTerminateAuto=" + driverstation.getTerminateAuto());
 		if (driverstation.getTerminateAuto()) {
 			auto.terminate();
 		} else {
@@ -177,6 +183,7 @@ public class Robot extends IterativeRobot {
 
 		switch (driveMode) {
 		case AUTONOMOUS:
+			LOGGER.debug("AUTONOMOUS");
 			driverstation.getAutonomous().reset();
 			break;
 		case AIM:
