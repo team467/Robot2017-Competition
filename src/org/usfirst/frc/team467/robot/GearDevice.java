@@ -16,7 +16,7 @@ public class GearDevice {
 	// TODO: no idea if angles are actually correct
 
 	// = 90 + 16.29 (calculated amount)
-	private static double SCOOP_ANGLE = 106.29;
+	private static double SCOOP_ANGLE = 91.0;
 	private static double CARRY_ANGLE = 30;
 
 	public enum Mode {
