@@ -16,14 +16,14 @@ public class GearDevice {
 	// TODO: no idea if angles are actually correct
 
 	// = 90 + 16.29 (calculated amount)
-	private static double SCOOP_ANGLE = 106.29;
-	private static double GET_GEAR_ANGLE = 30;
+	private static double SCOOP_ANGLE = 91.0;
+	private static double CARRY_ANGLE = 30;
 
 	public enum Mode {
-		UP, SCOOP, GET, PLACE;
+		CARRY, SCOOP, GET, PLACE;
 	}
 
-	private static Mode mode = Mode.UP;
+	private static Mode mode = Mode.CARRY;
 
 	public static GearDevice getInstance() {
 		if (instance == null) {
@@ -46,35 +46,35 @@ public class GearDevice {
 	}
 
 	public void goUp() {
-		controller.setSetpoint(0);
+		controller.setSetpoint(CARRY_ANGLE);
 	}
 
 	public void getGear() {
-		controller.setSetpoint(GET_GEAR_ANGLE);
+		controller.setSetpoint(0);
 	}
 
 	public void placeGear() {
-		// too complex for now
+		controller.setSetpoint(SCOOP_ANGLE);
 	}
 
 	public void updateMode() {
 		if (buttonPanel.buttonDown(Buttons.GEAR_UP)) {
-			mode = Mode.UP;
+			mode = Mode.CARRY;
 		} else if (buttonPanel.buttonDown(Buttons.GEAR_SCOOP)) {
 			if (mode == Mode.SCOOP) {
-				mode = Mode.UP;
+				mode = Mode.CARRY;
 			} else {
 				mode = Mode.SCOOP;
 			}
 		} else if (buttonPanel.buttonDown(Buttons.GEAR_GET)) {
 			if (mode == Mode.GET) {
-				mode = Mode.UP;
+				mode = Mode.CARRY;
 			} else {
 				mode = Mode.GET;
 			}
 		} else if (buttonPanel.buttonDown(Buttons.GEAR_PLACE)) {
 			if (mode == Mode.PLACE) {
-				mode = Mode.UP;
+				mode = Mode.CARRY;
 			} else {
 				mode = Mode.PLACE;
 			}
@@ -94,7 +94,7 @@ public class GearDevice {
 		case PLACE:
 			placeGear();
 			break;
-		case UP:
+		case CARRY:
     		goUp();
     		break;
     	default:
