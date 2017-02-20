@@ -28,7 +28,6 @@ public class Robot extends IterativeRobot {
 	private Drive drive;
 	private Process autonomous;
 
-	private CameraStream cam;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
 
@@ -59,7 +58,6 @@ public class Robot extends IterativeRobot {
 		// Initialize math lookup table
 		LookUpTable.init();
 
-		cam = CameraStream.getInstance();
 		vision = VisionProcessing.getInstance();
 
 		SmartDashboard.putString("DB/String 0", "1.0");

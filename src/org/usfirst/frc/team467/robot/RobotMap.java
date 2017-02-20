@@ -25,12 +25,12 @@ public class RobotMap {
 	// PWM IDs
 	//
 
-	// Steering motors - Talon, roboRio
+	// Steering motor channels - Talon
 	public static final int FRONT_LEFT_STEERING_MOTOR_CHANNEL = 0;
 	public static final int FRONT_RIGHT_STEERING_MOTOR_CHANNEL = 1;
 	public static final int BACK_LEFT_STEERING_MOTOR_CHANNEL = 2;
 	public static final int BACK_RIGHT_STEERING_MOTOR_CHANNEL = 3;
-	
+
     // TODO - test climber
 	public static final int CLIMBER_MOTOR_1 = 5;	
     public static final int CLIMBER_MOTOR_2 = 6;	
