@@ -57,7 +57,7 @@ public class GearDevice {
 		// too complex for now
 	}
 
-	private void updateMode() {
+	public void updateMode() {
 		if (buttonPanel.buttonDown(Buttons.GEAR_UP)) {
 			mode = Mode.UP;
 		} else if (buttonPanel.buttonDown(Buttons.GEAR_SCOOP)) {

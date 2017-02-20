@@ -27,20 +27,20 @@ public class BallIntake {
 		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
-	private void startIntake() {
+	public void startIntake() {
 		spark.set(1.0);
 	}
 
-	private void reverse() {
+	public void reverse() {
 		// reverse should be slower than intake
 		spark.set(-0.1);
 	}
 
-	private void stop() {
+	public void stop() {
 		spark.set(0.0);
 	}
 
-	private void updateMode() {
+	public void updateMode() {
 		if (buttonPanel.buttonDown(Buttons.INTAKE_IN)) {
 			if (mode == Mode.ON) {
 				mode = Mode.OFF;

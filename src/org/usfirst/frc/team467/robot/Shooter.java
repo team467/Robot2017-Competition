@@ -23,7 +23,7 @@ public class Shooter {
 		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
-	private void shoot() {
+	public void shoot() {
 		motorRight.set(1.0);
 		motorLeft.set(-1.0);
 
@@ -32,13 +32,13 @@ public class Shooter {
 		// TODO: make sure they also spin at the same speed
 	}
 
-	private void failsafe() {
+	public void reverse() {
 		// spins backwards to dislodge balls
 		motorRight.set(-0.1);
 		motorLeft.set(0.1);
 	}
 
-	private void stop() {
+	public void stop() {
 		motorRight.set(0.0);
 		motorLeft.set(0.0);
 	}
@@ -47,7 +47,7 @@ public class Shooter {
 		if (buttonPanel.buttonDown(Buttons.SHOOTER_SPIN)) {
 			shoot();
 		} else if (buttonPanel.buttonDown(Buttons.SHOOTER_FAILSAFE)) {
-			failsafe();
+			reverse();
 		} else {
 			stop();
 		}
