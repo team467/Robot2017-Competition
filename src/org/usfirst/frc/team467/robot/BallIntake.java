@@ -23,7 +23,7 @@ public class BallIntake {
 	Mode mode = Mode.ON;
 
 	private BallIntake() {
-		spark = new Spark(RobotMap.BALL_INTAKE_MOTOR_CHANNEL);
+		spark = new Spark(RobotMap.INTAKE_MOTOR);
 		buttonPanel = DriverStation2017.getInstance().getButtonPanel();
 	}
 
