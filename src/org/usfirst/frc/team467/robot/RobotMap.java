@@ -144,6 +144,8 @@ public class RobotMap {
 	public static final int SHOOTER_MOTOR_1 = 5;
 	public static final int SHOOTER_MOTOR_2 = 6;
 	public static final int AGITATOR_MOTOR = 1;
+	
+	public static final int ULTRASONIC_SENSOR = 9;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
