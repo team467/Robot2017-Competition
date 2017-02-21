@@ -33,6 +33,7 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 31.5; // front to back - in inches
 			width = 18.5; // side to side in inches
+			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
@@ -53,6 +54,7 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 18.5; // front to back - in inches
 			width = 22.5; // side to side in inches
+			MAX_SPEED = 450.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
@@ -82,7 +84,7 @@ public class RobotMap {
 	public static final boolean useRemoteImu = false;
 
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
-	public static final double MAX_SPEED = 300.0;
+	public static double MAX_SPEED;
 
 	// PWM Outputs
 	public static int[] steeringMotorChannel;
