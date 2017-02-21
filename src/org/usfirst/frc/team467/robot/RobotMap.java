@@ -127,10 +127,8 @@ public class RobotMap {
 
 	// Gear
 	public static boolean hasGear = false; // default to no gear mechanism
-	public static final PID GEAR_PID = new PID(0.1, 0.01, 0.001, 0);
 	// TODO confirm channel for these pieces
 	public static final int GEAR_MOTOR = 7;
-	public static final int GEAR_SENSOR = 1;
 
 	// Climber
 	public static boolean hasClimber = false; // default to no climber
