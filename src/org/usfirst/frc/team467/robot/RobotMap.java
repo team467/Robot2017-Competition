@@ -121,11 +121,6 @@ public class RobotMap {
 
 	// Game Pieces
 
-	// Gear
-	public static boolean hasGear = false; // default to no gear mechanism
-	// TODO confirm channel for these pieces
-	public static final int GEAR_MOTOR = 7;
-
 	// Climber
 	public static boolean hasClimber = false; // default to no climber
 	// TODO: need actual motor channels
@@ -136,7 +131,7 @@ public class RobotMap {
 	// Ball Intake
 	public static boolean hasBallIntake = false;
 	// TODO: need actual motor channels
-	public static final int INTAKE_MOTOR = 8;
+	public static final int INTAKE_MOTOR = 7;
 
 	// Shooter
 	public static boolean hasShooter = false;
@@ -144,6 +139,11 @@ public class RobotMap {
 	public static final int SHOOTER_MOTOR_1 = 5;
 	public static final int SHOOTER_MOTOR_2 = 6;
 	public static final int AGITATOR_MOTOR = 1;
+	
+	// Gear
+	public static boolean hasGear = false; // default to no gear mechanism
+	// TODO confirm channel for these pieces
+	public static final int GEAR_MOTOR = 8;
 	
 	public static final int ULTRASONIC_SENSOR = 9;
 
