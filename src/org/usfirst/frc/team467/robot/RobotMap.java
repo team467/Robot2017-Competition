@@ -18,10 +18,10 @@ public class RobotMap {
 	public static void init(RobotID id) {
 
 		// Initialize robot map based on robot ID;
-		
+
 		PIDvalues = new PID[4];
 		speedPIDFvalues = new PID[4];
-		
+
 		switch (id) {
 		case ROBOT2015:
 			robotID = RobotID.ROBOT2015;
@@ -77,6 +77,10 @@ public class RobotMap {
 
 	public static RobotID robotID;
 
+	// Set to true to use LSM9DS1 IMU on Raspberry Pi
+	// Set to false to use the local ADIS16448 IMU on the Robo Rio
+	public static final boolean useRemoteImu = false;
+
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static final double MAX_SPEED = 300.0;
 
@@ -102,8 +106,8 @@ public class RobotMap {
 	// @formatter:off
 
 	// Data keys (names used when saving centers to robot)
-	public static final String[] STEERING_KEYS = new String[] { 
-			"FrontLeft", 
+	public static final String[] STEERING_KEYS = new String[] {
+			"FrontLeft",
 			"FrontRight",
 			"BackLeft",
 			"BackRight"

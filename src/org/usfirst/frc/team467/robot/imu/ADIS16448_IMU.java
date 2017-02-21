@@ -4,8 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
-package com.analog.adis16448.frc;
+package org.usfirst.frc.team467.robot.imu;
 
 import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.InterruptableSensorBase;
@@ -33,7 +31,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * This class is for the ADIS16448 IMU that connects to the RoboRIO MXP port.
  */
-public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWindowSendable {
+public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWindowSendable, IMU {
   private static final double kTimeout = 0.1;
   private static final double kCalibrationSampleTime = 5.0;
   private static final double kDegreePerSecondPerLSB = 1.0/25.0;
@@ -47,12 +45,9 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
   private static final int kRegSENS_AVG = 0x38;
   private static final int kRegMSC_CTRL = 0x34;
   private static final int kRegPROD_ID = 0x56;
-  //private static final int kRegLOT_ID2 = 0x54;
-  //private static final int kRegLOT_ID1 = 0x52;
-  //private static final int kRegSERIAL_NUM = 0x58;
-  //private static final int kRegZGYRO_OFF = 0x1E;
-  //private static final int kRegYGYRO_OFF = 0x1C;
   private static final int kRegXGYRO_OFF = 0x1A;
+
+  private static final double MEASURES_PER_DEGREE = 4;
 
   public enum AHRSAlgorithm { kComplementary, kMadgwick }
   public enum Axis { kX, kY, kZ }
@@ -123,7 +118,6 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
   private AtomicBoolean m_freed = new AtomicBoolean(false);
 
   private SPI m_spi;
-  private DigitalOutput m_reset;
   private DigitalInput m_interrupt;
 
   // Sample from the IMU
@@ -137,8 +131,6 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     public double mag_x;
     public double mag_y;
     public double mag_z;
-    public double baro;
-    public double temp;
     public double dt;
 
     // Swap axis as appropriate for yaw axis selection
@@ -237,7 +229,7 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     m_spi.setChipSelectActiveLow();
 
     readRegister(kRegPROD_ID); // dummy read
-    
+
     // Validate the product ID
     if (readRegister(kRegPROD_ID) != 16448) {
       m_spi.free();
@@ -309,9 +301,9 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     this(Axis.kZ, AHRSAlgorithm.kComplementary);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#calibrate()
+ */
   @Override
   public void calibrate() {
     if (m_spi == null) return;
@@ -358,10 +350,11 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     m_spi.write(buf, 2);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void reset() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#reset()
+ */
+  @Override
+public void reset() {
     synchronized (this) {
       m_integ_gyro_x = 0.0;
       m_integ_gyro_y = 0.0;
@@ -369,9 +362,9 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     }
   }
 
-  /**
-   * Delete (free) the spi port used for the IMU.
-   */
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#free()
+ */
   @Override
   public void free() {
     m_freed.set(true);
@@ -453,8 +446,6 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
           sample.mag_x = mag_x;
           sample.mag_y = mag_y;
           sample.mag_z = mag_z;
-          sample.baro = baro;
-          sample.temp = temp;
           sample.dt = dt;
           m_samples_put_index += 1;
           if (m_samples_put_index == m_samples.length) {
@@ -557,7 +548,7 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
       double norm = Math.sqrt(ax * ax + ay * ay + az * az);
       if (norm > 0.3 && !excludeAccel) {
         // normal larger than the sensor noise floor during freefall
-        norm = 1.0 / norm; 
+        norm = 1.0 / norm;
         ax *= norm;
         ay *= norm;
         az *= norm;
@@ -719,7 +710,7 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // (Pitch, Roll, and Yaw).  This sensor fusion approach effectively
     // combines the individual sensor's best respective properties while
     // mitigating their shortfalls.
-    // 
+    //
     // Design:
     // The Complementary Filter is an algorithm that allows a pair of sensors
     // to contribute differently to a common, composite measurement result.
@@ -728,16 +719,16 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // to maintain the original unit of measurement.  It is computationally
     // inexpensive when compared to alternative estimation techniques such as
     // the Kalman filter.  The algorithm is given by:
-    // 
+    //
     // angle(n) = (alpha)*(angle(n-1) + gyrorate * dt) + (1-alpha)*(accel or mag);
-    // 
-    // where : 
-    // 
+    //
+    // where :
+    //
     // alpha = tau / (tau + dt)
-    // 
+    //
     // This implementation uses the average Gyro rate across the dt period, so
     // above gyrorate = [(gyrorate(n)-gyrorate(n-1)]/2
-    // 
+    //
     // Essentially, for Pitch and Roll, the slow moving (lower frequency) part
     // of the rotation estimate is taken from the Accelerometer - ignoring the
     // high noise level, and the faster moving (higher frequency) part is taken
@@ -751,16 +742,16 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // between the low and high pass filters.  Both tau and the sample time,
     // dt, affect the parameter 'alpha', which sets the balance point for how
     // much of which sensor is 'trusted' to contribute to the rotation estimate.
-    // 
+    //
     // The Complementary Filter algorithm is applied to each X/Y/Z rotation
     // axis to compute R/P/Y outputs, respectively.
-    // 
+    //
     // Magnetometer readings are tilt-compensated when Tilt-Comp-(Yaw) is
     // asserted (True), by the IMU TILT subVI.  This creates what is known as a
     // tilt-compensated compass, which allows Yaw to be insensitive to the
     // effects of a non-level sensor, but generates error in Yaw during
     // movement (coordinate acceleration).
-    // 
+    //
     // The Yaw "South" crossing detector is necessary to allow a smooth
     // transition across the +/- 180 deg discontinuity (inherent in the ATAN
     // function).  Since -180 deg is congruent with +180 deg, Yaw needs to jump
@@ -770,7 +761,7 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // and evaluates how far it is from the previous reading.  If it is greater
     // than the previous reading by the Discriminant (= 180 deg), then Yaw just
     // crossed South.
-    // 
+    //
     // By choosing 180 as the Discriminant, the only way the detector can
     // produce a false positive, assuming a loop iteration of 70 msec, is for
     // it to rotate >2,571 dps ... (2,571=180/.07).  This is faster than the ST
@@ -781,10 +772,10 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // crossing occurs.  The Modulus function cannot be used here as the
     // Complementary Filter algorithm has 'state' (needs to remember previous
     // Yaw).
-    // 
+    //
     // We are in effect stitching together two ends of a ruler for 'modular
     // arithmetic' (clock math).
-    // 
+    //
     // Inputs:
     // GYRO - Gyro rate and sample time measurements.
     // ACCEL - Acceleration measurements.
@@ -794,12 +785,12 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // TAU MAG - tau parameter used to set sensor balance between Mag and Gyro
     //           for Yaw.
     // TILT COMP (Yaw) - Enables Yaw tilt-compensation if True.
-    // 
+    //
     // Outputs:
     // ROLL - Filtered Roll about sensor X-axis.
     // PITCH - Filtered Pitch about sensor Y-axis.
     // YAW - Filtered Yaw about sensor Z-axis.
-    // 
+    //
     // Implementation:
     // It's best to establish the optimum loop sample time first.  See IMU READ
     // implementation notes for guidance.  Each tau parameter should then be
@@ -808,22 +799,22 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // each time until the result doesn't drift, but not so far that the result
     // gets noisy.  An optimum tau for this IMU is likely in the range of 1.0
     // to 0.01, for a loop sample time between 10 and 100 ms.
-    // 
+    //
     // Note that both sample timing (dt) and tau both affect the balance
     // parameter, 'alpha'.  Adjusting either dt or tau will require the other
     // to be readjusted to maintain a particular filter performance.
-    // 
+    //
     // It is likely best to set Yaw tilt-compensation to off (False) if the Yaw
     // value is to be used as feedback in a closed loop control application.
     // The tradeoff is that Yaw will only be accurate while the robot is level.
-    // 
+    //
     // Since a Yaw of -180 degrees is congruent with +180 degrees (they
     // represent the same direction), it is possible that the Yaw output will
     // oscillate between these two values when the sensor happens to be
     // pointing due South, as sensor noise causes slight variation.  You will
     // need to account for this possibility if you are using the Yaw value for
     // decision-making in code.
-    // 
+    //
     // ----- The RoboBees FRC Team 836! -----
     // Complement your passion to solve problems with a STEM Education!
 
@@ -858,26 +849,26 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     // for derivation of Pitch and Roll equations.  Used eqs 37 & 38 as Rxyz.
     // Eqs 42 & 43, as Ryxz, produce same values within Pitch & Roll
     // constraints.
-    // 
+    //
     // Freescale's Pitch/Roll derivation is preferred over ST's as it does not
     // degrade due to the Sine function linearity assumption.
-    // 
+    //
     // Pitch is accurate over +/- 90 degree range, and Roll is accurate within
     // +/- 180 degree range - as long as accelerometer is only sensing
     // acceleration due to gravity.  Movement (coordinate acceleration) will
     // add error to Pitch and Roll indications.
-    // 
-    // Yaw is not obtainable from an accelerometer due to its geometric 
+    //
+    // Yaw is not obtainable from an accelerometer due to its geometric
     // relationship with the Earth's gravity vector.  (Would have same problem
     // on Mars.)
-    // 
+    //
     // see http://www.pololu.com/file/0J434/LSM303DLH-compass-app-note.pdf
     // for derivation of Yaw equation.  Used eq 12 in Appendix A (eq 13 is
     // replaced by ATAN2 function).  Yaw is obtainable from the magnetometer,
     // but is sensitive to any tilt from horizontal.  This uses Pitch and Roll
     // values from above for tilt compensation of Yaw, resulting in a
     // tilt-compensated compass.
-    // 
+    //
     // As with Pitch/Roll, movement (coordinate acceleration) will add error to
     // Yaw indication.
 
@@ -955,115 +946,205 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public double getAngle() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAngle()
+ */
+  @Override
+public double getAngle() {
     if (m_spi == null) return 0.0;
     return getYaw();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public double getRate() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getRate()
+ */
+  @Override
+public double getRate() {
     if (m_spi == null) return 0.0;
     return getRateZ();
   }
 
-  public synchronized double getAngleX() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAngleX()
+ */
+@Override
+public synchronized double getAngleX() {
     return m_integ_gyro_x;
   }
 
-  public synchronized double getAngleY() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAngleY()
+ */
+@Override
+public synchronized double getAngleY() {
     return m_integ_gyro_y;
   }
 
-  public synchronized double getAngleZ() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAngleZ()
+ */
+@Override
+public synchronized double getAngleZ() {
     return m_integ_gyro_z;
   }
 
-  public synchronized double getRateX() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getRateX()
+ */
+@Override
+public synchronized double getRateX() {
     return m_gyro_x;
   }
 
-  public synchronized double getRateY() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getRateY()
+ */
+@Override
+public synchronized double getRateY() {
     return m_gyro_y;
   }
 
-  public synchronized double getRateZ() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getRateZ()
+ */
+@Override
+public synchronized double getRateZ() {
     return m_gyro_z;
   }
 
-  public synchronized double getAccelX() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAccelX()
+ */
+@Override
+public synchronized double getAccelX() {
     return m_accel_x;
   }
 
-  public synchronized double getAccelY() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAccelY()
+ */
+@Override
+public synchronized double getAccelY() {
     return m_accel_y;
   }
 
-  public synchronized double getAccelZ() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getAccelZ()
+ */
+@Override
+public synchronized double getAccelZ() {
     return m_accel_z;
   }
 
-  public synchronized double getMagX() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getMagX()
+ */
+@Override
+public synchronized double getMagX() {
     return m_mag_x;
   }
 
-  public synchronized double getMagY() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getMagY()
+ */
+@Override
+public synchronized double getMagY() {
     return m_mag_y;
   }
 
-  public synchronized double getMagZ() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getMagZ()
+ */
+@Override
+public synchronized double getMagZ() {
     return m_mag_z;
   }
 
-  public synchronized double getPitch() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getPitch()
+ */
+@Override
+public synchronized double getPitch() {
     return m_pitch;
   }
 
-  public synchronized double getRoll() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getRoll()
+ */
+@Override
+public synchronized double getRoll() {
     return m_roll;
   }
 
-  public synchronized double getYaw() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getYaw()
+ */
+@Override
+public synchronized double getYaw() {
     return m_yaw;
   }
 
-  public synchronized double getLastSampleTime() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getLastSampleTime()
+ */
+@Override
+public synchronized double getLastSampleTime() {
     return m_last_sample_time;
   }
 
-  public synchronized double getBarometricPressure() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getBarometricPressure()
+ */
+@Override
+public synchronized double getBarometricPressure() {
     return m_baro;
   }
 
-  public synchronized double getTemperature() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getTemperature()
+ */
+@Override
+public synchronized double getTemperature() {
     return m_temp;
   }
 
   // Get quaternion W for the Kalman AHRS.
   // Always returns 0 for the Complementary AHRS.
-  public synchronized double getQuaternionW() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getQuaternionW()
+ */
+@Override
+public synchronized double getQuaternionW() {
     return m_ahrs_q1;
   }
 
   // Get quaternion X for the Kalman AHRS.
   // Always returns 0 for the Complementary AHRS.
-  public synchronized double getQuaternionX() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getQuaternionX()
+ */
+@Override
+public synchronized double getQuaternionX() {
     return m_ahrs_q2;
   }
 
   // Get quaternion Y for the Kalman AHRS.
   // Always returns 0 for the Complementary AHRS.
-  public synchronized double getQuaternionY() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getQuaternionY()
+ */
+@Override
+public synchronized double getQuaternionY() {
     return m_ahrs_q3;
   }
 
   // Get quaternion Z for the Kalman AHRS.
   // Always returns 0 for the Complementary AHRS.
-  public synchronized double getQuaternionZ() {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#getQuaternionZ()
+ */
+@Override
+public synchronized double getQuaternionZ() {
     return m_ahrs_q4;
   }
 
@@ -1073,13 +1154,17 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
   // It is likely best to set Yaw tilt-compensation to off (False) if the Yaw
   // value is to be used as feedback in a closed loop control application.
   // The tradeoff is that Yaw will only be accurate while the robot is level.
-  public synchronized void setTiltCompYaw(boolean enabled) {
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#setTiltCompYaw(boolean)
+ */
+@Override
+public synchronized void setTiltCompYaw(boolean enabled) {
     m_tilt_comp_yaw = enabled;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /* (non-Javadoc)
+ * @see org.usfirst.frc.team467.robot.imu.IMU#updateTable()
+ */
   @Override
   public void updateTable() {
    ITable table = getTable();
@@ -1095,5 +1180,9 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
       table.putNumber("AngleY", getAngleY());
       table.putNumber("AngleZ", getAngleZ());
     }
+  }
+
+  public double getMeasuresPerDegree() {
+      return MEASURES_PER_DEGREE;
   }
 }
