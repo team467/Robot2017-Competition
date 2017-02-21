@@ -6,9 +6,17 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ButtonPanel2017 {
 
 	public enum Buttons {
-		CLIMBER_UP(1), CLIMBER_DOWN(2), SHOOTER_SPIN(3), SHOOTER_FAILSAFE(4), INTAKE_IN(5), INTAKE_OUT(6),
-		// agitator will not have buttons
-		AGITATOR_SHOOT(7), AGITATOR_REVERSE(8), GEAR_DOWN(9);
+		VISION_ALIGN_SHOOT(1),
+		SHOOTER_SHOOT(2),
+		SHOOTER_FAILSAFE(3),
+		CLIMBER_UP(4),
+		CLIMBER_REVERSE(5),
+		GEAR_DOWN(6),
+		TOGGLE_SWITCH_UP(7),
+		VISION_ALIGN_GEAR(8),
+		TOGGLE_SWITCH_DOWN(9),
+		INTAKE_OUT(10),
+		INTAKE_IN(11);
 
 		public final int id;
 

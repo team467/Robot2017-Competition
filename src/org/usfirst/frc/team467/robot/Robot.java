@@ -124,16 +124,12 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testInit() {
-		 gyro.reset();
-		 double p = Double.parseDouble(SmartDashboard.getString("DB/String 0",
-		 "2.0"));
-		 double i = Double.parseDouble(SmartDashboard.getString("DB/String 1",
-		 "0.0"));
-		 double d = Double.parseDouble(SmartDashboard.getString("DB/String 2",
-		 "0.0"));
-		 double f = Double.parseDouble(SmartDashboard.getString("DB/String 3",
-		 "0.0"));
-		 drive.aiming.setPID(p, i, d, f);
+		gyro.reset();
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
 	}
 
 	public void testPeriodic() {
@@ -276,19 +272,13 @@ public class Robot extends IterativeRobot {
 			gearDevice.goUp();
 		}
 
-		DriverStation2017.IntakeMode intakeMode = driverstation.getIntakeMode();
-		switch (intakeMode) {
-		case ON:
+		if (driverstation.isIntaking()) {
 			intake.startIntake();
-			break;
-		case REVERSE:
+		} else if (driverstation.isIntakingReverse()) {
 			intake.reverse();
-			break;
-		case OFF:
+		} else {
 			intake.stop();
-			break;
 		}
-
 	}
 
 }

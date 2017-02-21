@@ -28,12 +28,6 @@ public class DriverStation2017 {
 		SLOW, FAST
 	}
 
-	enum IntakeMode {
-		ON, OFF, REVERSE;
-	}
-
-	private static IntakeMode intakeMode = IntakeMode.OFF;
-
 	/**
 	 * Singleton instance of the object.
 	 *
@@ -158,7 +152,7 @@ public class DriverStation2017 {
 	}
 
 	public boolean isShooting() {
-		return buttonPanel.buttonDown(Buttons.SHOOTER_SPIN);
+		return buttonPanel.buttonDown(Buttons.SHOOTER_SHOOT);
 	}
 
 	public boolean isShootingReverse() {
@@ -170,29 +164,19 @@ public class DriverStation2017 {
 	}
 
 	public boolean isClimbingReverse() {
-		return buttonPanel.buttonDown(Buttons.CLIMBER_DOWN);
+		return buttonPanel.buttonDown(Buttons.CLIMBER_REVERSE);
 	}
 
 	public boolean isGearDown() {
 		return buttonPanel.buttonDown(Buttons.GEAR_DOWN);
 	}
 
-	public IntakeMode getIntakeMode() {
-		if (buttonPanel.buttonDown(Buttons.INTAKE_IN)) {
-			if (intakeMode == IntakeMode.ON) {
-				intakeMode = IntakeMode.OFF;
-			} else {
-				intakeMode = IntakeMode.ON;
-			}
-		} else if (buttonPanel.buttonDown(Buttons.INTAKE_OUT)) {
-			if (intakeMode == IntakeMode.REVERSE) {
-				intakeMode = IntakeMode.OFF;
-			} else {
-				intakeMode = IntakeMode.REVERSE;
-			}
-		}
+	public boolean isIntaking() {
+		return buttonPanel.buttonDown(Buttons.INTAKE_IN);
+	}
 
-		return intakeMode;
+	public boolean isIntakingReverse() {
+		return buttonPanel.buttonDown(Buttons.INTAKE_OUT);
 	}
 
 }
