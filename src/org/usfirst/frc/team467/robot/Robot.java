@@ -271,7 +271,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (driverstation.isGearDown()) {
-			gearDevice.scoop();
+			gearDevice.goDown();
 		} else {
 			gearDevice.goUp();
 		}

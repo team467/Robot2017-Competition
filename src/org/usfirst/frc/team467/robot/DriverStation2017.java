@@ -28,15 +28,10 @@ public class DriverStation2017 {
 		SLOW, FAST
 	}
 
-	enum GearMode {
-		CARRY, SCOOP, GET, PLACE;
-	}
-
 	enum IntakeMode {
 		ON, OFF, REVERSE;
 	}
 
-	private static GearMode gearMode = GearMode.CARRY;
 	private static IntakeMode intakeMode = IntakeMode.OFF;
 
 	/**

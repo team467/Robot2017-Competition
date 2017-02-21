@@ -39,5 +39,4 @@ public class Climber {
 		motorRight.set(-motorSpeed);
 	}
 
-	  
 }

@@ -3,7 +3,6 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
 
 public class GearDevice {
 	private static GearDevice instance = null;
@@ -30,7 +29,7 @@ public class GearDevice {
 		controller = new PIDController(RobotMap.GEAR_PID.p, RobotMap.GEAR_PID.d, RobotMap.GEAR_PID.f, sensor, spark);
 	}
 
-	public void scoop() {
+	public void goDown() {
 		controller.setSetpoint(SCOOP_ANGLE);
 	}
 
