@@ -26,8 +26,8 @@ public class RobotMap {
 		case ROBOT2015:
 			robotID = RobotID.ROBOT2015;
 			steeringMotorChannel = new int[] { 0, 1, 2, 3 };
-			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON, Steering.PWMType.TALON,
-					Steering.PWMType.TALON };
+			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
+					Steering.PWMType.TALON, Steering.PWMType.TALON };
 			steeringSensorChannel = new int[] { 0, 1, 2, 3 };
 			driveMotorChannel = new int[] { 2, 1, 3, 4 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -47,8 +47,8 @@ public class RobotMap {
 		case ROBOT2017A:
 			robotID = RobotID.ROBOT2017A;
 			steeringMotorChannel = new int[] { 0, 3, 1, 2 };
-			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON, Steering.PWMType.TALON,
-					Steering.PWMType.TALON };
+			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
+					Steering.PWMType.TALON, Steering.PWMType.TALON };
 			steeringSensorChannel = new int[] { 0, 3, 1, 2 };
 			driveMotorChannel = new int[] { 1, 4, 2, 3 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -83,7 +83,8 @@ public class RobotMap {
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio
 	public static final boolean useRemoteImu = false;
 
-	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
+	// The maximum revolutions per minute (RPM) of a wheel when in speed control
+	// mode.
 	public static double MAX_SPEED;
 
 	// PWM Outputs
@@ -108,12 +109,7 @@ public class RobotMap {
 	// @formatter:off
 
 	// Data keys (names used when saving centers to robot)
-	public static final String[] STEERING_KEYS = new String[] {
-			"FrontLeft",
-			"FrontRight",
-			"BackLeft",
-			"BackRight"
-	};
+	public static final String[] STEERING_KEYS = new String[] { "FrontLeft", "FrontRight", "BackLeft", "BackRight" };
 	// @formatter:on
 
 	// Number of increments on the steering sensor (12-bit A/D)
@@ -149,16 +145,19 @@ public class RobotMap {
 	public static final int SHOOTER_MOTOR_2 = 6;
 	public static final int AGITATOR_MOTOR = 1;
 
-	// The number of encoder ticks per one revolution of the wheel. This is used for correctly determining RPM and position.
+	// The number of encoder ticks per one revolution of the wheel. This is used
+	// for correctly determining RPM and position.
 	public static final int WHEELPOD_ENCODER_CODES_PER_REVOLUTION = 256;
 
 	/**
-	 * Used to ensure that all Talon SRX outputs are relative to a fixed value. If the available voltage is below the nominal and a
-	 * value about that is requested, the output will be 100%.
+	 * Used to ensure that all Talon SRX outputs are relative to a fixed value.
+	 * If the available voltage is below the nominal and a value about that is
+	 * requested, the output will be 100%.
 	 */
 	public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
 
-	// The circumference of the wheels for use in determining distance in position mode
+	// The circumference of the wheels for use in determining distance in
+	// position mode
 	public static final double WHEELPOD_CIRCUMFERENCE = 18.85;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;

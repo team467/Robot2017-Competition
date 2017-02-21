@@ -8,7 +8,7 @@ public class ButtonPanel2017 {
 	public enum Buttons {
 		CLIMBER_UP(1), CLIMBER_DOWN(2), SHOOTER_SPIN(3), SHOOTER_FAILSAFE(4), INTAKE_IN(5), INTAKE_OUT(6),
 		// agitator will not have buttons
-		AGITATOR_SHOOT(7), AGITATOR_REVERSE(8), GEAR_GET(9), GEAR_SCOOP(10), GEAR_PLACE(11), GEAR_UP(12);
+		AGITATOR_SHOOT(7), AGITATOR_REVERSE(8), GEAR_DOWN(9);
 
 		public final int id;
 

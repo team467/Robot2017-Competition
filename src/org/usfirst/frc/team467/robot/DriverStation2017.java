@@ -174,7 +174,7 @@ public class DriverStation2017 {
 	}
 
 	public boolean isGearDown() {
-		return buttonPanel.buttonDown(Buttons.GEAR_SCOOP);
+		return buttonPanel.buttonDown(Buttons.GEAR_DOWN);
 	}
 
 	public IntakeMode getIntakeMode() {
