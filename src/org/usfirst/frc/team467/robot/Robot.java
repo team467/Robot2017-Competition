@@ -256,7 +256,7 @@ public class Robot extends IterativeRobot {
 			loader.load();
 		} else if (driverstation.isShootingReverse()) {
 			shooter.reverse();
-			loader.load();
+			loader.reverse();
 		} else {
 			shooter.stop();
 			loader.stop();
