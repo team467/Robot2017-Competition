@@ -1,6 +1,8 @@
 package org.usfirst.frc.team467.robot;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
+import org.usfirst.frc.team467.robot.imu.ADIS16448_IMU;
+import org.usfirst.frc.team467.robot.imu.IMU;
+import org.usfirst.frc.team467.robot.imu.LSM9DS1_IMU;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -10,14 +12,20 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  */
 public class Gyrometer implements PIDSource {
 
-	private ADIS16448_IMU imu = null;
+	private IMU imu = null;
 	private static Gyrometer instance;
+	private double measuresPerDegree;
+
 
 	/*
 	 * private constructor (singleton pattern)
 	 */
 	private Gyrometer() {
-		imu = new ADIS16448_IMU();
+		if (RobotMap.useRemoteImu) {
+			imu = new ADIS16448_IMU();
+		} else {
+			imu = new LSM9DS1_IMU();
+		}
 	}
 
 	/**
@@ -78,7 +86,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleZRadians() {
-		return imu.getAngleZ() * Math.PI / 720;
+		return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
 	}
 
 	/**
@@ -87,7 +95,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleZDegrees() {
-		return imu.getAngleZ() / 4;
+		return imu.getAngleZ() / measuresPerDegree;
 	}
 
 	/**
@@ -96,7 +104,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleXRadians() {
-		return -imu.getAngleX() * Math.PI / 720;
+		return -imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
 	}
 
 	/**
@@ -105,7 +113,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleXDegrees() {
-		return imu.getAngleX() / 4;
+		return imu.getAngleX() / measuresPerDegree;
 	}
 
 	/**
@@ -114,7 +122,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleYRadians() {
-		return -imu.getAngleY() * Math.PI / 720;
+		return -imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
 	}
 
 	/**
@@ -123,7 +131,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleYDegrees() {
-		return imu.getAngleY() / 4;
+		return imu.getAngleY() / measuresPerDegree;
 	}
 
 	@Override
@@ -139,7 +147,7 @@ public class Gyrometer implements PIDSource {
 
 	@Override
 	public double pidGet() {
-		double angle = imu.getAngleZ() / 4;
+		double angle = imu.getAngleZ() / measuresPerDegree;
 		while (angle > 180) {
 			angle -= 360;
 		}
