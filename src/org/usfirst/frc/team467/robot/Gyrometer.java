@@ -22,9 +22,11 @@ public class Gyrometer implements PIDSource {
 	 */
 	private Gyrometer() {
 		if (RobotMap.useRemoteImu) {
-			imu = new ADIS16448_IMU();
-		} else {
 			imu = new LSM9DS1_IMU();
+			measuresPerDegree = 1;
+		} else {
+			imu = new ADIS16448_IMU();
+			measuresPerDegree = 4;
 		}
 	}
 
