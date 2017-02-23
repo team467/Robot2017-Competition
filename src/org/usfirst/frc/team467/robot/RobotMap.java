@@ -126,24 +126,24 @@ public class RobotMap {
 	// TODO: need actual motor channels
 	// TODO - test climber
 	public static final int CLIMBER_MOTOR_1 = 5;
-	public static final int CLIMBER_MOTOR_2 = 6;
+	public static final int CLIMBER_MOTOR_2 = 4;
 
 	// Ball Intake
 	public static boolean hasBallIntake = false;
 	// TODO: need actual motor channels
-	public static final int INTAKE_MOTOR = 7;
+	public static final int INTAKE_MOTOR = 6;
 
 	// Shooter
 	public static boolean hasShooter = false;
 	// TODO - test shooter motor
 	public static final int SHOOTER_MOTOR_1 = 5;
 	public static final int SHOOTER_MOTOR_2 = 6;
-	public static final int AGITATOR_MOTOR = 1;
+	public static final int AGITATOR_MOTOR = 3;
 	
 	// Gear
 	public static boolean hasGear = false; // default to no gear mechanism
 	// TODO confirm channel for these pieces
-	public static final int GEAR_MOTOR = 8;
+	public static final int GEAR_MOTOR = 7;
 	
 	public static final int ULTRASONIC_SENSOR = 9;
 
