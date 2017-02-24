@@ -23,7 +23,7 @@ public class BallIntake {
 
 	public void reverse() {
 		// reverse should be slower than intake
-		spark.set(-0.1);
+		spark.set(-1.0);
 	}
 
 	public void stop() {

@@ -30,8 +30,8 @@ public class Shooter {
 
 	public void reverse() {
 		// spins backwards to dislodge balls
-		motorRight.set(-0.1);
-		motorLeft.set(0.1);
+		motorRight.set(-1.0);
+		motorLeft.set(1.0);
 	}
 
 	public void stop() {
