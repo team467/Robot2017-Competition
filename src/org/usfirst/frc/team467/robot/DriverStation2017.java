@@ -17,7 +17,7 @@ public class DriverStation2017 {
 	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
-	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_LEFT;
+	private static int AIM_BUTTON = XBoxJoystick467.BUMPER_LEFT;
 	private static int BASIC_PROCESS_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
 	private static int TERMINATE_BUTTON = XBoxJoystick467.BUTTON_BACK;
 

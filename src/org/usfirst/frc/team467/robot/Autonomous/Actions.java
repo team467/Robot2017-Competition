@@ -32,7 +32,7 @@ public class Actions {
 		return new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
 	}
 	
-	public static ActionGroup aimProcess(double angle) {
+	public static ActionGroup newAimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
 		mode.addAction(aim(angle));
 		return mode;

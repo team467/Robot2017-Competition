@@ -201,7 +201,9 @@ public class Robot extends IterativeRobot {
 
 		switch (driveMode) {
 		case AIM:
-			drive.turnToAngle(vision.getTargetAngle());
+			if (vision.canSeeTwo()) {
+				drive.turnToAngle(vision.getTargetAngle());
+			}
 			break;
 
 		case VECTOR:
