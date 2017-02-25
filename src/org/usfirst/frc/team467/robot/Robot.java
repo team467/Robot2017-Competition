@@ -198,12 +198,18 @@ public class Robot extends IterativeRobot {
 	 */
 	private void updateDrive() {
 		DriveMode driveMode = driverstation.getDriveMode();
+		
+		if (driveMode != DriveMode.FACE_ANGLE) {
+			drive.aiming.disable();
+		}
 
 		switch (driveMode) {
 		case AIM:
 			if (vision.canSeeTwo()) {
 				drive.turnToAngle(vision.getTargetAngle());
 			}
+		case FACE_ANGLE:
+			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
 			break;
 
 		case VECTOR:
