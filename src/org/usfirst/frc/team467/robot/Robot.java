@@ -84,29 +84,24 @@ public class Robot extends IterativeRobot {
 		gyro = Gyrometer.getInstance();
 
 		autonomous = driverstation.getActionGroup();
-
-		SmartDashboard.putString("DB/String 0", "1.0");
-		SmartDashboard.putString("DB/String 1", "0.0");
-		SmartDashboard.putString("DB/String 2", "0.0");
-		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
+	}
+	
+	public void robotPeriodic() {
+		double gyroAngle = gyro.pidGet();
+		SmartDashboard.putNumber("gyro", gyroAngle);
 	}
 
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
+		drive.aiming.disable();
 	}
 
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
 		SmartDashboard.putData("Ultrasonic", ultra);
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", gyroAngle);
-		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
-		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
-		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		drive.aiming.setPID(p, i, d, f);
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
+		
 		vision.update();
 	}
 
@@ -124,10 +119,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testInit() {
-		gyro.reset();
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", ".025"));
 		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.1"));
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
 	}
@@ -212,7 +206,6 @@ public class Robot extends IterativeRobot {
 		case FACE_ANGLE:
 			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
 			break;
-
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
 			// @formatter:off
