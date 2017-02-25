@@ -138,7 +138,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 		driverstation.readInputs();
-		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
+		double driveAngle = (vision.getTargetAngle() - gyroAngle) * Math.PI / 180;
 		// drive.crabDrive(driveAngle, 0.0);
 		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
 		// gyro
@@ -201,7 +201,7 @@ public class Robot extends IterativeRobot {
 
 		switch (driveMode) {
 		case AIM:
-			Actions.aimProcess(vision.targetAngle).run();
+			drive.turnToAngle(vision.getTargetAngle());
 			break;
 
 		case VECTOR:
