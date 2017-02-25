@@ -157,7 +157,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
-		drive.aiming.reset();
+//		drive.aiming.reset();
 
 		// Read driverstation inputs
 		driverstation.readInputs();
@@ -204,10 +204,11 @@ public class Robot extends IterativeRobot {
 		}
 
 		switch (driveMode) {
-		case AIM:
-			if (vision.canSeeTwo()) {
-				drive.turnToAngle(vision.getTargetAngle());
-			}
+//		case AIM:
+//			if (vision.canSeeTwo()) {
+//				drive.turnToAngle(vision.getTargetAngle());
+//			}
+//			break;
 		case FACE_ANGLE:
 			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
 			break;

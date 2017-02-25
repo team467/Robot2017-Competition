@@ -17,7 +17,7 @@ public class DriverStation2017 {
 	private static int UNWIND_BUTTON = XBoxJoystick467.BUTTON_B;
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
-	private static int AIM_BUTTON = XBoxJoystick467.BUMPER_LEFT;
+//	private static int AIM_BUTTON = XBoxJoystick467.BUMPER_LEFT;
 	private static int BASIC_PROCESS_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
 	private static int TERMINATE_BUTTON = XBoxJoystick467.BUTTON_BACK;
 
@@ -95,8 +95,8 @@ public class DriverStation2017 {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
-		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			drivemode = DriveMode.AIM;
+//		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+//			drivemode = DriveMode.AIM;
 		} else if (driverJoy.getJoystick().getPOV(0) != -1) {
 			drivemode = DriveMode.FACE_ANGLE;
 		}
