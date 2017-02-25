@@ -29,7 +29,7 @@ public class Drive extends RobotDrive {
 	// Gyroscope
 	private Gyrometer gyro;
 
-	public double[] aimingPIDs = { 2.0, 0.0, 0.0, 0.0 };
+	private double[] aimingPIDs = { .025, 0.0, 0.1, 0.0 };
 	public PIDController aiming;
 
 	// Steering objects
@@ -71,7 +71,7 @@ public class Drive extends RobotDrive {
 				(output) -> {
 					if (aiming.isEnabled()) {
 						System.out.println("PID Output=" + output);
-						turnDrive(-output);
+						turnDrive(output);
 					}
 				});
 		aiming.setInputRange(0, 360); // 4 Gyro units per degree
