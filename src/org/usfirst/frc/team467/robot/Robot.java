@@ -132,8 +132,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		vision.update();
 		driverstation.readInputs();
-		double driveAngle = (vision.getTargetAngle() - gyroAngle) * Math.PI / 180;
-		// drive.crabDrive(driveAngle, 0.0);
 		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
 		// gyro
 		if (onTarget) {
@@ -155,10 +153,12 @@ public class Robot extends IterativeRobot {
 
 		// Read driverstation inputs
 		driverstation.readInputs();
+		vision.update();
 
 		if (driverstation.getGyroReset()) {
 			gyro.reset();
 		}
+		
 		if (!autonomous.isComplete()) {
 			updateAutonomous(autonomous);
 		} else if (driverstation.isInCalibrateMode()) {
@@ -193,16 +193,18 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 		DriveMode driveMode = driverstation.getDriveMode();
 		
-		if (driveMode != DriveMode.FACE_ANGLE) {
+		if (driveMode != DriveMode.FACE_ANGLE && driveMode != DriveMode.AIM) {
 			drive.aiming.disable();
 		}
 
 		switch (driveMode) {
-//		case AIM:
-//			if (vision.canSeeTwo()) {
-//				drive.turnToAngle(vision.getTargetAngle());
-//			}
-//			break;
+		case AIM:
+			LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
+			if (vision.canSeeTwo()) {
+				LOGGER.debug("AIM DRIVE: TURNING");
+				drive.turnToAngle(vision.getTargetAngle());
+			}
+			break;
 		case FACE_ANGLE:
 			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
 			break;
