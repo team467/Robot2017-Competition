@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
 
 	private VisionProcessing vision;
 	private Gyrometer gyro;
-	private Ultrasonic ultra;
+	private Ultrasonic467 ultra;
 
 	private Climber climber;
 	private BallIntake intake;
@@ -53,7 +53,6 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
-
 		RobotMap.init(RobotMap.RobotID.ROBOT2015);
 
 		// Initialize logging framework
@@ -80,7 +79,7 @@ public class Robot extends IterativeRobot {
 		LookUpTable.init();
 
 		vision = VisionProcessing.getInstance();
-		ultra = new Ultrasonic(0, 1);
+		ultra = Ultrasonic467.getInstance();
 		gyro = Gyrometer.getInstance();
 
 		autonomous = driverstation.getActionGroup();
@@ -88,8 +87,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void robotPeriodic() {
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", gyroAngle);
+		vision.update();
 	}
 
 	public void disabledInit() {
@@ -99,11 +97,9 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
-		SmartDashboard.putData("Ultrasonic", ultra);
+		SmartDashboard.putData("Ultrasonic", ultra.getSensor());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
-		
-		vision.update();
-	}
+		}
 
 	public void autonomousInit() {
 		System.out.println("Autonomous reset");
@@ -130,7 +126,6 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		vision.update();
 		driverstation.readInputs();
 		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
 		// gyro
@@ -153,7 +148,6 @@ public class Robot extends IterativeRobot {
 
 		// Read driverstation inputs
 		driverstation.readInputs();
-		vision.update();
 
 		if (driverstation.getGyroReset()) {
 			gyro.reset();

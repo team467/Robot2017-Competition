@@ -7,11 +7,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class VisionProcessing {
 	private static final Logger LOGGER = Logger.getLogger(VisionProcessing.class);
 	private static VisionProcessing instance;
+	
+	private Gyrometer gyro;
+	private Ultrasonic467 ultra;
 
 	private double targetAngle, x, y, width, height = 0.0;
 	private boolean seeTwo = false;
 
 	private VisionProcessing() {
+		gyro = Gyrometer.getInstance();
+		ultra = Ultrasonic467.getInstance();
 		update();
 	}
 
@@ -29,6 +34,8 @@ public class VisionProcessing {
 		y = SmartDashboard.getNumber("y", 0.0);
 		width = SmartDashboard.getNumber("w", 0.0);
 		height = SmartDashboard.getNumber("h", 0.0);
+		SmartDashboard.putNumber("ultra", ultra.getDistance());
+		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		
 //		LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
 	}

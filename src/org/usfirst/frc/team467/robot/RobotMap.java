@@ -145,7 +145,7 @@ public class RobotMap {
 	// TODO confirm channel for these pieces
 	public static final int GEAR_MOTOR = 7;
 	
-	public static final int ULTRASONIC_SENSOR = 9;
+	public static final int ULTRASONIC_SENSOR = 1;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
