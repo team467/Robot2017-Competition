@@ -33,6 +33,7 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 31.5; // front to back - in inches
 			width = 18.5; // side to side in inches
+			CamToCenterInches = 4.5; // TODO Get real measurement
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -103,6 +104,7 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double length;
 	public static double width;
+	public static double CamToCenterInches;
 
 	// Game pieces motor channels
 

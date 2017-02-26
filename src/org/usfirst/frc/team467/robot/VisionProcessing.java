@@ -15,6 +15,7 @@ public class VisionProcessing {
 	private boolean seeTwo = false;
 
 	private VisionProcessing() {
+		SmartDashboard.putNumber("CamToCenter", RobotMap.CamToCenterInches);
 		gyro = Gyrometer.getInstance();
 		ultra = Ultrasonic467.getInstance();
 		update();
