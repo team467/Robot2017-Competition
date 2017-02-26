@@ -8,8 +8,8 @@ public class VisionProcessing {
 	private static final Logger LOGGER = Logger.getLogger(VisionProcessing.class);
 	private static VisionProcessing instance;
 
-	private double targetAngle, x, y, width, height;
-	private boolean seeTwo;
+	private double targetAngle, x, y, width, height = 0.0;
+	private boolean seeTwo = false;
 
 	private VisionProcessing() {
 		update();
@@ -30,7 +30,7 @@ public class VisionProcessing {
 		width = SmartDashboard.getNumber("w", 0.0);
 		height = SmartDashboard.getNumber("h", 0.0);
 		
-		LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
+//		LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
 	}
 	
 	public double getTargetAngle() {

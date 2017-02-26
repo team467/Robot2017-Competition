@@ -29,7 +29,7 @@ public class Drive extends RobotDrive {
 	// Gyroscope
 	private Gyrometer gyro;
 
-	private double[] aimingPIDs = { .025, 0.0, 0.1, 0.0 };
+	private double[] aimingPIDs = { .018, 0.0, 0.06, 0.0 };
 	public PIDController aiming;
 
 	// Steering objects
