@@ -96,9 +96,11 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+//		vision.logDistanceValues();
 		// LOGGER.debug("Disabled Periodic");
 		SmartDashboard.putData("Ultrasonic", ultra.getSensor());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
+//		drive.logSteeringValues();
 		}
 
 	public void autonomousInit() {
@@ -143,9 +145,11 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+//		vision.logDistanceValues();
+		LOGGER.info("angle aimTo=" + vision.getTargetAngle() + ", gyro=" + gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
 //		drive.aiming.reset();
-
+//		drive.logSteeringValues();
 		// Read driverstation inputs
 		driverstation.readInputs();
 
