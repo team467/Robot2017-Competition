@@ -4,6 +4,8 @@
  */
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Logger;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
  *
  */
 public class Drive extends RobotDrive {
+	private static final Logger LOGGER = Logger.getLogger(Drive.class);
 	// Single instance of this class
 	private static Drive instance = null;
 
@@ -419,6 +422,14 @@ public class Drive extends RobotDrive {
 	 */
 	public double getNormalizedSteeringAngle(int steeringMotor) {
 		return steering[steeringMotor].getSteeringAngle();
+	}
+	
+	public void logSteeringValues() {
+		LOGGER.debug(
+				"FL=" + steering[0].getSensorValue() +
+				" FR=" + steering[1].getSensorValue() +
+				" BL=" + steering[2].getSensorValue() +
+				" BR=" + steering[3].getSensorValue());
 	}
 
 }
