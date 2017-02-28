@@ -24,7 +24,7 @@ public class RobotMap {
 
 		switch (id) {
 		case ROBOT2015:
-			robotID = RobotID.ROBOT2015;
+			robotID = id;
 			steeringMotorChannel = new int[] { 0, 1, 2, 3 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -33,7 +33,8 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 31.5; // front to back - in inches
 			width = 18.5; // side to side in inches
-			CamToCenterInches = 4.5; // TODO Get real measurement
+			CamToCenterWidthInches = 4.5; // TODO Get measurement for other robots
+			CamToCenterLengthInches = 17; // TODO Get measurement for other robots
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -46,7 +47,7 @@ public class RobotMap {
 			break;
 
 		case ROBOT2017A:
-			robotID = RobotID.ROBOT2017A;
+			robotID = id;
 			steeringMotorChannel = new int[] { 0, 3, 1, 2 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -59,7 +60,7 @@ public class RobotMap {
 			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[BACK_LEFT] = new PID(0.013, 0.0, 0.0);
-			PIDvalues[BACK_RIGHT] = new PID(0.015, 0.0, 0.0);;
+			PIDvalues[BACK_RIGHT] = new PID(0.015, 0.0, 0.0);
 			speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
 			speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
 			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
@@ -68,6 +69,31 @@ public class RobotMap {
 			hasClimber = true;
 			hasBallIntake = true;
 			hasShooter = true;
+			break;
+
+		case ROBOT2017B:
+			robotID = id;
+			steeringMotorChannel = new int[] { 0, 3, 1, 2 };
+			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
+					Steering.PWMType.TALON, Steering.PWMType.TALON };
+			steeringSensorChannel = new int[] { 0, 3, 1, 2 };
+			driveMotorChannel = new int[] { 1, 4, 2, 3 };
+			isDriveMotorInverted = new boolean[] { false, true, false, true };
+			length = 18.5; // front to back - in inches
+			width = 22.5; // side to side in inches
+			MAX_SPEED = 450.0;
+			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
+			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
+			PIDvalues[BACK_LEFT] = new PID(0.013, 0.0, 0.0);
+			PIDvalues[BACK_RIGHT] = new PID(0.015, 0.0, 0.0);
+			speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
+			speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
+			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
+			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
+			hasGear = false;
+			hasClimber = false;
+			hasBallIntake = true;
+			hasShooter = false;
 			break;
 
 		default:
@@ -104,7 +130,8 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double length;
 	public static double width;
-	public static double CamToCenterInches;
+	public static double CamToCenterWidthInches;
+	public static double CamToCenterLengthInches;
 
 	// Game pieces motor channels
 
@@ -147,7 +174,7 @@ public class RobotMap {
 	// TODO confirm channel for these pieces
 	public static final int GEAR_MOTOR = 7;
 	
-	public static final int ULTRASONIC_SENSOR = 1;
+	public static final int ULTRASONIC_SENSOR = 3;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
