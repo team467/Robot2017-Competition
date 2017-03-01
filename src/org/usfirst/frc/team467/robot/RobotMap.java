@@ -33,6 +33,7 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 31.5; // front to back - in inches
 			width = 18.5; // side to side in inches
+			crabDriveFrontAngle = 0;
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -54,6 +55,7 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 18.5; // front to back - in inches
 			width = 22.5; // side to side in inches
+			crabDriveFrontAngle = Math.PI;
 			MAX_SPEED = 450.0;
 			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -103,6 +105,7 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double length;
 	public static double width;
+	public static double crabDriveFrontAngle;
 
 	// Game pieces motor channels
 
