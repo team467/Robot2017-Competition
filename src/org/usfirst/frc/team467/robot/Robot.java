@@ -260,8 +260,8 @@ public class Robot extends IterativeRobot {
 
 		if (driverstation.isClimbing()) {
 			climber.climb();
-		} else if (driverstation.isClimbingReverse()) {
-			climber.reverse();
+		} else if (driverstation.isClimbingSlow()) {
+			climber.slow();
 		} else {
 			climber.stop();
 		}
