@@ -228,6 +228,7 @@ public class Drive extends RobotDrive {
 	 *            Speed to drive at
 	 */
 	public void crabDrive(double angle, double speed) {
+		angle += RobotMap.crabDriveFrontAngle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);

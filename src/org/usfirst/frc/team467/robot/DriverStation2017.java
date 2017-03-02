@@ -46,7 +46,7 @@ public class DriverStation2017 {
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
 		autonomous = Actions.basicProcess; // Default
-		// buttonPanel = new ButtonPanel2017(1);
+		buttonPanel = new ButtonPanel2017(1);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
-		// buttonPanel.readInputs();
+		 buttonPanel.readInputs();
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class DriverStation2017 {
 		return buttonPanel.buttonDown(Buttons.CLIMBER_UP);
 	}
 
-	public boolean isClimbingReverse() {
-		return buttonPanel.buttonDown(Buttons.CLIMBER_REVERSE);
+	public boolean isClimbingSlow() {
+		return buttonPanel.buttonDown(Buttons.CLIMBER_SLOW);
 	}
 
 	public boolean isGearDown() {
