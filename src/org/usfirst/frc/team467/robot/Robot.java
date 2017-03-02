@@ -129,8 +129,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		driverstation.readInputs();
-		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
-		// gyro
+		boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
 		if (onTarget) {
 			System.out.println("TARGET ACQUIRED");
 		}
@@ -148,7 +147,6 @@ public class Robot extends IterativeRobot {
 //		vision.logDistanceValues();
 		LOGGER.info("angle aimTo=" + vision.getTargetAngle() + ", gyro=" + gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
-//		drive.aiming.reset();
 //		drive.logSteeringValues();
 		// Read driverstation inputs
 		driverstation.readInputs();
@@ -196,13 +194,13 @@ public class Robot extends IterativeRobot {
 		}
 
 		switch (driveMode) {
-		case AIM:
-			LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
-			if (vision.canSeeTwo()) {
-				LOGGER.debug("AIM DRIVE: TURNING");
-				drive.turnToAngle(vision.getTargetAngle());
-			}
-			break;
+//		case AIM:
+//			LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
+//			if (vision.canSeeTwo()) {
+//				LOGGER.debug("AIM DRIVE: TURNING");
+//				drive.turnToAngle(vision.getTargetAngle());
+//			}
+//			break;
 		case FACE_ANGLE:
 			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
 			break;

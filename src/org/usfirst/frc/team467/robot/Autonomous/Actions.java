@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.usfirst.frc.team467.robot.*;
 
 public class Actions {
@@ -19,31 +21,73 @@ public class Actions {
 
 	public static final Action moveForward = new Action(
 			"Move Forward 2 seconds",
-			new ActionGroup.Duration(2),
+			new ActionGroup.Duration(1),
 			() -> Drive.getInstance().crabDrive(0, 0.5));
 	
 	public static final Action moveBackward = new Action(
 			"Move Backward 2 seconds",
-			new ActionGroup.Duration(2),
+			new ActionGroup.Duration(1),
 			() -> Drive.getInstance().crabDrive(0, -0.5));
+	
+	public static final Action moveLeft = new Action(
+			"Move Forward 2 seconds",
+			new ActionGroup.Duration(1),
+			() -> Drive.getInstance().crabDrive(3*Math.PI/2, 0.5));
+	
+	public static final Action moveRight = new Action(
+			"Move Forward 2 seconds",
+			new ActionGroup.Duration(1),
+			() -> Drive.getInstance().crabDrive(Math.PI/2, 0.5));
 
-	public static Action aim(double angle) {
+	public static ActionGroup aim(double angle) {
 		Drive drive = Drive.getInstance();
-		return new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
+		ActionGroup mode = new ActionGroup("Aim");
+		Action aim =  new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
+		Action disable = new Action("Disable", () -> true, () -> drive.aiming.disable());
+		mode.addAction(aim);
+		mode.addAction(disable);
+		return mode;
+	}
+	
+	public static Action driveToGear(double targetDistance) {
+		// Ran once at initialization
+		Drive drive = Drive.getInstance();
+		VisionProcessing vision = VisionProcessing.getInstance();
+		AtomicInteger minimumDistance = new AtomicInteger((int)vision.getDistance());
+		// Ran periodically
+		return new Action("Drive Distance",
+				() -> {
+					double currentDistance = vision.getDistance();
+
+					if (minimumDistance.get() > currentDistance) {
+						minimumDistance.set((int)currentDistance);
+					}
+					
+					// If we are currently more than two inches further away than our start
+					if (currentDistance > minimumDistance.get() + 4.0) {
+						return true;
+					}
+					
+					return currentDistance <= targetDistance;
+					},
+				() -> drive.crabDrive(0, 0.3));
 	}
 	
 	public static ActionGroup newAimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
-		mode.addAction(aim(angle));
+		mode.addActions(aim(angle));
+		mode.addAction(driveToGear(40));
+		mode.enable();
 		return mode;
 	}
 	
 	// Private method makes process, but for only one public variable
 	public static ActionGroup newBasicProcess() {
 		ActionGroup mode = new ActionGroup("Basic Auto");
-		mode.addAction(example1);
 		mode.addAction(moveForward);
+		mode.addAction(moveRight);
 		mode.addAction(moveBackward);
+		mode.addAction(moveLeft);
 		mode.enable();
 		return mode;
 	}

@@ -10,7 +10,7 @@ public class DriverStation2017 {
 	XBoxJoystick467 driverJoy = null;
 	ButtonPanel2017 buttonPanel = null;
 	ActionGroup autonomous = null;
-
+	
 	// Mapping of functions to Joystick Buttons for normal operation
 
 	private static int GYRO_RESET_BUTTON = XBoxJoystick467.BUTTON_Y;
@@ -95,8 +95,8 @@ public class DriverStation2017 {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
-		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			drivemode = DriveMode.AIM;
+//		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+//			drivemode = DriveMode.AIM;
 		} else if (driverJoy.getJoystick().getPOV(0) != -1) {
 			drivemode = DriveMode.FACE_ANGLE;
 		}
@@ -135,10 +135,9 @@ public class DriverStation2017 {
 	public ActionGroup getActionGroup() {
 		if (driverJoy.buttonDown(BASIC_PROCESS_BUTTON)) {
 			autonomous = Actions.newBasicProcess();
+		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+			autonomous = Actions.newAimProcess(VisionProcessing.getInstance().getTargetAngle());
 		}
-		// } else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
-		// autonomous = Actions.foo;
-		// }
 		return autonomous; // TODO Get multiple options
 	}
 
