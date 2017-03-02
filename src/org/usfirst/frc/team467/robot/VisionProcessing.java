@@ -11,7 +11,7 @@ public class VisionProcessing {
 	private NetworkTable table;
 	private Gyrometer gyro;
 	
-	private double targetAngle, x, y, width, height = 0.0;
+	private double targetAngle, x, y, distance, width, height = 0.0;
 	private boolean seeTwo = false;
 
 	private VisionProcessing() {
@@ -34,6 +34,7 @@ public class VisionProcessing {
 		targetAngle = table.getNumber("angle", 0.0);
 		x = table.getNumber("x", 0.0);
 		y = table.getNumber("y", 0.0);
+		distance = table.getNumber("distance", 0.0);
 		width = table.getNumber("w", 0.0);
 		height = table.getNumber("h", 0.0);
 		table.putNumber("gyro", gyro.getRobotAngleDegrees());
@@ -52,6 +53,10 @@ public class VisionProcessing {
 	public double getY() {
 		return y;
 	}
+	
+	public double getDistance() {
+		return distance;
+	}
 
 	public double getWidth() {
 		return width;
@@ -63,10 +68,6 @@ public class VisionProcessing {
 
 	public boolean canSeeTwo() {
 		return seeTwo;
-	}
-	
-	public double getDistance() {
-		return 3580/height;
 	}
 	
 	public void logDistanceValues() {
