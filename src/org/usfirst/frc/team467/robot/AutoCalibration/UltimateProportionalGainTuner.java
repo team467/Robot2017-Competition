@@ -19,31 +19,22 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 	private long cycleStartTime;
 	private int numberCycles;
 	private ArrayList<Long> cycleTimes;
-	private boolean positionIsSet;
 
 	/**
 	 * @param talon
 	 * @param reverseDirection
 	 */
-	public UltimateProportionalGainTuner(WheelPod wheelPod, boolean findVelocityPID) {
-		super(wheelPod, findVelocityPID);
+	public UltimateProportionalGainTuner(WheelPod wheelPod) {
+		super(wheelPod, true);
 		cycleDiff = new ArrayList<Long>();
 		cycleTimes = new ArrayList<Long>();
 		System.out.println("Starting autotune stage for ultimate proportional gain.");
 		clear();
-		if (this.findVelocityPID) {
-			currentValue = 1;
-		} else {
-			currentValue = 12;
-		}
+		currentValue = 1;
 		previousValue = currentValue;
 		increaseFactor = 1;
-		pidf(currentValue, 0.0, 0.0, 0.0);
-		if (findVelocityPID) {
-			wheelPod.speedMode();
-		} else {
-			wheelPod.positionMode();
-		}
+		pid(currentValue, 0.0, 0.0);
+		wheelPod.speedMode();
 		cycleDiff.clear();
 		cycleTimes.clear();
 		count = 0;
@@ -51,7 +42,6 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 		lastReading = 0;
 		lastPeak = 0;
 		goingUp = true;
-		positionIsSet = false;
 	}
 
 	private int peakIncreaseCount() {
@@ -122,32 +112,18 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 			cycleTimes.clear();
 			cycleDiff.clear();
 			p(currentValue);
-			if (this.findVelocityPID) {
-				wheelPod.set(setpoint);
-			} else {
-				wheelPod.zeroPosition();
-				set(setpoint);
-				if (!positionIsSet) {
-					positionIsSet = true;
-				}
-			}
+			wheelPod.set(setpoint);
 			count++;
 		} else if (count >= HOLD_PERIOD) {
 			count = 0;
-			if (findVelocityPID) {
-				set(0);
-			} else {
-				wheelPod.zeroPosition();
-				set(0);
-				positionIsSet = false;
-			}
+			set(0);
 			int peakIncreaseCount = peakIncreaseCount();
 			int cycleTimeIncreaseCount = cycleTimeIncreaseCount();
 			long averageCycleTime = averageCycleTime();
 			System.out.println(wheelPod.name() + " P: " + currentValue + " Error: " + wheelPod.error() + " Reading: " + reading
 					+ " Ave Diff: " + averageCycleDiff() + " Peaks increasing: " + peakIncreaseCount + " Ave Cycle Times: "
 					+ averageCycleTime + " Times increasing: " + cycleTimeIncreaseCount + " Number of Cycles: " + numberCycles);
-			if (Math.abs(peakIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
+			if (peakIncreaseCount >= 0 && Math.abs(peakIncreaseCount) < DEFAULT_ALLOWABLE_ERROR && Math.abs(cycleTimeIncreaseCount) < DEFAULT_ALLOWABLE_ERROR
 					&& numberCycles > 2 && reading > 0) {
 				System.out.println("Cycle times are stable");
 				velocityMaxStableProportionalTerm(currentValue);
@@ -163,21 +139,14 @@ public class UltimateProportionalGainTuner extends BaseTuner implements Tuner {
 					return true;
 				}
 			}
-			if (peakIncreaseCount > 0) {
+			if (peakIncreaseCount > DEFAULT_ALLOWABLE_ERROR) {
 				// Getting worse -- unstable
 				decreaseValue();
 			} else {
 				increaseValue();
 			}
 		} else {
-			if (this.findVelocityPID) {
-				set(setpoint);
-			} else {
-				if (!positionIsSet) {
-					set(setpoint);
-					positionIsSet = true;
-				}
-			}
+			set(setpoint);
 			if (goingUp) {
 				if (reading < lastReading) {
 					// Found peek

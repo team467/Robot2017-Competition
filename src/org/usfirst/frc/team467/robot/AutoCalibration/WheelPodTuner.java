@@ -45,7 +45,7 @@ public class WheelPodTuner extends BaseTuner implements Tuner {
 
 		case ULTIMATE_PROPORTIONAL_TERM:
 			if (!tuneInProgress) {
-				tuner = new UltimateProportionalGainTuner(wheelPod, findVelocityPID);
+				tuner = new UltimateProportionalGainTuner(wheelPod);
 				tuneInProgress = true;
 			} else {
 				if (tuner.process()) {
