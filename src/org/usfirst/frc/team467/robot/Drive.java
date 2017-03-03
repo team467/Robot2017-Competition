@@ -98,6 +98,9 @@ public class Drive extends RobotDrive {
 		return instance;
 	}
 
+	/**
+	 * Sets the motors to drive in speed mode.
+	 */
 	public void setSpeedMode() {
 		controlMode = TalonControlMode.Speed;
 		frontleft.speedMode();
@@ -106,12 +109,95 @@ public class Drive extends RobotDrive {
 		backleft.speedMode();
 	}
 
+	/**
+	 * Sets the motors to drive in percent of voltage mode. Default for when the speed sensors are not working.
+	 *
+	 * @return true when the percent of voltage mode is set, which is required for autonomous
+	 */
 	public void setPercentVoltageBusMode() {
 		controlMode = TalonControlMode.PercentVbus;
 		frontleft.percentVoltageBusMode();
 		frontright.percentVoltageBusMode();
 		backright.percentVoltageBusMode();
 		backleft.percentVoltageBusMode();
+	}
+
+	/**
+	 * Sets the motors to drive in position mode.
+	 */
+	public void setPositionMode() {
+		frontleft.positionMode();
+		frontright.positionMode();
+		backright.positionMode();
+		backleft.positionMode();
+	}
+
+	/**
+	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
+	 *
+	 * @return true when the position mode is set, which is required for autonomous
+	 */
+	public boolean isInPositionMode() {
+		boolean isInPositionMode = true;
+		isInPositionMode &= frontleft.isPositionMode();
+		isInPositionMode &= frontright.isPositionMode();
+		isInPositionMode &= backleft.isPositionMode();
+		isInPositionMode &= backright.isPositionMode();
+		return isInPositionMode;
+	}
+
+	/**
+	 * Takes the drive out of position mode back into its previous drive mode.
+	 */
+	public void returnToDriveMode() {
+		if (controlMode == TalonControlMode.Speed) {
+			setSpeedMode();
+		} else {
+			setPercentVoltageBusMode();
+		}
+	}
+
+	/**
+	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
+	 *
+	 * @return true when the position mode is not set, which is required for autonomous
+	 */
+	public boolean isNotInPositionMode() {
+		boolean isNotPositionMode = true;
+		isNotPositionMode &= frontleft.isNotPositionMode();
+		isNotPositionMode &= frontright.isNotPositionMode();
+		isNotPositionMode &= backleft.isNotPositionMode();
+		isNotPositionMode &= backright.isNotPositionMode();
+		return isNotPositionMode;
+	}
+
+	/**
+	 * Drives each of the four wheels to different positions.
+	 *
+	 * @param frontLeftDistance
+	 * @param frontRightDistance
+	 * @param backLeftDistance
+	 * @param backRightDistance
+	 * @return  true if the move to the specified distance is complete.
+	 */
+	private void fourWheelMoveDistance(
+			double frontLeftDistance,
+			double frontRightDistance,
+			double backLeftDistance,
+			double backRightDistance) {
+		// If any of the motors doesn't exist then exit
+		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
+			throw new NullPointerException("Null motor provided");
+		}
+
+		frontleft.moveDistance(frontLeftDistance);
+		frontright.moveDistance(frontRightDistance);
+		backleft.moveDistance(backLeftDistance);
+		backright.moveDistance(backRightDistance);
+
+		if (m_safetyHelper != null) {
+			m_safetyHelper.feed();
+		}
 	}
 
 	/**
@@ -233,6 +319,47 @@ public class Drive extends RobotDrive {
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
 	}
+
+	/**
+	 * Uses a crab drive like mode to turn to angle and move a certain distance
+	 *
+	 * @param angle
+	 *            value corresponding to the field direction to move in
+	 * @param distance
+	 *            the distance to move in feet
+	 * @return true if the move is complete
+	 */
+	public void turnAndMoveDistance(double angle, double distance) {
+		angle += RobotMap.crabDriveFrontAngle;
+		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, distance);
+		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
+		// In this case, the corrected speed is actually a corrected distance
+		// measurement.
+		// This only reverse the direction if that is the best way to turn the
+		// wheel.
+		fourWheelMoveDistance(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+	}
+
+	public boolean moveDistanceComplete() {
+		boolean moveComplete = true;
+		moveComplete &= frontleft.isAtDistance();
+		moveComplete &= frontright.isAtDistance();
+		moveComplete &= backleft.isAtDistance();
+		moveComplete &= backright.isAtDistance();
+		return moveComplete;
+	}
+
+	/**
+	 * Moves straight forward for a certain distance;
+	 *
+	 * @param distance  the distance to move in feet
+	 * @return true if the move is complete
+	 */
+	public void moveDistance(double distance) {
+		turnAndMoveDistance(RobotMap.crabDriveFrontAngle, distance);
+	}
+
+
 
 	/**
 	 * Vector drive
@@ -388,6 +515,9 @@ public class Drive extends RobotDrive {
 		return corrected;
 	}
 
+	/**
+	 * Used for correcting the steering sensors, especially if they are out of range.
+	 */
 	public void printSteeringSensors() {
 		for (int i = 0; i < 4; i++) {
 			System.out.print(i + ":  " + steering[i].getSensorValue());
