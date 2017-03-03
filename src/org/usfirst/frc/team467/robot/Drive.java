@@ -4,6 +4,8 @@
  */
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Logger;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
  *
  */
 public class Drive extends RobotDrive {
+	private static final Logger LOGGER = Logger.getLogger(Drive.class);
 	// Single instance of this class
 	private static Drive instance = null;
 
@@ -29,7 +32,7 @@ public class Drive extends RobotDrive {
 	// Gyroscope
 	private Gyrometer gyro;
 
-	public double[] aimingPIDs = { 2.0, 0.0, 0.0, 0.0 };
+	private double[] aimingPIDs = { .018, 0.0, 0.06, 0.0 };
 	public PIDController aiming;
 
 	// Steering objects
@@ -71,7 +74,7 @@ public class Drive extends RobotDrive {
 				(output) -> {
 					if (aiming.isEnabled()) {
 						System.out.println("PID Output=" + output);
-						turnDrive(-output);
+						turnDrive(output);
 					}
 				});
 		aiming.setInputRange(0, 360); // 4 Gyro units per degree
@@ -557,6 +560,14 @@ public class Drive extends RobotDrive {
 	 */
 	public double getNormalizedSteeringAngle(int steeringMotor) {
 		return steering[steeringMotor].getSteeringAngle();
+	}
+	
+	public void logSteeringValues() {
+		LOGGER.debug(
+				"FL=" + steering[0].getSensorValue() +
+				" FR=" + steering[1].getSensorValue() +
+				" BL=" + steering[2].getSensorValue() +
+				" BR=" + steering[3].getSensorValue());
 	}
 
 }

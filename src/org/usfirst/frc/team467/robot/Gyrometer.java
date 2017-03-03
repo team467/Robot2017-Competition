@@ -149,7 +149,7 @@ public class Gyrometer implements PIDSource {
 
 	@Override
 	public double pidGet() {
-		double angle = imu.getAngleZ() / measuresPerDegree;
+		double angle = getRobotAngleDegrees();
 		while (angle > 180) {
 			angle -= 360;
 		}

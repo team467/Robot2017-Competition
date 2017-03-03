@@ -10,6 +10,12 @@ public class Action {
 		this.condition = condition;
 		this.activity = activity;
 	}
+	
+	public void run() {
+		if (!isDone()) {
+			doIt();
+		}
+	}
 
 	public boolean isDone() {
 		return condition.isDone();
