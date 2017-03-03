@@ -34,9 +34,14 @@ public class TuneRobot {
 			tuners[i] = new PIDTuningCycleCharacteristics(pods[i], true);
 //			tuners[i] = new PositionTuner(pods[i]);
 //			tuners[i] = new WheelPodTuner(pods[i], true);
-			tuners[i] = new UltimateProportionalGainTuner(pods[i]);
+//			tuners[i] = new UltimateProportionalGainTuner(pods[i]);
 //			tuners[i] = new InitialFeedForwardTuner(pods[i], true);
 			tuneComplete[i] = false;
+			pods[i].checkReversed();
+		}
+		for (int i = 0; i < 4; i++) {
+//			tuneComplete [i] = tuners[i].process();
+			pods[i].moveDistance(3);
 		}
 //		pods[RobotMap.FRONT_LEFT].positionMode();
 //		overshoot = 0;
@@ -53,7 +58,8 @@ public class TuneRobot {
 //		System.out.println("Position Error: " + error + " Overshoot: " + overshoot);
 //		tuners[RobotMap.FRONT_LEFT].process();
 			for (int i = 0; i < 4; i++) {
-				tuneComplete [i] = tuners[i].process();
+//				tuneComplete [i] = tuners[i].process();
+//				pods[i].moveDistance(3);
 			}
 
 	}
