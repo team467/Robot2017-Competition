@@ -206,45 +206,31 @@ public class WheelPod {
 		prefs.putDouble(keyHeader() + "F", motor.getF());
 	}
 
-	private static final double AUTONOMOUS_SPEED = 100;
 	private double targetRevolutions;
 
 	/**
 	 * Moves a distance if in position mode.
 	 *
-	 * @param targetDistance
-	 *            the target distance in feet.
+	 * @param distance  the target distance in feet.
+	 * @return boolean  true if move is complete
 	 */
-	public void moveDistance(double targetDistance) {
-		positionMode();
-		zeroPosition();
-		targetRevolutions = targetDistance * 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
+	public void moveDistance(double distance) {
+		targetRevolutions = distance * 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
 		if (isPosition) {
 			motor.set(targetRevolutions);
 		} else {
-			motor.set(AUTONOMOUS_SPEED);
-			System.out.println("Time to move = " + (60 * targetRevolutions / AUTONOMOUS_SPEED));
+			System.out.println("Not in position mode.");
 		}
 	}
 
-	public boolean checkIfStillMoving() {
+	public boolean isAtDistance() {
+		boolean moveComplete = false;
 		double position = motor.getPosition();
-		System.out.println("Position: " + position);
-		boolean isStillMoving = true;
+		System.out.println("Position: " + position + " Target: " + targetRevolutions);
 		if (position >= targetRevolutions) {
-			if (!isPosition) {
-				motor.set(0);
-			}
-			isStillMoving = false;
-		} else {
-			if (isPosition) {
-				motor.set(targetRevolutions);
-			} else {
-				motor.set(AUTONOMOUS_SPEED);
-				System.out.println("Time to move = " + (60 * targetRevolutions / AUTONOMOUS_SPEED));
-			}
+			moveComplete = true;
 		}
-		return isStillMoving;
+		return moveComplete;
 	}
 
 	/*
@@ -253,6 +239,10 @@ public class WheelPod {
 	public void reverse() {
 		motor.reverseSensor(true);
 		motor.reverseOutput(true);
+	}
+
+	public void straightenMotorOutput() {
+		motor.reverseOutput(false);
 	}
 
 	public boolean checkReversed() {
@@ -307,7 +297,11 @@ public class WheelPod {
 	 * Changes the control mode to percentage of voltage bus.
 	 */
 	public void percentVoltageBusMode() {
+		isPosition = false;
+		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.PercentVbus);
+		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+		motor.reverseOutput(false); // Drive will reverse output manually
 	}
 
 	/**
@@ -317,12 +311,23 @@ public class WheelPod {
 		isPosition = true;
 		motor.setProfile(POSITION_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Position);
-		motor.setPosition(0);
+		motor.setAllowableClosedLoopErr(0);
+		checkReversed();
+		zeroPosition();
+	}
+
+	public boolean isPositionMode() {
+		return (isPosition ? true : false);
+	}
+
+	public boolean isNotPositionMode() {
+		return (!isPosition ? true : false);
 	}
 
 	public void zeroPosition() {
 		motor.setPosition(0);
 		motor.setEncPosition(0);
+		targetRevolutions = 0;
 	}
 
 	/**
@@ -332,8 +337,8 @@ public class WheelPod {
 		isPosition = false;
 		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Speed);
-//		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
-		motor.setAllowableClosedLoopErr(0);
+		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+		motor.reverseOutput(false); // Drive will reverse output manually
 	}
 
 	public void set(double setpoint) {
