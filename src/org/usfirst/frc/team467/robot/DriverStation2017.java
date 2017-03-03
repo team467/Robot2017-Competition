@@ -95,10 +95,10 @@ public class DriverStation2017 {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
-//		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-//			drivemode = DriveMode.AIM;
-		} else if (driverJoy.getJoystick().getPOV(0) != -1) {
-			drivemode = DriveMode.FACE_ANGLE;
+		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+			drivemode = DriveMode.AIM;
+//		} else if (driverJoy.getJoystick().getPOV(0) != -1) {
+//			drivemode = DriveMode.FACE_ANGLE;
 		}
 		return drivemode;
 	}
