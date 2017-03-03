@@ -216,6 +216,7 @@ public class WheelPod {
 	 *            the target distance in feet.
 	 */
 	public void moveDistance(double targetDistance) {
+		positionMode();
 		zeroPosition();
 		targetRevolutions = targetDistance * 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
 		if (isPosition) {
