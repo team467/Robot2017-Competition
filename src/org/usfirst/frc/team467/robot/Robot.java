@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.ROBOT2017A);
+		RobotMap.init(RobotMap.RobotID.MIRACLE);
 
 		// Initialize logging framework
 		Logging.init();
