@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.usfirst.frc.team467.robot.*;
 
 public class Actions {
@@ -87,16 +89,45 @@ public class Actions {
 		return mode;
 	}
 
-	public static Action aim(double angle) {
+	public static ActionGroup aim(double angle) {
 		Drive drive = Drive.getInstance();
-		return new Action("Aim",
-				() -> drive.aiming.onTarget(),
-				() -> drive.turnToAngle(angle));
+		ActionGroup mode = new ActionGroup("Aim");
+		Action aim =  new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
+		Action disable = new Action("Disable", () -> true, () -> drive.aiming.disable());
+		mode.addAction(aim);
+		mode.addAction(disable);
+		return mode;
 	}
 
-	public static ActionGroup aimProcess(double angle) {
+	public static Action driveToGear(double targetDistance) {
+		// Ran once at initialization
+		Drive drive = Drive.getInstance();
+		VisionProcessing vision = VisionProcessing.getInstance();
+		AtomicInteger minimumDistance = new AtomicInteger((int)vision.getDistance());
+		// Ran periodically
+		return new Action("Drive Distance",
+				() -> {
+					double currentDistance = vision.getDistance();
+
+					if (minimumDistance.get() > currentDistance) {
+						minimumDistance.set((int)currentDistance);
+					}
+
+					// If we are currently more than two inches further away than our start
+					if (currentDistance > minimumDistance.get() + 4.0) {
+						return true;
+					}
+
+					return currentDistance <= targetDistance;
+					},
+				() -> drive.crabDrive(0, 0.3));
+	}
+
+	public static ActionGroup newAimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
-		mode.addAction(aim(angle));
+		mode.addActions(aim(angle));
+		mode.addAction(driveToGear(40));
+		mode.enable();
 		return mode;
 	}
 

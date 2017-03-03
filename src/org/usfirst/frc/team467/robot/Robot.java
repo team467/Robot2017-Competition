@@ -136,16 +136,11 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		vision.update();
 		driverstation.readInputs();
-		double driveAngle = (vision.targetAngle - gyroAngle) * Math.PI / 180;
-		// drive.crabDrive(driveAngle, 0.0);
-		boolean onTarget = drive.turnToAngle(90.0); // Face 2º according to
-		// gyro
+		boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
 		if (onTarget) {
 			System.out.println("TARGET ACQUIRED");
 		}
-
 	}
 
 	public void autonomousPeriodic() {
@@ -200,9 +195,17 @@ public class Robot extends IterativeRobot {
 		DriveMode driveMode = driverstation.getDriveMode();
 
 		switch (driveMode) {
-		case AIM:
-			Actions.aimProcess(vision.targetAngle).run();
-			break;
+//		case AIM:
+//		LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
+//		if (vision.canSeeTwo()) {
+//			LOGGER.debug("AIM DRIVE: TURNING");
+//			drive.turnToAngle(vision.getTargetAngle());
+//		}
+//		break;
+//
+//		case FACE_ANGLE:
+//			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
+//			break;
 
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
