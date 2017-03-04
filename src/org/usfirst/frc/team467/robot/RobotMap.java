@@ -5,7 +5,7 @@ package org.usfirst.frc.team467.robot;
  */
 public class RobotMap {
 	public enum RobotID {
-		ROBOT2015, ROBOT2017A, ROBOT2017B
+		ROBOT2015, MIRACLE, MISTAKE
 	};
 
 	// Steering motor ids in array (DO NOT ALTER)
@@ -45,8 +45,8 @@ public class RobotMap {
 			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
 			break;
 
-		case ROBOT2017A:
-			robotID = RobotID.ROBOT2017A;
+		case MIRACLE:
+			robotID = RobotID.MIRACLE;
 			steeringMotorChannel = new int[] { 0, 3, 1, 2 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -70,7 +70,31 @@ public class RobotMap {
 			hasBallIntake = true;
 			hasShooter = true;
 			break;
-
+			
+		case MISTAKE:
+            robotID = id;
+            steeringMotorChannel = new int[] { 0, 3, 1, 2 };
+            steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
+                    Steering.PWMType.TALON, Steering.PWMType.TALON };
+            steeringSensorChannel = new int[] { 0, 3, 1, 2 };
+            driveMotorChannel = new int[] { 1, 4, 2, 3 };
+            isDriveMotorInverted = new boolean[] { false, true, false, true };
+            length = 18.5; // front to back - in inches
+            width = 22.5; // side to side in inches
+            MAX_SPEED = 450.0;
+            PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
+            PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
+            PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
+            PIDvalues[BACK_RIGHT] = new PID(-0.015, 0.0, 0.0);
+            speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
+            speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
+            speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
+            speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
+            hasGear = false;
+            hasClimber = false;
+            hasBallIntake = true;
+            hasShooter = false;
+            break;
 		default:
 			System.out.println("Robot ID not defined");
 			break;

@@ -10,6 +10,7 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
@@ -54,7 +55,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.ROBOT2017A);
+		RobotMap.init(RobotMap.RobotID.MIRACLE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -82,8 +83,8 @@ public class Robot extends IterativeRobot {
 		vision = VisionProcessing.getInstance();
 		ultra = new Ultrasonic(0, 1);
 		gyro = Gyrometer.getInstance();
+		autonomous = Actions.doNothing();
 
-		autonomous = driverstation.getActionGroup();
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
@@ -111,16 +112,25 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-		System.out.println("Autonomous reset");
-		autonomous = driverstation.getActionGroup();
+//		autonomous = driverstation.getActionGroup();
+		final String autoMode = SmartDashboard.getString("Auto Selector","none");
+		System.out.println("Autonomous init: " + autoMode);
+		switch (autoMode) {
+		case "go":
+			autonomous = Actions.goFoward(2.0);
+			break;
+		default:
+			autonomous = Actions.doNothing();
+			break;
+		}
 		autonomous.enable();
 	}
 
 	public void teleopInit() {
 		gyro.reset();
 		driverstation.readInputs();
-		autonomous.terminate();
-		autonomous = driverstation.getActionGroup();
+//		autonomous.terminate();
+//		autonomous = driverstation.getActionGroup();
 	}
 
 	public void testInit() {
@@ -149,6 +159,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		drive.aiming.reset();
 		autonomous.run();
 	}
 
@@ -170,6 +181,7 @@ public class Robot extends IterativeRobot {
 		} else if (driverstation.isInCalibrateMode()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
+			System.out.println(" FL: " + drive.getSteeringAngle(0) + " BL: " + drive.getSteeringAngle(1) + " BR: " + drive.getSteeringAngle(2) + " FR: " + drive.getSteeringAngle(3));
 		} else {
 			autonomous = driverstation.getActionGroup();
 			// Drive Mode

@@ -233,6 +233,10 @@ public class Drive extends RobotDrive {
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
 	}
+	
+	public boolean isStopped(){
+			return false;
+	}
 
 	/**
 	 * Vector drive
