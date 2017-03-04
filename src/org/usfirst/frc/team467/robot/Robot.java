@@ -251,6 +251,10 @@ public class Robot extends IterativeRobot {
 				wheelpod.setAbsoluteAngle(0);
 			}
 			break;
+			
+		case CRAB_SLOW:
+			drive.crabDrive(driverstation.getDriveJoystick().getPOV(), 0.5);
+			break;
 
 		default:
 			drive.stop();

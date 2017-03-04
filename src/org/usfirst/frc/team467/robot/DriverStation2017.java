@@ -97,6 +97,8 @@ public class DriverStation2017 {
 			drivemode = DriveMode.CRAB;
 		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
 			drivemode = DriveMode.AIM;
+		} else if (driverJoy.getPOV() != -1){
+			drivemode = DriveMode.CRAB_SLOW;
 		}
 		return drivemode;
 	}
@@ -131,7 +133,7 @@ public class DriverStation2017 {
 	}
 
 	public ActionGroup getActionGroup() {
-		if (driverJoy.buttonDown(BASIC_PROCESS_BUTTON)) {
+		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
 			autonomous = Actions.newBasicProcess();
 		}
 		// } else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
