@@ -394,6 +394,13 @@ public class Drive extends RobotDrive {
 		return corrected;
 	}
 
+	public void printSteeringSensors() {
+		for (int i = 0; i < 4; i++) {
+			System.out.print(i + ":  " + steering[i].getSensorValue());
+		}
+		System.out.println();
+	}
+
 	/**
 	 * Set the steering center to a new value
 	 *
