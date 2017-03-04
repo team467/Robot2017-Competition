@@ -253,7 +253,14 @@ public class Robot extends IterativeRobot {
 			break;
 			
 		case CRAB_SLOW:
-			drive.crabDrive(driverstation.getDriveJoystick().getPOV(), 0.5);
+			double povAngleDeg = driverstation.getDriveJoystick().getPOV();
+			
+			if(povAngleDeg % 90 == 0) {
+				drive.crabDrive(povAngleDeg * (Math.PI / 180), 0.5);
+				System.out.println("pov angle:" + driverstation.getDriveJoystick().getPOV());
+			} else {
+				drive.stop();
+			}
 			break;
 
 		default:
