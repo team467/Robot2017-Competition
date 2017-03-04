@@ -95,6 +95,7 @@ public class Robot extends IterativeRobot {
 
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
+		autonomous.terminate();
 	}
 
 	public void disabledPeriodic() {
@@ -130,6 +131,7 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 		driverstation.readInputs();
 //		autonomous.terminate();
+		autonomous = Actions.doNothing();
 //		autonomous = driverstation.getActionGroup();
 	}
 

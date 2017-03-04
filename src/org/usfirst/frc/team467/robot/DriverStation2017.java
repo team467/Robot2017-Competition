@@ -45,7 +45,8 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
-		autonomous = Actions.basicProcess; // Default
+//		autonomous = Actions.basicProcess; // Default
+		autonomous = Actions.doNothing();
 		buttonPanel = new ButtonPanel2017(1);
 	}
 
@@ -95,8 +96,8 @@ public class DriverStation2017 {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
-		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			drivemode = DriveMode.AIM;
+//		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+//			drivemode = DriveMode.AIM;
 		} else if (driverJoy.getPOV() != -1){
 			drivemode = DriveMode.CRAB_SLOW;
 		}
@@ -133,9 +134,9 @@ public class DriverStation2017 {
 	}
 
 	public ActionGroup getActionGroup() {
-		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
-			autonomous = Actions.newBasicProcess();
-		}
+//		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
+//			autonomous = Actions.newBasicProcess();
+//		}
 		// } else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
 		// autonomous = Actions.foo;
 		// }
