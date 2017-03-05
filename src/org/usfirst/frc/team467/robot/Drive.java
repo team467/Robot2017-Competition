@@ -104,6 +104,30 @@ public class Drive extends RobotDrive {
 		frontright.speedMode();
 		backright.speedMode();
 		backleft.speedMode();
+		
+//		frontleft.motor().configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
+//		frontleft.motor().setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+//		frontleft.motor().reverseSensor(true);
+//		frontleft.motor().changeControlMode(TalonControlMode.Speed);
+//
+//		
+//		frontright.motor().configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
+//		frontright.motor().setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+//		frontright.motor().reverseSensor(true);
+//		frontright.motor().changeControlMode(TalonControlMode.Speed);
+//
+//
+//		backright.motor().configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
+//		backright.motor().setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+//		backright.motor().reverseSensor(true);
+//		backright.motor().changeControlMode(TalonControlMode.Speed);
+//
+//
+//		backleft.motor().configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
+//		backleft.motor().setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+//		backleft.motor().reverseSensor(true);
+//		backleft.motor().changeControlMode(TalonControlMode.Speed);
+	
 	}
 
 	public void setPercentVoltageBusMode() {
@@ -231,9 +255,20 @@ public class Drive extends RobotDrive {
 	 */
 	public void crabDrive(double angle, double speed) {
 		angle += RobotMap.crabDriveFrontAngle;
+		
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+		
+		int numgood = 0;
+		for(int i = 0; i < 4; i++){
+			if(steering[i].getAngleDelta() > Math.PI / 6){
+				numgood++;
+			}
+		}
+		if(numgood >= 2){
+			fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+
+		}
 	}
 	
 	public boolean isStopped(){
