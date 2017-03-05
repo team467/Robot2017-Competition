@@ -7,7 +7,9 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -85,6 +87,7 @@ public class Robot extends IterativeRobot {
 		gyro = Gyrometer.getInstance();
 		autonomous = Actions.doNothing();
 
+//		CameraServer.getInstance().startAutomaticCapture();
 
 		SmartDashboard.putString("DB/String 0", "1.0");
 		SmartDashboard.putString("DB/String 1", "0.0");
@@ -119,6 +122,25 @@ public class Robot extends IterativeRobot {
 		switch (autoMode) {
 		case "go":
 			autonomous = Actions.goFoward(2.0);
+			break;
+//		case "dgleft":
+//			//drop gear from position on left side of field
+//			autonomous = Actions.dropGearFromLeft();
+//			break;
+//		case "dgright":
+//			//drop gear from position on right side of field
+//			autonomous = Actions.dropGearFromRight();
+//			break;
+		case "lg":
+			//get into position to drop gear from left side of field
+			autonomous = Actions.getIntoGearPositionFromLeft();
+			break;
+		case "rg":
+			//get into position to drop gear from right side of field
+			autonomous = Actions.getIntoGearPositionFromRight();
+			break;
+		case "back":
+			autonomous = Actions.goBackwards(2.0);
 			break;
 		default:
 			autonomous = Actions.doNothing();
@@ -256,7 +278,8 @@ public class Robot extends IterativeRobot {
 			
 		case CRAB_SLOW:
 			double povAngleDeg = driverstation.getDriveJoystick().getPOV();
-			
+			//Timer.delay(0.25);
+
 			if(povAngleDeg % 90 == 0) {
 				drive.crabDrive(povAngleDeg * (Math.PI / 180), 0.5);
 				System.out.println("pov angle:" + driverstation.getDriveJoystick().getPOV());
@@ -268,7 +291,7 @@ public class Robot extends IterativeRobot {
 		default:
 			drive.stop();
 			break;
-		}
+		} 
 	}
 
 	private void updateNavigation() {
