@@ -226,7 +226,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			auto.run();
 		}
-	}
+}
 
 	/**
 	 * called once per iteration to perform any necessary updates to the drive
@@ -234,9 +234,10 @@ public class Robot extends IterativeRobot {
 	 */
 	private void updateDrive() {
 		DriveMode driveMode = driverstation.getDriveMode();
+		//drive.setSpeedMode();
 
 		switch (driveMode) {
-		case AIM:
+		case AIM:	
 			Actions.aimProcess(vision.targetAngle).run();
 			break;
 
