@@ -282,7 +282,7 @@ public class Robot extends IterativeRobot {
 			//Timer.delay(0.25);
 
 			if(povAngleDeg % 90 == 0) {
-				drive.crabDrive(povAngleDeg * (Math.PI / 180), 0.5);
+				drive.crabDrive(povAngleDeg * (Math.PI / 180), 0.4);
 				System.out.println("pov angle:" + driverstation.getDriveJoystick().getPOV());
 			} else {
 				drive.stop();

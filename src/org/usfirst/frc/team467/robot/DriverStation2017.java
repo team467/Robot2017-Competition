@@ -55,6 +55,7 @@ public class DriverStation2017 {
 		autonomous = Actions.doNothing();
 		buttonPanel = new ButtonPanel2017(1);
 		timer = new Timer();
+		timer.start();
 	}
 
 	/**
