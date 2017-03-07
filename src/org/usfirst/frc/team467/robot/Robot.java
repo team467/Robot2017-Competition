@@ -7,9 +7,7 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -232,23 +230,10 @@ public class Robot extends IterativeRobot {
 		//drive.setSpeedMode();
 
 		switch (driveMode) {
-<<<<<<< HEAD
-//		case AIM:
-//		LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
-//		if (vision.canSeeTwo()) {
-//			LOGGER.debug("AIM DRIVE: TURNING");
-//			drive.turnToAngle(vision.getTargetAngle());
-//		}
-//		break;
-//
-//		case FACE_ANGLE:
-//			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
-//			break;
-=======
-		case AIM:	
-			Actions.aimProcess(vision.targetAngle).run();
+
+		case AIM:
+			Actions.aimProcess(vision.getTargetAngle()).run();
 			break;
->>>>>>> master
 
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
@@ -285,7 +270,7 @@ public class Robot extends IterativeRobot {
 				wheelpod.setAbsoluteAngle(0);
 			}
 			break;
-			
+
 		case CRAB_SLOW:
 			double povAngleDeg = driverstation.getDriveJoystick().getPOV();
 			//Timer.delay(0.25);
@@ -301,7 +286,7 @@ public class Robot extends IterativeRobot {
 		default:
 			drive.stop();
 			break;
-		} 
+		}
 	}
 
 	private void updateNavigation() {

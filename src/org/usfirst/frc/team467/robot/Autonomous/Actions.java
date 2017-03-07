@@ -7,20 +7,9 @@ import org.usfirst.frc.team467.robot.*;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
-<<<<<<< HEAD
-	public static final Action nothingForever = new Action(
-			"Do Nothing Fovever",
-			() -> false, () -> {
-			/* Do Nothing */ });
 
-=======
 	static Timer timer = new Timer();
-	
-//	public static final Action nothingForever = new Action(
-//			"Do Nothing Fovever",
-//			() -> false, () -> {
-//			/* Do Nothing */ });
-	
+
 	public static final Action nothingForever(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
@@ -28,8 +17,7 @@ public class Actions {
 				() -> drive.isStopped(),
 				() -> drive.crabDrive(0, 0));
 	}
-	
->>>>>>> master
+
 	public static final Action example1 = new Action(
 			"Example 1",
 			new ActionGroup.Duration(2),
@@ -48,7 +36,7 @@ public class Actions {
 			"Move Backward 2 seconds",
 			new ActionGroup.Duration(2),
 			() -> Drive.getInstance().crabDrive(0, -0.5));
-	
+
 	public static final Action goForward(double seconds){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move Forward " + seconds + "seconds";
@@ -59,7 +47,7 @@ public class Actions {
 				() -> isDurationOver(seconds),
 				() -> drive.crabDrive(0, 0.7));
 	}
-	
+
 	public static Action goBackward(double seconds){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move backward " + seconds + "seconds";
@@ -70,7 +58,7 @@ public class Actions {
 				() -> isDurationOver(seconds),
 				() -> drive.crabDrive(0, -0.5));
 	}
-	
+
 	public static boolean isDurationOver(double seconds){
 		if (timer.get() >= seconds){
 			return true;
@@ -139,13 +127,28 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup aim(double angle) {
+	public static Action aim(double angle) {
 		Drive drive = Drive.getInstance();
+		Action aim =  new Action(
+				"Aim",
+				() -> drive.aiming.onTarget(),
+				() -> drive.turnToAngle(angle));
+		return aim;
+	}
+
+	public static Action disableAiming() {
+		Drive drive = Drive.getInstance();
+		Action disableAimingAction = new Action(
+				"Disable",
+				() -> true,
+				() -> drive.aiming.disable());
+		return disableAimingAction;
+	}
+
+	public static ActionGroup aimAndDisable(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
-		Action aim =  new Action("Aim", () -> drive.aiming.onTarget(), () -> drive.turnToAngle(angle));
-		Action disable = new Action("Disable", () -> true, () -> drive.aiming.disable());
-		mode.addAction(aim);
-		mode.addAction(disable);
+		mode.addAction(aim(angle));
+		mode.addAction(disableAiming());
 		return mode;
 	}
 
@@ -172,11 +175,7 @@ public class Actions {
 					},
 				() -> drive.crabDrive(0, 0.3));
 	}
-<<<<<<< HEAD
 
-	public static ActionGroup newAimProcess(double angle) {
-=======
-	
 	public static Action dispenseGearA() {
 		GearDevice gear = GearDevice.getInstance();
 		String actionText = "dispense gear";
@@ -187,7 +186,7 @@ public class Actions {
 				() -> isDurationOver(1.5),
 				() -> gear.goDown());
 	}
-	
+
 	public static Action dispenseGearB(){
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
@@ -202,61 +201,59 @@ public class Actions {
 					drive.crabDrive(Math.PI, -0.5);
 				});
 	}
-	
+
 	public static boolean isGearHolderDown(){
 		return false;
 	}
-	
+
 	public static ActionGroup aimProcess(double angle) {
->>>>>>> master
 		ActionGroup mode = new ActionGroup("Aim");
-		mode.addActions(aim(angle));
+		mode.addActions(aimAndDisable(angle));
 		mode.addAction(driveToGear(40));
 		mode.enable();
 		return mode;
 	}
-<<<<<<< HEAD
 
-=======
-	
 	public static ActionGroup goFoward(double seconds){
 		ActionGroup mode = new ActionGroup("go");
 		mode.addAction(goForward(seconds));
 		return mode;
 	}
-	
+
 	public static ActionGroup goBackwards(double seconds){
 		ActionGroup mode = new ActionGroup("go back");
 		mode.addAction(goBackward(seconds));
 		return mode;
 	}
-	
+
 	public static ActionGroup doNothing(){
 		ActionGroup mode = new ActionGroup("none");
 		mode.addAction(nothingForever());
 		return mode;
 	}
-	
+
 	public static ActionGroup dropGearFromLeft(){
 		ActionGroup mode = new ActionGroup("gear");
 		mode.addAction(goForward(0.9));
 		mode.addAction(aim(60));
+		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
 		mode.addAction(dispenseGearA());
 		mode.addAction(dispenseGearB());
 		return mode;
 	}
-	
+
 	public static ActionGroup dropGearFromRight(){
 		ActionGroup mode = new ActionGroup("gear");
 		mode.addAction(goForward(0.9));
 		mode.addAction(aim(-60));
+		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
 		mode.addAction(dispenseGearA());
 		mode.addAction(dispenseGearB());
 		return mode;
 	}
-	
+
 	public static ActionGroup getIntoGearPositionFromLeft() {
 		ActionGroup mode = new ActionGroup("line up into gear position");
 		mode.addAction(goForward(2.0));
@@ -264,16 +261,16 @@ public class Actions {
 //		mode.addAction(aim(60));
 		return mode;
 	}
-	
+
 	public static ActionGroup getIntoGearPositionFromRight() {
 		ActionGroup mode = new ActionGroup("line up into gear position");
 		mode.addAction(goForward(2.0));
 		mode.addAction(goBackward(1.3));
 		mode.addAction(aim(-60));
+		mode.addAction(disableAiming());
 		return mode;
 	}
-	
->>>>>>> master
+
 	// Private method makes process, but for only one public variable
 	public static ActionGroup newBasicProcess() {
 		ActionGroup mode = new ActionGroup("Basic Auto");

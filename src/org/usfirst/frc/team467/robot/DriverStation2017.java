@@ -26,8 +26,8 @@ public class DriverStation2017 {
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
-	
-	
+
+
 	private static Timer timer;
 
 	enum Speed {
@@ -98,7 +98,7 @@ public class DriverStation2017 {
 	 */
 	public DriveMode getDriveMode() {
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
-		
+
 		if (driverJoy.getPOV() == -1){
 			timer.reset();
 		}
@@ -107,21 +107,14 @@ public class DriverStation2017 {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
-<<<<<<< HEAD
-		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			drivemode = DriveMode.AIM;
-//		} else if (driverJoy.getJoystick().getPOV(0) != -1) {
-//			drivemode = DriveMode.FACE_ANGLE;
-=======
 //		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
 //			drivemode = DriveMode.AIM;
 		} else if (driverJoy.getPOV() != -1){
 			drivemode = DriveMode.CRAB_SLOW;
->>>>>>> master
 		}
 		return drivemode;
 	}
-	
+
 	public boolean isSlowCrabDelay() {
 		return timer.get() > 0.25;
 	}
@@ -156,20 +149,12 @@ public class DriverStation2017 {
 	}
 
 	public ActionGroup getActionGroup() {
-<<<<<<< HEAD
-		if (driverJoy.buttonDown(BASIC_PROCESS_BUTTON)) {
-			autonomous = Actions.newBasicProcess();
-		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			autonomous = Actions.newAimProcess(VisionProcessing.getInstance().getTargetAngle());
-		}
-=======
 //		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
 //			autonomous = Actions.newBasicProcess();
 //		}
 		// } else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
 		// autonomous = Actions.foo;
 		// }
->>>>>>> master
 		return autonomous; // TODO Get multiple options
 	}
 
