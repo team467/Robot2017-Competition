@@ -72,7 +72,7 @@ public class RobotMap {
 			hasBallIntake = true;
 			hasShooter = true;
 			break;
-
+			
 		case MISTAKE:
             robotID = id;
             steeringMotorChannel = new int[] { 0, 3, 1, 2 };
@@ -97,7 +97,6 @@ public class RobotMap {
             hasBallIntake = true;
             hasShooter = false;
             break;
-
 		default:
 			System.out.println("Robot ID not defined");
 			break;
@@ -171,12 +170,12 @@ public class RobotMap {
 	public static final int SHOOTER_MOTOR_1 = 5;
 	public static final int SHOOTER_MOTOR_2 = 6;
 	public static final int AGITATOR_MOTOR = 3;
-
+	
 	// Gear
 	public static boolean hasGear = false; // default to no gear mechanism
 	// TODO confirm channel for these pieces
 	public static final int GEAR_MOTOR = 7;
-
+	
 	public static final int ULTRASONIC_SENSOR = 9;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used

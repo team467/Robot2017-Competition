@@ -64,7 +64,13 @@ public class Gyrometer implements PIDSource {
 		if (RobotMap.robotID == RobotMap.RobotID.ROBOT2015) {
 			return getAngleZRadians();
 		} else {
-			return getAngleYRadians();
+			double angle = getAngleYRadians();
+			angle += Math.PI;
+			if (angle > 2 * Math.PI){
+				angle -= 2* Math.PI;
+			}
+			return angle;
+
 		}
 	}
 
