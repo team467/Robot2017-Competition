@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team467.robot.AutoCalibration.TuneRobot;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
@@ -41,6 +42,8 @@ public class Robot extends IterativeRobot {
 	private BallLoader loader;
 	private GearDevice gearDevice;
 	private Shooter shooter;
+
+	private TuneRobot tuner;
 
 	int session;
 
@@ -162,17 +165,21 @@ public class Robot extends IterativeRobot {
 		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
+		String tuneSetting = SmartDashboard.getString("DB/String 4", "none");
+		tuner = new TuneRobot(tuneSetting);
+		tuner.init();
 	}
 
 	public void testPeriodic() {
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
-		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		driverstation.readInputs();
-		boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
-		if (onTarget) {
-			System.out.println("TARGET ACQUIRED");
-		}
+//		double gyroAngle = gyro.pidGet();
+//		SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
+//		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+//		driverstation.readInputs();
+//		boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
+//		if (onTarget) {
+//			System.out.println("TARGET ACQUIRED");
+//		}
+		tuner.periodic();
 	}
 
 	public void autonomousPeriodic() {
