@@ -307,8 +307,8 @@ public class Drive extends RobotDrive {
 		// TODO - do we need to introduce any rate limiting this year?
 		return (speed);
 	}
-	
-	
+
+
 
 	/**
 	 * Crab Drive
@@ -320,11 +320,11 @@ public class Drive extends RobotDrive {
 	 */
 	public void crabDrive(double angle, double speed) {
 		angle += RobotMap.crabDriveFrontAngle;
-		
+
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 
-		
+
 		/* check how many wheelpods are in place	`*/
 		int numgood = 0;
 		for (int i = 0; i < 4; ++i) {
@@ -336,13 +336,13 @@ public class Drive extends RobotDrive {
 		if (numgood >= 2) {
 			fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
 		}
-		
+
 	}
-	
+
 	public boolean isStopped(){
 			return false;
 	}
-	
+
 	/**
 	 * Uses a crab drive like mode to turn to angle and move a certain distance
 	 *
@@ -539,16 +539,6 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Used for correcting the steering sensors, especially if they are out of range.
-	 */
-	public void printSteeringSensors() {
-		for (int i = 0; i < 4; i++) {
-			System.out.print(i + ":  " + steering[i].getSensorValue());
-		}
-		System.out.println();
-	}
-
-	/**
 	 * Set the steering center to a new value
 	 *
 	 * @param steeringMotor
@@ -581,13 +571,16 @@ public class Drive extends RobotDrive {
 	public double getNormalizedSteeringAngle(int steeringMotor) {
 		return steering[steeringMotor].getSteeringAngle();
 	}
-	
+
+	/**
+	 * Used for correcting the steering sensors, especially if they are out of range.
+	 */
 	public void logSteeringValues() {
 		LOGGER.debug(
-				"FL=" + steering[0].getSensorValue() +
-				" FR=" + steering[1].getSensorValue() +
-				" BL=" + steering[2].getSensorValue() +
-				" BR=" + steering[3].getSensorValue());
+				"FL=" + steering[RobotMap.FRONT_LEFT].getSensorValue() +
+				" FR=" + steering[RobotMap.FRONT_RIGHT].getSensorValue() +
+				" BL=" + steering[RobotMap.BACK_LEFT].getSensorValue() +
+				" BR=" + steering[RobotMap.BACK_RIGHT].getSensorValue());
 	}
 
 }
