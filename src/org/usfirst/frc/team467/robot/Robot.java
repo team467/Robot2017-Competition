@@ -95,6 +95,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 2", "0.0");
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
+		
 	}
 
 	public void disabledInit() {
