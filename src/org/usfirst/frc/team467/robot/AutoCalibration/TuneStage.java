@@ -21,17 +21,18 @@ public enum TuneStage {
 		TuneStage stage = NO_TUNING;
 		if (tuneStageString.compareToIgnoreCase("characterize") == 0) {
 			stage =  CHARACTERIZE;
-		} else if (tuneStageString.compareToIgnoreCase("proportional gain") == 0) {
+		} else if (tuneStageString.compareToIgnoreCase("proportional_gain") == 0) {
 			stage =  ULTIMATE_PROPORTIONAL_TERM;
-		} else if (tuneStageString.compareToIgnoreCase("feed forward") == 0) {
+		} else if (tuneStageString.compareToIgnoreCase("feed_forward") == 0) {
 			stage =  INITIAL_FEED_FORWARD;
-		} else if (tuneStageString.compareToIgnoreCase("max speed") == 0) {
+		} else if (tuneStageString.compareToIgnoreCase("max_speed") == 0) {
 			stage =  MAX_SPEED;
 		} else if (tuneStageString.compareToIgnoreCase("position") == 0) {
 			stage =  POSITION;
 		} else if (tuneStageString.compareToIgnoreCase("none") == 0) {
 			stage =  NO_TUNING;
 		}
+		System.out.println("Tune stage set to " + tuneStageString);
 		return stage;
 	}
 }

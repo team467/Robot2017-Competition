@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MIRACLE);
+		RobotMap.init(RobotMap.RobotID.ROBOT2015);
 
 		// Initialize logging framework
 		Logging.init();
@@ -95,7 +95,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 2", "0.0");
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
-		
+
 	}
 
 	public void disabledInit() {
@@ -166,7 +166,7 @@ public class Robot extends IterativeRobot {
 		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
-		String tuneSetting = SmartDashboard.getString("DB/String 4", "none");
+		String tuneSetting = SmartDashboard.getString("DB/String 5", "none");
 		tuner = new TuneRobot(tuneSetting);
 		tuner.init();
 	}
