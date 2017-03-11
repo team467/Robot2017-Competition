@@ -7,6 +7,7 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +39,8 @@ public class Robot extends IterativeRobot {
 	private GearDevice gearDevice;
 
 	private TuneRobot tuner;
+	
+	private UsbCamera cam;
 
 	int session;
 
@@ -82,7 +85,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
 		
-		CameraServer.getInstance().startAutomaticCapture();
+		cam = CameraServer.getInstance().startAutomaticCapture();
+		cam.setResolution(320, 240);
+		cam.setFPS(15);
 	}
 
 	public void disabledInit() {
@@ -101,6 +106,11 @@ public class Robot extends IterativeRobot {
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
 		vision.update();
+		
+		System.out.println(
+				"vid mode: " + cam.getVideoMode() + 
+				"kind: " + cam.getKind()
+				);
 	}
 
 	public void autonomousInit() {
