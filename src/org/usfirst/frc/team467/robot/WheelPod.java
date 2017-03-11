@@ -211,8 +211,9 @@ public class WheelPod {
 	/**
 	 * Moves a distance if in position mode.
 	 *
-	 * @param distance  the target distance in feet.
-	 * @return boolean  true if move is complete
+	 * @param distance
+	 *            the target distance in feet.
+	 * @return boolean true if move is complete
 	 */
 	public void moveDistance(double distance) {
 		targetRevolutions = distance * 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;

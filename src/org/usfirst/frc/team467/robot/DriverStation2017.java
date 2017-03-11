@@ -2,8 +2,6 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
-import edu.wpi.first.wpilibj.Timer;
-
 import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
@@ -27,9 +25,6 @@ public class DriverStation2017 {
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
 
-
-	private static Timer timer;
-
 	enum Speed {
 		SLOW, FAST
 	}
@@ -51,11 +46,9 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
-//		autonomous = Actions.basicProcess; // Default
+		// autonomous = Actions.basicProcess; // Default
 		autonomous = Actions.doNothing();
 		buttonPanel = new ButtonPanel2017(1);
-		timer = new Timer();
-		timer.start();
 	}
 
 	/**
@@ -63,7 +56,7 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
-		 buttonPanel.readInputs();
+		buttonPanel.readInputs();
 	}
 
 	/**
@@ -97,11 +90,8 @@ public class DriverStation2017 {
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
-		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
+		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox controller
 
-		if (driverJoy.getPOV() == -1){
-			timer.reset();
-		}
 		// UNWIND takes greatest priority
 		if (driverJoy.buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
@@ -113,10 +103,6 @@ public class DriverStation2017 {
 			drivemode = DriveMode.CRAB_SLOW;
 		}
 		return drivemode;
-	}
-
-	public boolean isSlowCrabDelay() {
-		return timer.get() > 0.25;
 	}
 
 	// return +1 for right, -1 for left
@@ -149,12 +135,10 @@ public class DriverStation2017 {
 	}
 
 	public ActionGroup getActionGroup() {
-//		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
-//			autonomous = Actions.newBasicProcess();
-//		}
-		// } else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
-		// autonomous = Actions.foo;
-		// }
+		//		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
+		//			autonomous = Actions.newBasicProcess();
+		//		}
+		// } 
 		return autonomous; // TODO Get multiple options
 	}
 
@@ -169,14 +153,6 @@ public class DriverStation2017 {
 		return getCalibrationJoystick().buttonDown(CALIBRATE_CONFIRM_BUTTON);
 	}
 
-	public boolean isShooting() {
-		return buttonPanel.buttonDown(Buttons.SHOOTER_SHOOT);
-	}
-
-	public boolean isShootingReverse() {
-		return buttonPanel.buttonDown(Buttons.SHOOTER_FAILSAFE);
-	}
-
 	public boolean isClimbing() {
 		return buttonPanel.buttonDown(Buttons.CLIMBER_UP);
 	}
@@ -188,13 +164,4 @@ public class DriverStation2017 {
 	public boolean isGearDown() {
 		return buttonPanel.buttonDown(Buttons.GEAR_DOWN);
 	}
-
-	public boolean isIntaking() {
-		return buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT);
-	}
-
-	public boolean isIntakingReverse() {
-		return buttonPanel.buttonDown(Buttons.VISION_ALIGN_GEAR);
-	}
-
 }

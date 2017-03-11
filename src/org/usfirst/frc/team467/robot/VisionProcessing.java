@@ -7,10 +7,10 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class VisionProcessing {
 	private static final Logger LOGGER = Logger.getLogger(VisionProcessing.class);
 	private static VisionProcessing instance;
-	
+
 	private NetworkTable table;
 	private Gyrometer gyro;
-	
+
 	private double targetAngle, x, y, distance, width, height = 0.0;
 	private boolean seeTwo = false;
 
@@ -38,10 +38,10 @@ public class VisionProcessing {
 		width = table.getNumber("w", 0.0);
 		height = table.getNumber("h", 0.0);
 		table.putNumber("gyro", gyro.getRobotAngleDegrees());
-		
-//		LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
+
+		// LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
 	}
-	
+
 	public double getTargetAngle() {
 		return targetAngle;
 	}
@@ -53,7 +53,7 @@ public class VisionProcessing {
 	public double getY() {
 		return y;
 	}
-	
+
 	public double getDistance() {
 		return distance;
 	}
@@ -69,14 +69,14 @@ public class VisionProcessing {
 	public boolean canSeeTwo() {
 		return seeTwo;
 	}
-	
+
 	public void logDistanceValues() {
-		LOGGER.info("distance," + getHeight() + "," + 3580/getHeight() + "," + getHeight()*getWidth());
+		LOGGER.info("distance," + getHeight() + "," + 3580 / getHeight() + "," + getHeight() * getWidth());
 	}
-	
+
 	@Override
 	public String toString() {
-		return "VisionProcessing [targetAngle=" + targetAngle + ", x=" + x + ", y=" + y + ", width=" + width
-				+ ", height=" + height + ", seeTwo=" + seeTwo + "]";
+		return "VisionProcessing [targetAngle=" + targetAngle + ", x=" + x + ", y=" + y + ", width=" + width + ", height=" + height
+				+ ", seeTwo=" + seeTwo + "]";
 	}
 }
