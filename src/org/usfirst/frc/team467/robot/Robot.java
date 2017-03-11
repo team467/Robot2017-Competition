@@ -232,6 +232,8 @@ public class Robot extends IterativeRobot {
 //			break;
 		case FACE_ANGLE:
 			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
+			break;
+			
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
 			// @formatter:off
