@@ -36,11 +36,11 @@ public class Logging {
 			rollingFileAppender.rollOver();
 			Logger.getRootLogger().addAppender(rollingFileAppender);
 		} catch (IOException e) {
-	           System.out.println("Failed to create log file appender: " + e.getMessage());
-        }
+			System.out.println("Failed to create log file appender: " + e.getMessage());
+		}
 
 
-        // Set the default log level to INFO.
-        Logger.getRootLogger().setLevel(Level.INFO); // changing log level
-    }
+		// Set the default log level to INFO.
+		Logger.getRootLogger().setLevel(Level.INFO); // changing log level
+	}
 }

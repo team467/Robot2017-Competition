@@ -67,10 +67,6 @@ public class RobotMap {
 			speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
 			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
 			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
-			hasGear = true;
-			hasClimber = true;
-			hasBallIntake = true;
-			hasShooter = true;
 			break;
 			
 		case MISTAKE:
@@ -92,10 +88,6 @@ public class RobotMap {
             speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
             speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
             speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
-            hasGear = false;
-            hasClimber = false;
-            hasBallIntake = true;
-            hasShooter = false;
             break;
 		default:
 			System.out.println("Robot ID not defined");
@@ -153,30 +145,11 @@ public class RobotMap {
 	// Game Pieces
 
 	// Climber
-	public static boolean hasClimber = false; // default to no climber
-	// TODO: need actual motor channels
-	// TODO - test climber
 	public static final int CLIMBER_MOTOR_1 = 5;
 	public static final int CLIMBER_MOTOR_2 = 4;
-
-	// Ball Intake
-	public static boolean hasBallIntake = false;
-	// TODO: need actual motor channels
-	public static final int INTAKE_MOTOR = 6;
-
-	// Shooter
-	public static boolean hasShooter = false;
-	// TODO - test shooter motor
-	public static final int SHOOTER_MOTOR_1 = 5;
-	public static final int SHOOTER_MOTOR_2 = 6;
-	public static final int AGITATOR_MOTOR = 3;
 	
 	// Gear
-	public static boolean hasGear = false; // default to no gear mechanism
-	// TODO confirm channel for these pieces
 	public static final int GEAR_MOTOR = 7;
-	
-	public static final int ULTRASONIC_SENSOR = 9;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
