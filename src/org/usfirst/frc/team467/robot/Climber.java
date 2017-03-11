@@ -7,7 +7,7 @@ public class Climber {
 	private static Spark motorLeft;
 	private static Spark motorRight;
 
-	private static double motorSpeed = 0.7;
+	private static double motorSpeed = -0.7;
 
 	public static Climber getInstance() {
 		if (instance == null) {
@@ -34,9 +34,9 @@ public class Climber {
 		motorRight.set(motorSpeed);
 	}
 
-	public void reverse() {
-		motorLeft.set(-motorSpeed);
-		motorRight.set(-motorSpeed);
+	public void slow() {
+		motorLeft.set(0.5 * motorSpeed);
+		motorRight.set(0.5 * motorSpeed);
 	}
 
 }

@@ -7,9 +7,12 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.apache.log4j.Logger;
@@ -69,11 +72,11 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 
 		// game pieces
-		// climber = Climber.getInstance();
-		// intake = BallIntake.getInstance();
-		// loader = BallLoader.getInstance();
-		// geardevice = GearDevice.getInstance();
-		// shooter = Shooter.getInstance();
+		climber = Climber.getInstance();
+		intake = BallIntake.getInstance();
+		loader = BallLoader.getInstance();
+		gearDevice = GearDevice.getInstance();
+		shooter = Shooter.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -81,9 +84,9 @@ public class Robot extends IterativeRobot {
 		vision = VisionProcessing.getInstance();
 		ultra = Ultrasonic467.getInstance();
 		gyro = Gyrometer.getInstance();
-
 		autonomous = driverstation.getActionGroup();
 		LOGGER.debug("Robot Initialized");
+		
 	}
 	
 	public void robotPeriodic() {
@@ -93,6 +96,7 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
 		drive.aiming.disable();
+		autonomous.terminate();
 	}
 
 	public void disabledPeriodic() {
@@ -104,8 +108,30 @@ public class Robot extends IterativeRobot {
 		}
 
 	public void autonomousInit() {
-		System.out.println("Autonomous reset");
-		autonomous = driverstation.getActionGroup();
+//		autonomous = driverstation.getActionGroup();
+		final String autoMode = SmartDashboard.getString("Auto Selector","none");
+		System.out.println("Autonomous init: " + autoMode);
+		switch (autoMode) {
+//		case "dgleft":
+//			//drop gear from position on left side of field
+//			autonomous = Actions.dropGearFromLeft();
+//			break;
+//		case "dgright":
+//			//drop gear from position on right side of field
+//			autonomous = Actions.dropGearFromRight();
+//			break;
+		case "lg":
+			//get into position to drop gear from left side of field
+			autonomous = Actions.getIntoGearPositionFromLeft();
+			break;
+		case "rg":
+			//get into position to drop gear from right side of field
+			autonomous = Actions.getIntoGearPositionFromRight();
+			break;
+		default:
+			autonomous = Actions.doNothing();
+			break;
+		}
 		autonomous.enable();
 	}
 
@@ -113,6 +139,7 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 		driverstation.readInputs();
 		autonomous.terminate();
+//		autonomous = Actions.doNothing();
 		autonomous = driverstation.getActionGroup();
 	}
 
@@ -137,6 +164,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		drive.aiming.reset();
 		autonomous.run();
 	}
 
@@ -160,11 +188,12 @@ public class Robot extends IterativeRobot {
 		} else if (driverstation.isInCalibrateMode()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
+			System.out.println(" FL: " + drive.getSteeringAngle(0) + " BL: " + drive.getSteeringAngle(1) + " BR: " + drive.getSteeringAngle(2) + " FR: " + drive.getSteeringAngle(3));
 		} else {
 			autonomous = driverstation.getActionGroup();
 			// Drive Mode
 			updateDrive();
-			// updateNavigation();
+			updateNavigation();
 		}
 	}
 
@@ -180,7 +209,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			auto.run();
 		}
-	}
+}
 
 	/**
 	 * called once per iteration to perform any necessary updates to the drive
@@ -203,7 +232,6 @@ public class Robot extends IterativeRobot {
 //			break;
 		case FACE_ANGLE:
 			drive.turnToAngle(driverstation.driverJoy.getJoystick().getPOV(0));
-			break;
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;
 			// @formatter:off
@@ -239,11 +267,23 @@ public class Robot extends IterativeRobot {
 				wheelpod.setAbsoluteAngle(0);
 			}
 			break;
+			
+		case CRAB_SLOW:
+			double povAngleDeg = driverstation.getDriveJoystick().getPOV();
+			//Timer.delay(0.25);
+
+			if(povAngleDeg % 90 == 0) {
+				drive.crabDrive(povAngleDeg * (Math.PI / 180), 0.4);
+				System.out.println("pov angle:" + driverstation.getDriveJoystick().getPOV());
+			} else {
+				drive.stop();
+			}
+			break;
 
 		default:
 			drive.stop();
 			break;
-		}
+		} 
 	}
 
 	private void updateNavigation() {
@@ -260,8 +300,8 @@ public class Robot extends IterativeRobot {
 
 		if (driverstation.isClimbing()) {
 			climber.climb();
-		} else if (driverstation.isClimbingReverse()) {
-			climber.reverse();
+		} else if (driverstation.isClimbingSlow()) {
+			climber.slow();
 		} else {
 			climber.stop();
 		}

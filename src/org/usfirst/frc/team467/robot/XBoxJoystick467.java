@@ -22,6 +22,7 @@ public class XBoxJoystick467 {
 	private double rightStickY = 0.0;
 	private double leftTrigger = 0.0;
 	private double rightTrigger = 0.0;
+	 private int pov = 0;
 
 	private static final double DEADZONE = 0.1;
 
@@ -80,6 +81,8 @@ public class XBoxJoystick467 {
 
 		leftTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_LEFT_TRIGGER));
 		rightTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_TRIGGER));
+		
+        pov = joystick.getPOV(0);
 	}
 
 	/**
@@ -124,6 +127,10 @@ public class XBoxJoystick467 {
 
 	public double getRightStickX() {
 		return rightStickX;
+	}
+	
+	public double getPOV() {
+		return pov;
 	}
 
 	/**
@@ -175,6 +182,7 @@ public class XBoxJoystick467 {
 
 		return (stickAngle);
 	}
+	
 
 	/**
 	 * Calculate the angle of this joystick.

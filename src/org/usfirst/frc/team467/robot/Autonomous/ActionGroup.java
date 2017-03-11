@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * Runs through a set of actions. <br>
  * Can be used in Autonomous and also Teleop routines.
@@ -84,28 +86,32 @@ public class ActionGroup {
 	}
 
 	public static class Duration implements Action.Condition {
-		private double durationMS;
-		private double actionStartTimeMS = -1;
+		private Timer timer;
+		private double duration;
+		private boolean isRunning = false;
 
 		/**
 		 * @param duration
 		 *            in Seconds
 		 */
 		public Duration(double duration) {
-			durationMS = duration * 1000;
+			timer = new Timer();
+			timer.reset();
 		}
 
 		@Override
 		public boolean isDone() {
-			if (actionStartTimeMS < 0) {
-				actionStartTimeMS = System.currentTimeMillis();
+			if (!isRunning) {
+				isRunning = true;
+				timer.start();
 			}
 
-			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
+			return (timer.get() >= duration);
 		}
 
 		public void reset() {
-			actionStartTimeMS = -1;
+			isRunning = false;
+			timer.reset();
 		}
 	}
 
