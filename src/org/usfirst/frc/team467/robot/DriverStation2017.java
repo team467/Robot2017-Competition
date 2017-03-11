@@ -190,11 +190,11 @@ public class DriverStation2017 {
 	}
 
 	public boolean isIntaking() {
-		return buttonPanel.buttonDown(Buttons.INTAKE_IN);
+		return buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT);
 	}
 
 	public boolean isIntakingReverse() {
-		return buttonPanel.buttonDown(Buttons.INTAKE_OUT);
+		return buttonPanel.buttonDown(Buttons.VISION_ALIGN_GEAR);
 	}
 
 }
