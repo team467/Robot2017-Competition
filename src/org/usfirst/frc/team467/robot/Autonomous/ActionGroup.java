@@ -86,32 +86,28 @@ public class ActionGroup {
 	}
 
 	public static class Duration implements Action.Condition {
-		private Timer timer;
-		private double duration;
-		private boolean isRunning = false;
+		private double durationMS;
+		private double actionStartTimeMS = -1;
 
 		/**
 		 * @param duration
 		 *            in Seconds
 		 */
 		public Duration(double duration) {
-			timer = new Timer();
-			timer.reset();
+			durationMS = duration * 1000;
 		}
 
 		@Override
 		public boolean isDone() {
-			if (!isRunning) {
-				isRunning = true;
-				timer.start();
+			if (actionStartTimeMS < 0) {
+				actionStartTimeMS = System.currentTimeMillis();
 			}
 
-			return (timer.get() >= duration);
+			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
 		}
 
 		public void reset() {
-			isRunning = false;
-			timer.reset();
+			actionStartTimeMS = -1;
 		}
 	}
 
