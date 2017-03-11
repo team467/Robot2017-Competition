@@ -44,7 +44,7 @@ public class Actions {
 		timer.reset();
 		timer.start();
 		return new Action(actionText,
-				() -> isDurationOver(seconds),
+				new ActionGroup.Duration(seconds),
 				() -> drive.crabDrive(0, 0.7));
 	}
 
@@ -55,16 +55,8 @@ public class Actions {
 		timer.reset();
 		timer.start();
 		return new Action(actionText,
-				() -> isDurationOver(seconds),
+				new ActionGroup.Duration(seconds),
 				() -> drive.crabDrive(0, -0.5));
-	}
-
-	public static boolean isDurationOver(double seconds){
-		if (timer.get() >= seconds){
-			return true;
-		}else{
-			return false;
-		}
 	}
 
 	public static Action setPositionMode() {
@@ -183,7 +175,7 @@ public class Actions {
 		timer.reset();
 		timer.start();
 		return new Action(actionText,
-				() -> isDurationOver(1.5),
+				new ActionGroup.Duration(1.5),
 				() -> gear.goDown());
 	}
 
@@ -195,7 +187,7 @@ public class Actions {
 		timer.reset();
 		timer.start();
 		return new Action(actionText,
-				() -> isDurationOver(1.5),
+				new ActionGroup.Duration(1.5),
 				() -> {
 					gear.goDown();
 					drive.crabDrive(Math.PI, -0.5);
