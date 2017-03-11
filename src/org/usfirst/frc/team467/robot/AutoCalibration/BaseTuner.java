@@ -13,7 +13,7 @@ public abstract class BaseTuner implements Tuner {
 
 	public static final int ENCODER_CODES_PER_REVOLUTION = 256;
 	protected static final double VELOCITY_SETPOINT = 100;
-	protected static final double POSITION_SETPOINT = 1;
+	protected static final double POSITION_SETPOINT = 10;
 
 	protected static final double DEFAULT_ALLOWABLE_ERROR = 1.0;
 	protected static final double ALLOWABLE_CYCLE_TIME_ERROR = 0.5;

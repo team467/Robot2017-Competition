@@ -206,6 +206,9 @@ public class WheelPod {
 		prefs.putDouble(keyHeader() + "F", motor.getF());
 	}
 
+	private static final double AUTONOMOUS_SPEED = 100;
+	private double targetRevolutions;
+
 	/**
 	 * Moves a distance if in position mode.
 	 *
@@ -213,12 +216,35 @@ public class WheelPod {
 	 *            the target distance in feet.
 	 */
 	public void moveDistance(double targetDistance) {
-		if (!isPosition) {
-			positionMode();
-		}
+		positionMode();
 		zeroPosition();
-		double revolutions = targetDistance * 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
-		motor.set(revolutions);
+		targetRevolutions = targetDistance * 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
+		if (isPosition) {
+			motor.set(targetRevolutions);
+		} else {
+			motor.set(AUTONOMOUS_SPEED);
+			System.out.println("Time to move = " + (60 * targetRevolutions / AUTONOMOUS_SPEED));
+		}
+	}
+
+	public boolean checkIfStillMoving() {
+		double position = motor.getPosition();
+		System.out.println("Position: " + position);
+		boolean isStillMoving = true;
+		if (position >= targetRevolutions) {
+			if (!isPosition) {
+				motor.set(0);
+			}
+			isStillMoving = false;
+		} else {
+			if (isPosition) {
+				motor.set(targetRevolutions);
+			} else {
+				motor.set(AUTONOMOUS_SPEED);
+				System.out.println("Time to move = " + (60 * targetRevolutions / AUTONOMOUS_SPEED));
+			}
+		}
+		return isStillMoving;
 	}
 
 	/*
@@ -231,11 +257,24 @@ public class WheelPod {
 
 	public boolean checkReversed() {
 		if (RobotMap.isDriveMotorInverted[id]) {
-			motor.reverseOutput(true);
-			motor.reverseSensor(true);
+			if (RobotMap.robotID == RobotMap.RobotID.ROBOT2015) {
+				motor.reverseOutput(true);
+				motor.reverseSensor(true);
+			} else {
+				motor.reverseOutput(true);
+				motor.reverseSensor(false);
+			}
 			return true;
+		} else {
+			if (RobotMap.robotID == RobotMap.RobotID.ROBOT2015) {
+				motor.reverseOutput(false);
+				motor.reverseSensor(false);
+			} else {
+				motor.reverseOutput(false);
+				motor.reverseSensor(true);
+			}
+			return false;
 		}
-		return false;
 	}
 
 	public boolean checkSensor() {
@@ -283,6 +322,7 @@ public class WheelPod {
 
 	public void zeroPosition() {
 		motor.setPosition(0);
+		motor.setEncPosition(0);
 	}
 
 	/**
@@ -292,7 +332,8 @@ public class WheelPod {
 		isPosition = false;
 		motor.setProfile(VELOCITY_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Speed);
-		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+//		motor.setAllowableClosedLoopErr(ALLOWABLE_CLOSED_LOOP_ERROR);
+		motor.setAllowableClosedLoopErr(0);
 	}
 
 	public void set(double setpoint) {

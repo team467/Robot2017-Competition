@@ -1,6 +1,9 @@
 package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+
+import edu.wpi.first.wpilibj.Timer;
+
 import org.usfirst.frc.team467.robot.ButtonPanel2017.Buttons;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
@@ -23,6 +26,9 @@ public class DriverStation2017 {
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
+	
+	
+	private static Timer timer;
 
 	enum Speed {
 		SLOW, FAST
@@ -45,8 +51,11 @@ public class DriverStation2017 {
 	 */
 	private DriverStation2017() {
 		driverJoy = new XBoxJoystick467(0);
-		autonomous = Actions.basicProcess; // Default
+//		autonomous = Actions.basicProcess; // Default
+		autonomous = Actions.doNothing();
 		buttonPanel = new ButtonPanel2017(1);
+		timer = new Timer();
+		timer.start();
 	}
 
 	/**
@@ -89,16 +98,25 @@ public class DriverStation2017 {
 	 */
 	public DriveMode getDriveMode() {
 		DriveMode drivemode = DriveMode.VECTOR; // default drive mode for xbox
-
+		
+		if (driverJoy.getPOV() == -1){
+			timer.reset();
+		}
 		// UNWIND takes greatest priority
 		if (driverJoy.buttonDown(UNWIND_BUTTON)) {
 			drivemode = DriveMode.UNWIND;
 		} else if (driverJoy.buttonDown(CRAB_DRIVE)) {
 			drivemode = DriveMode.CRAB;
-		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
-			drivemode = DriveMode.AIM;
+//		} else if (driverJoy.buttonDown(AIM_BUTTON)) {
+//			drivemode = DriveMode.AIM;
+		} else if (driverJoy.getPOV() != -1){
+			drivemode = DriveMode.CRAB_SLOW;
 		}
 		return drivemode;
+	}
+	
+	public boolean isSlowCrabDelay() {
+		return timer.get() > 0.25;
 	}
 
 	// return +1 for right, -1 for left
@@ -131,9 +149,9 @@ public class DriverStation2017 {
 	}
 
 	public ActionGroup getActionGroup() {
-		if (driverJoy.buttonDown(BASIC_PROCESS_BUTTON)) {
-			autonomous = Actions.newBasicProcess();
-		}
+//		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
+//			autonomous = Actions.newBasicProcess();
+//		}
 		// } else if (navigatorJoy.buttonDown(FOO_BUTTON)) {
 		// autonomous = Actions.foo;
 		// }

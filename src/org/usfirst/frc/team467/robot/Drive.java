@@ -218,6 +218,8 @@ public class Drive extends RobotDrive {
 		// TODO - do we need to introduce any rate limiting this year?
 		return (speed);
 	}
+	
+	
 
 	/**
 	 * Crab Drive
@@ -229,11 +231,29 @@ public class Drive extends RobotDrive {
 	 */
 	public void crabDrive(double angle, double speed) {
 		angle += RobotMap.crabDriveFrontAngle;
+		
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-		fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-	}
 
+		
+		/* check how many wheelpods are in place	`*/
+		int numgood = 0;
+		for (int i = 0; i < 4; ++i) {
+			if (steering[i].getAngleDelta() < Math.PI / 6) {
+				numgood++;
+			}
+		}
+		/* if at least 2 wheelpods are in place, proceed as normal*/
+		if (numgood >= 2) {
+			fourWheelDrive(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+		}
+		
+	}
+	
+	public boolean isStopped(){
+			return false;
+	}
+	
 	/**
 	 * Vector drive
 	 *
@@ -386,6 +406,13 @@ public class Drive extends RobotDrive {
 			corrected.angle -= Math.PI;
 		}
 		return corrected;
+	}
+
+	public void printSteeringSensors() {
+		for (int i = 0; i < 4; i++) {
+			System.out.print(i + ":  " + steering[i].getSensorValue());
+		}
+		System.out.println();
 	}
 
 	/**
