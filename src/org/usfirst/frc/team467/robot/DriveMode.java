@@ -10,5 +10,4 @@ public enum DriveMode {
 	VECTOR, // Drives field aligned, but allows turns during movement
 	XB_SPLIT, // left joystick is front, back, right joystick is left, right
 	CRAB_SLOW,
-	FACE_ANGLE // Face the angle of the POV
 }

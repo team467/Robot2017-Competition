@@ -236,11 +236,19 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 		DriveMode driveMode = driverstation.getDriveMode();
 		//drive.setSpeedMode();
+		
+		// If not in any drive mode that aims
+		if (driveMode != DriveMode.AIM) {
+			drive.aiming.disable();
+		}
 
 		switch (driveMode) {
-
 		case AIM:
-			Actions.aimProcess(vision.getTargetAngle()).run();
+			LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
+			if (vision.canSeeTwo()) {
+				LOGGER.debug("AIM DRIVE: TURNING");
+				drive.turnToAngle(vision.getTargetAngle());
+			}
 			break;
 
 		case VECTOR:
