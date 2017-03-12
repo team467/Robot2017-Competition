@@ -25,6 +25,7 @@ public class RobotMap {
 		switch (id) {
 		case ROBOT2015:
 			robotID = RobotID.ROBOT2015;
+            useSpeedControllers = false;
 			steeringMotorChannel = new int[] { 0, 1, 2, 3 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -48,6 +49,7 @@ public class RobotMap {
 
 		case MIRACLE:
 			robotID = RobotID.MIRACLE;
+            useSpeedControllers = false;
 			steeringMotorChannel = new int[] { 2, 1, 3, 0 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -69,6 +71,7 @@ public class RobotMap {
 			
 		case MISTAKE:
             robotID = id;
+            useSpeedControllers = true;
             steeringMotorChannel = new int[] { 2, 1, 3, 0 };
             steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
                     Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -96,6 +99,8 @@ public class RobotMap {
 	// Global robot constants
 
 	public static RobotID robotID;
+	
+	public static boolean useSpeedControllers;
 
 	// Set to true to use LSM9DS1 IMU on Raspberry Pi
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio

@@ -78,7 +78,7 @@ public class Actions {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				() -> drive.moveDistanceComplete(),
-				() -> drive.moveDistance(distance));
+				() -> drive.crabDrive(0, distance));
 	}
 
 	public static Action turnAndMoveDistanceForward(double angle, double distance) {
@@ -86,7 +86,7 @@ public class Actions {
 		String actionText = "Turn to " + angle + " and move " + distance + " feet";
 		return new Action(actionText,
 				() -> drive.moveDistanceComplete(),
-				() -> drive.turnAndMoveDistance(angle, distance));
+				() -> drive.crabDrive(angle, distance));
 	}
 
 	public static ActionGroup turnAndMoveDistanceForwardProcess(double angle, double distance) {

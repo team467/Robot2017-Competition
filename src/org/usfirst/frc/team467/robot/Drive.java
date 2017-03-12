@@ -129,6 +129,7 @@ public class Drive extends RobotDrive {
 	 * Sets the motors to drive in position mode.
 	 */
 	public void setPositionMode() {
+		controlMode = TalonControlMode.Speed;
 		frontleft.positionMode();
 		frontright.positionMode();
 		backright.positionMode();
@@ -153,7 +154,7 @@ public class Drive extends RobotDrive {
 	 * Takes the drive out of position mode back into its previous drive mode.
 	 */
 	public void returnToDriveMode() {
-		if (controlMode == TalonControlMode.Speed) {
+		if (RobotMap.useSpeedControllers) {
 			setSpeedMode();
 		} else {
 			setPercentVoltageBusMode();
@@ -175,72 +176,31 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Drives each of the four wheels to different positions.
-	 *
-	 * @param frontLeftDistance
-	 * @param frontRightDistance
-	 * @param backLeftDistance
-	 * @param backRightDistance
-	 * @return  true if the move to the specified distance is complete.
-	 */
-	private void fourWheelMoveDistance(
-			double frontLeftDistance,
-			double frontRightDistance,
-			double backLeftDistance,
-			double backRightDistance) {
-		// If any of the motors doesn't exist then exit
-		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
-			throw new NullPointerException("Null motor provided");
-		}
-
-		frontleft.moveDistance(frontLeftDistance);
-		frontright.moveDistance(frontRightDistance);
-		backleft.moveDistance(backLeftDistance);
-		backright.moveDistance(backRightDistance);
-
-		if (m_safetyHelper != null) {
-			m_safetyHelper.feed();
-		}
-	}
-
-	/**
 	 * Drives each of the four wheels at different speeds using invert constants to account for wiring.
 	 *
-	 * @param frontLeftSpeed
-	 * @param frontRightSpeed
-	 * @param backLeftSpeed
-	 * @param backRightSpeed
+	 * @param frontLeftParam
+	 * 			Speed or Distance value for front left wheel
+	 * @param frontRightParam
+	 * 			Speed or Distance value for front right wheel
+	 * @param backLeftParam
+	 * 			Speed or Distance value for back left wheel
+	 * @param backRightParam
+	 * 			Speed or Distance value for back right wheel
 	 */
-	private void fourWheelDrive(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed) {
+	private void fourWheelDrive(double frontLeftParam, double frontRightParam, double backLeftParam, double backRightParam) {
 		// If any of the motors doesn't exist then exit
 		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
 		}
 
-		switch (controlMode) {
-		case Speed:
-			m_frontLeftMotor.set((RobotMap.isDriveMotorInverted[RobotMap.FRONT_LEFT] ? -1 : 1)
-					* limitSpeed(frontLeftSpeed, RobotMap.FRONT_LEFT) * RobotMap.MAX_SPEED);
-			m_frontRightMotor.set((RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1)
-					* limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT) * RobotMap.MAX_SPEED);
-			m_rearLeftMotor.set((RobotMap.isDriveMotorInverted[RobotMap.BACK_LEFT] ? -1 : 1)
-					* limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT) * RobotMap.MAX_SPEED);
-			m_rearRightMotor.set((RobotMap.isDriveMotorInverted[RobotMap.BACK_RIGHT] ? -1 : 1)
-					* limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT) * RobotMap.MAX_SPEED);
-			break;
-		case Voltage:
-		case PercentVbus:
-		default:
-			// System.out.println(frontLeftSpeed);
-			m_frontLeftMotor.set((RobotMap.isDriveMotorInverted[RobotMap.FRONT_LEFT] ? -1 : 1)
-					* limitSpeed((frontLeftSpeed), RobotMap.FRONT_LEFT));
-			m_frontRightMotor.set((RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1)
-					* limitSpeed(frontRightSpeed, RobotMap.FRONT_RIGHT));
-			m_rearLeftMotor.set(
-					(RobotMap.isDriveMotorInverted[RobotMap.BACK_LEFT] ? -1 : 1) * limitSpeed(backLeftSpeed, RobotMap.BACK_LEFT));
-			m_rearRightMotor.set((RobotMap.isDriveMotorInverted[RobotMap.BACK_RIGHT] ? -1 : 1)
-					* limitSpeed(backRightSpeed, RobotMap.BACK_RIGHT));
-		}
+		m_frontLeftMotor.set(
+				(RobotMap.isDriveMotorInverted[RobotMap.FRONT_LEFT] ? -1 : 1) * adjustSpeedOrDistance((frontLeftParam), RobotMap.FRONT_LEFT));
+		m_frontRightMotor.set(
+				(RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(frontRightParam, RobotMap.FRONT_RIGHT));
+		m_rearLeftMotor.set(
+				(RobotMap.isDriveMotorInverted[RobotMap.BACK_LEFT] ? -1 : 1) * adjustSpeedOrDistance(backLeftParam, RobotMap.BACK_LEFT));
+		m_rearRightMotor.set(
+				(RobotMap.isDriveMotorInverted[RobotMap.BACK_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(backRightParam, RobotMap.BACK_RIGHT));
 
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
@@ -296,16 +256,31 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Limit the rate at which the robot can change speed once driving fast. This is to prevent causing mechanical damage - or
-	 * tipping the robot through stopping too quickly.
+	 * Single point of entry for any speed adjustments made to the robot. This can be used for:
+	 * - limiting rate of acceleration or deceleration
+	 * - adjusting speed parameter based on Talon control mode (Speed, Position etc.)
 	 *
-	 * @param speed
-	 *            desired speed for robot
-	 * @return returns rate-limited speed
+	 * @param speedOrDistance
+	 *            input speed or distance for robot 
+	 *            	speed will be in range -1.0 to 1.0
+	 *              distance is measured in feet
+	 * @return returns adjusted speed
 	 */
-	private double limitSpeed(double speed, int wheelID) {
-		// TODO - do we need to introduce any rate limiting this year?
-		return (speed);
+	private double adjustSpeedOrDistance(double speedOrDistance, int wheelID) {
+		switch (controlMode)
+		{
+		case Speed:
+			speedOrDistance *= RobotMap.MAX_SPEED;
+			break;
+		
+		case Position:
+			speedOrDistance *= 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
+			break;
+			
+		default:
+			break;
+		}
+		return (speedOrDistance);
 	}
 
 
@@ -341,36 +316,6 @@ public class Drive extends RobotDrive {
 		return false;
 	}
 
-	/**
-	 * Uses a crab drive like mode to turn to angle and move a certain distance
-	 *
-	 * @param angle
-	 *            value corresponding to the field direction to move in
-	 * @param distance
-	 *            the distance to move in feet
-	 * @return true if the move is complete
-	 */
-	public void turnAndMoveDistance(double angle, double distance) {
-
-		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, distance);
-		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-
-		/* check how many wheelpods are in place	`*/
-		int numgood = 0;
-		for (int i = 0; i < 4; ++i) {
-			if (steering[i].getAngleDelta() < Math.PI / 6) {
-				numgood++;
-			}
-		}
-		/* if at least 2 wheelpods are in place, proceed as normal*/
-		if (numgood >= 2) {
-			/* In this case, the corrected speed is actually a corrected distance measurement.
-			 * This only reverse the direction if that is the best way to turn the wheel.
-			 */
-			fourWheelMoveDistance(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
-		}
-	}
-
 	public boolean moveDistanceComplete() {
 		boolean moveComplete = true;
 		moveComplete &= frontleft.isAtDistance();
@@ -378,16 +323,6 @@ public class Drive extends RobotDrive {
 		moveComplete &= backleft.isAtDistance();
 		moveComplete &= backright.isAtDistance();
 		return moveComplete;
-	}
-
-	/**
-	 * Moves straight forward for a certain distance;
-	 *
-	 * @param distance  the distance to move in feet
-	 * @return true if the move is complete
-	 */
-	public void moveDistance(double distance) {
-		turnAndMoveDistance(0, distance);
 	}
 
 	/**

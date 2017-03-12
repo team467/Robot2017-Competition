@@ -210,6 +210,7 @@ public class WheelPod {
 
 	private double targetRevolutions;
 
+	
 	/**
 	 * Moves a distance if in position mode.
 	 *
@@ -315,7 +316,6 @@ public class WheelPod {
 		motor.setProfile(POSITION_PID_PROFILE);
 		motor.changeControlMode(TalonControlMode.Position);
 		motor.setAllowableClosedLoopErr(0);
-		checkReversed();
 		zeroPosition();
 	}
 

@@ -96,6 +96,7 @@ public class Robot extends IterativeRobot {
 				"go",
 				"lg",
 				"rg",
+				"test",
 				"back"
 		};
 
@@ -148,6 +149,11 @@ public class Robot extends IterativeRobot {
 		case "back":
 			autonomous = Actions.goBackwards(2.0);
 			break;
+		
+		case "test":
+			autonomous = Actions.turnAndMoveDistanceForwardProcess(Math.PI/4, 3);
+			break;
+		
 		default:
 			autonomous = Actions.doNothing();
 			break;
