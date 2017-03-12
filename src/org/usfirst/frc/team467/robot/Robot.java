@@ -108,11 +108,6 @@ public class Robot extends IterativeRobot {
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
 		vision.update();
-		
-		System.out.println(
-				"vid mode: " + cam.getVideoMode() + 
-				"kind: " + cam.getKind()
-				);
 	}
 
 	public void autonomousInit() {
