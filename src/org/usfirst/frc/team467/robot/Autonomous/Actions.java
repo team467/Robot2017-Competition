@@ -132,7 +132,7 @@ public class Actions {
 				() -> true, // Done immediately
 				() -> Drive.getInstance().aiming.disable());
 
-	public static ActionGroup aimAndDisable(double angle) {
+	public static ActionGroup newAimAndDisable(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
 		mode.addAction(aim(angle));
 		mode.addAction(disableAiming);
@@ -195,7 +195,7 @@ public class Actions {
 
 	public static ActionGroup aimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
-		mode.addActions(aimAndDisable(angle));
+		mode.addActions(newAimAndDisable(angle));
 		mode.addAction(driveToGear(40));
 		mode.enable();
 		return mode;

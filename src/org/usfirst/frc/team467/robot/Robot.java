@@ -81,6 +81,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
 	}
+	
+	public void robotPeriodic() {
+		vision.update();
+	}
 
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
@@ -89,9 +93,7 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		// LOGGER.debug("Disabled Periodic");
-		double gyroAngle = gyro.pidGet();
-		SmartDashboard.putNumber("gyro", gyroAngle);
-		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
+		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
 		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.017"));
 		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
 		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.06"));
