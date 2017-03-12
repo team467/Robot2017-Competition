@@ -27,15 +27,17 @@ public class ActionGroup {
 	 * Run periodically to perform the Actions
 	 */
 	public void run() {
+		LOGGER.info("run " + action);
 		if (action == null || action.isDone()) {
 			try {
 				LOGGER.debug("Next action");
 				if (!agenda.isEmpty()) {
+					LOGGER.info("----- Finished action: " + action + " -----");
 					action = agenda.pop();
 					LOGGER.info("----- Starting action: " + action + " -----");
 				} else {
 					// Stop everything forever
-					LOGGER.info("----- Final action completed -----");
+					LOGGER.info("----- Finished final action: " + action + " -----");
 					action = null;
 					return;
 				}
@@ -43,8 +45,6 @@ public class ActionGroup {
 				LOGGER.error("Ran out of actions!", e);
 			}
 		}
-		
-		LOGGER.info("run " + action);
 		action.doIt();
 	}
 	
@@ -80,14 +80,23 @@ public class ActionGroup {
 		action = null;
 	}
 	
-	static class RunOnce implements Action.Condition {
+	static class RunOnce implements Action.Condition, Action.Activity {
 		boolean isDone = false;
+		final Action.Activity activity;
+		
+		public RunOnce(Action.Activity activity) {
+			this.activity = activity;
+		}
 		
 		@Override
 		public boolean isDone() {
-			final boolean prevVal = isDone;
+			return isDone;
+		}
+
+		@Override
+		public void doIt() {
+			activity.doIt();
 			isDone = true;
-			return prevVal;
 		}
 	}
 

@@ -7,15 +7,16 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
-import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.Autonomous.*;
 
 public class Logging {
 	public static void init() {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
-		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
+//		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
 		Logger.getLogger(ActionGroup.class).setLevel(Level.DEBUG);
+		Logger.getLogger(Actions.class).setLevel(Level.DEBUG);
 		// Logger.getLogger(Steering.class).setLevel(Level.INFO);
 		// Logger.getLogger(Calibration.class).setLevel(Level.DEBUG);
 		// Logger.getLogger(Drive.class).setLevel(Level.DEBUG);

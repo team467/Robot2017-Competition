@@ -2,20 +2,21 @@ package org.usfirst.frc.team467.robot.Autonomous;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.*;
 
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
-
+	private static final Logger LOGGER = Logger.getLogger(Actions.class);
 	static Timer timer = new Timer();
 
 	public static final Action nothingForever(){
 		Drive drive = Drive.getInstance();
-		String actionText = "Do Nothing";
-		return new Action(actionText,
-				new ActionGroup.RunOnce(),
-				() -> drive.crabDrive(0, 0));
+		return new Action("Do Nothing",
+				new ActionGroup.RunOnce(
+						() -> drive.crabDrive(0, 0)
+						));
 	}
 
 	public static final Action example1 = new Action(
@@ -131,8 +132,9 @@ public class Actions {
 
 	public static Action disableAiming = new Action(
 				"Disable",
-				new ActionGroup.RunOnce(), // Done immediately
-				() -> Drive.getInstance().aiming.disable());
+				new ActionGroup.RunOnce(
+						() -> Drive.getInstance().aiming.disable()
+				));
 
 	public static ActionGroup newAimAndDisable(double angle) {
 		ActionGroup mode = new ActionGroup("Aim and Disable");
@@ -142,27 +144,31 @@ public class Actions {
 	}
 
 	public static Action driveToGear(double targetDistance) {
-		// Ran once at initialization
-		Drive drive = Drive.getInstance();
-		VisionProcessing vision = VisionProcessing.getInstance();
-		AtomicInteger minimumDistance = new AtomicInteger((int)vision.getDistance());
-		// Ran periodically
+		// Run once at initialization
+		final Drive drive = Drive.getInstance();
+		final VisionProcessing vision = VisionProcessing.getInstance();
+		
+		// Using AtomicInteger because it is mutable.
+//		final AtomicInteger minimumDistance = new AtomicInteger((int)vision.getDistance());
+		final AtomicInteger minimumDistance = new AtomicInteger(1000);
+
+		// Run periodically
 		return new Action("Drive Distance",
 				() -> {
 					double currentDistance = vision.getDistance();
-
+					LOGGER.debug("currentDistance=" + currentDistance + " minimumDistance=" + minimumDistance.get());
 					if (minimumDistance.get() > currentDistance) {
 						minimumDistance.set((int)currentDistance);
 					}
 
 					// If we are currently more than four inches further away than our start
-					if (currentDistance > minimumDistance.get() + 4.0) {
+					if (currentDistance > minimumDistance.get() + 6.0) {
 						return true;
 					}
 
 					return currentDistance <= targetDistance;
 					},
-				() -> drive.crabDrive(0, 0.3));
+				() -> drive.crabDrive(0, 0.4));
 	}
 
 	public static Action dispenseGearA() {
@@ -198,8 +204,7 @@ public class Actions {
 	public static ActionGroup aimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
 		mode.addActions(newAimAndDisable(angle));
-		mode.addAction(driveToGear(40));
-		mode.enable();
+		mode.addAction(driveToGear(32));
 		return mode;
 	}
 

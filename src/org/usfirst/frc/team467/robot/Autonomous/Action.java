@@ -13,6 +13,12 @@ public class Action {
 		this.activity = activity;
 	}
 
+	public Action(String description, ActionGroup.RunOnce runOnce) {
+		this.description = description;
+		this.condition = runOnce;
+		this.activity = runOnce;
+	}
+
 	public void run() {
 		if (!isDone()) {
 			System.out.println(description + ": not done, running");
