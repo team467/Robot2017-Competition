@@ -68,7 +68,7 @@ public class RobotMap {
 			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
 			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
 			break;
-			
+
 		case MISTAKE:
             robotID = id;
             useSpeedControllers = true;
@@ -99,8 +99,12 @@ public class RobotMap {
 	// Global robot constants
 
 	public static RobotID robotID;
-	
+
 	public static boolean useSpeedControllers;
+	public static final int VELOCITY_PID_PROFILE = 0;
+	public static final int POSITION_PID_PROFILE = 1;
+	public static final double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEELPOD_CIRCUMFERENCE); // 1/2 inch
+	public static final int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
 
 	// Set to true to use LSM9DS1 IMU on Raspberry Pi
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio
@@ -149,7 +153,7 @@ public class RobotMap {
 	// Climber
 	public static final int CLIMBER_MOTOR_1 = 5;
 	public static final int CLIMBER_MOTOR_2 = 4;
-	
+
 	// Gear
 	public static final int GEAR_MOTOR = 7;
 

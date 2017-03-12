@@ -7,6 +7,7 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -20,11 +21,11 @@ public class Drive extends RobotDrive {
 	// Single instance of this class
 	private static Drive instance = null;
 
-	// WheelPods for setting modes
-	private static WheelPod frontleft;
-	private static WheelPod backleft;
-	private static WheelPod frontright;
-	private static WheelPod backright;
+	// need CAN Talons for PID modes
+	private CANTalon frontLeft;
+	private CANTalon backLeft;
+	private CANTalon frontRight;
+	private CANTalon backRight;
 
 	// Drive control mode
 	private TalonControlMode controlMode;
@@ -48,6 +49,18 @@ public class Drive extends RobotDrive {
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
 		super(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
+
+		this.frontLeft = frontLeftMotor;
+		initMotor(this.frontLeft);
+
+		this.backLeft = backLeftMotor;
+		initMotor(this.backLeft);
+
+		this.frontRight = frontRightMotor;
+		initMotor(this.frontRight);
+
+		this.backRight = backRightMotor;
+		initMotor(this.backRight);
 
 		// Set default control mode to percentage of voltage bus.
 		controlMode = TalonControlMode.PercentVbus;
@@ -83,6 +96,13 @@ public class Drive extends RobotDrive {
 		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
 	}
 
+	private void initMotor(CANTalon talon) {
+		talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		talon.configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
+		talon.setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+		talon.reverseSensor(true);
+	}
+
 	/**
 	 * Gets the single instance of this class.
 	 *
@@ -91,12 +111,11 @@ public class Drive extends RobotDrive {
 	public static Drive getInstance() {
 		if (instance == null) {
 			// First usage - create Drive object
-			frontleft = new WheelPod(RobotMap.FRONT_LEFT);
-			backleft = new WheelPod(RobotMap.BACK_LEFT);
-			frontright = new WheelPod(RobotMap.FRONT_RIGHT);
-			backright = new WheelPod(RobotMap.BACK_RIGHT);
-
-			instance = new Drive(frontleft.motor(), backleft.motor(), frontright.motor(), backright.motor());
+			instance = new Drive(
+					new CANTalon(RobotMap.driveMotorChannel[RobotMap.FRONT_LEFT]),
+					new CANTalon(RobotMap.driveMotorChannel[RobotMap.BACK_LEFT]),
+					new CANTalon(RobotMap.driveMotorChannel[RobotMap.FRONT_RIGHT]),
+					new CANTalon(RobotMap.driveMotorChannel[RobotMap.BACK_RIGHT]));
 		}
 		return instance;
 	}
@@ -106,10 +125,16 @@ public class Drive extends RobotDrive {
 	 */
 	public void setSpeedMode() {
 		controlMode = TalonControlMode.Speed;
-		frontleft.speedMode();
-		frontright.speedMode();
-		backright.speedMode();
-		backleft.speedMode();
+		initMotorForSpeedMode(frontLeft);
+		initMotorForSpeedMode(frontRight);
+		initMotorForSpeedMode(backLeft);
+		initMotorForSpeedMode(backRight);
+	}
+
+	private void initMotorForSpeedMode(CANTalon talon) {
+		talon.changeControlMode(TalonControlMode.Speed);
+		talon.setProfile(RobotMap.VELOCITY_PID_PROFILE);
+		talon.setAllowableClosedLoopErr(RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR);
 	}
 
 	/**
@@ -119,60 +144,46 @@ public class Drive extends RobotDrive {
 	 */
 	public void setPercentVoltageBusMode() {
 		controlMode = TalonControlMode.PercentVbus;
-		frontleft.percentVoltageBusMode();
-		frontright.percentVoltageBusMode();
-		backright.percentVoltageBusMode();
-		backleft.percentVoltageBusMode();
+		frontLeft.changeControlMode(TalonControlMode.PercentVbus);
+		frontRight.changeControlMode(TalonControlMode.PercentVbus);
+		backLeft.changeControlMode(TalonControlMode.PercentVbus);
+		backRight.changeControlMode(TalonControlMode.PercentVbus);
 	}
 
 	/**
 	 * Sets the motors to drive in position mode.
 	 */
 	public void setPositionMode() {
-		controlMode = TalonControlMode.Speed;
-		frontleft.positionMode();
-		frontright.positionMode();
-		backright.positionMode();
-		backleft.positionMode();
+		controlMode = TalonControlMode.Position;
+		initMotorForPositionMode(frontLeft);
+		initMotorForPositionMode(frontRight);
+		initMotorForPositionMode(backLeft);
+		initMotorForPositionMode(backRight);
 	}
 
-	/**
-	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
-	 *
-	 * @return true when the position mode is set, which is required for autonomous
-	 */
-	public boolean isInPositionMode() {
-		boolean isInPositionMode = true;
-		isInPositionMode &= frontleft.isPositionMode();
-		isInPositionMode &= frontright.isPositionMode();
-		isInPositionMode &= backleft.isPositionMode();
-		isInPositionMode &= backright.isPositionMode();
-		return isInPositionMode;
+	private void initMotorForPositionMode(CANTalon talon) {
+		talon.changeControlMode(TalonControlMode.Position);
+		talon.setProfile(RobotMap.POSITION_PID_PROFILE);
+		// Try and get to the right position.
+		talon.setAllowableClosedLoopErr(0);
+		// Zero the position
+		talon.setPosition(0);
+	}
+
+	public TalonControlMode getControlMode() {
+		return controlMode;
 	}
 
 	/**
 	 * Takes the drive out of position mode back into its previous drive mode.
 	 */
-	public void returnToDriveMode() {
+	public void setDriveMode() {
 		if (RobotMap.useSpeedControllers) {
 			setSpeedMode();
 		} else {
 			setPercentVoltageBusMode();
 		}
-	}
-
-	/**
-	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
-	 *
-	 * @return true when the position mode is not set, which is required for autonomous
-	 */
-	public boolean isNotInPositionMode() {
-		boolean isNotPositionMode = true;
-		isNotPositionMode &= frontleft.isNotPositionMode();
-		isNotPositionMode &= frontright.isNotPositionMode();
-		isNotPositionMode &= backleft.isNotPositionMode();
-		isNotPositionMode &= backright.isNotPositionMode();
-		return isNotPositionMode;
+		stop();
 	}
 
 	/**
@@ -193,13 +204,13 @@ public class Drive extends RobotDrive {
 			throw new NullPointerException("Null motor provided");
 		}
 
-		m_frontLeftMotor.set(
+		frontLeft.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.FRONT_LEFT] ? -1 : 1) * adjustSpeedOrDistance((frontLeftParam), RobotMap.FRONT_LEFT));
-		m_frontRightMotor.set(
+		frontRight.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(frontRightParam, RobotMap.FRONT_RIGHT));
-		m_rearLeftMotor.set(
+		backLeft.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.BACK_LEFT] ? -1 : 1) * adjustSpeedOrDistance(backLeftParam, RobotMap.BACK_LEFT));
-		m_rearRightMotor.set(
+		backRight.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.BACK_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(backRightParam, RobotMap.BACK_RIGHT));
 
 		if (m_safetyHelper != null) {
@@ -261,7 +272,7 @@ public class Drive extends RobotDrive {
 	 * - adjusting speed parameter based on Talon control mode (Speed, Position etc.)
 	 *
 	 * @param speedOrDistance
-	 *            input speed or distance for robot 
+	 *            input speed or distance for robot
 	 *            	speed will be in range -1.0 to 1.0
 	 *              distance is measured in feet
 	 * @return returns adjusted speed
@@ -272,11 +283,11 @@ public class Drive extends RobotDrive {
 		case Speed:
 			speedOrDistance *= RobotMap.MAX_SPEED;
 			break;
-		
+
 		case Position:
 			speedOrDistance *= 12 / RobotMap.WHEELPOD_CIRCUMFERENCE;
 			break;
-			
+
 		default:
 			break;
 		}
@@ -316,13 +327,15 @@ public class Drive extends RobotDrive {
 		return false;
 	}
 
-	public boolean moveDistanceComplete() {
-		boolean moveComplete = true;
-		moveComplete &= frontleft.isAtDistance();
-		moveComplete &= frontright.isAtDistance();
-		moveComplete &= backleft.isAtDistance();
-		moveComplete &= backright.isAtDistance();
-		return moveComplete;
+	/**
+	 * Gets the distance moved for checking drive modes.
+	 *
+	 * @return the absolute distance moved in feet
+	 */
+	public double absoluteDistanceMoved() {
+		System.out.println("Distances: FL: " + frontLeft.getPosition() + " FR: " + frontRight.getPosition()
+		+ " BL: " + backLeft.getPosition() + " BR: " + backRight.getPosition());
+		return Math.abs(backRight.getPosition() * RobotMap.WHEELPOD_CIRCUMFERENCE / 12);
 	}
 
 	/**

@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.usfirst.frc.team467.robot.*;
 
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
@@ -62,30 +64,71 @@ public class Actions {
 	public static Action setPositionMode() {
 		Drive drive = Drive.getInstance();
 		return new Action("Setting position mode for driving a set distance.",
-				() -> drive.isInPositionMode(),
+				() -> isInPositionMode(),
 				() -> drive.setPositionMode());
+	}
+
+	/**
+	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
+	 *
+	 * @return true when the position mode is set
+	 */
+	public static boolean isInPositionMode() {
+		Drive drive = Drive.getInstance();
+		if (drive.getControlMode() == TalonControlMode.Position) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
+	 *
+	 * @return true when the position mode is not set
+	 */
+	public static boolean isNotInPositionMode() {
+		Drive drive = Drive.getInstance();
+		if (drive.getControlMode() != TalonControlMode.Position) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static Action setDriveMode() {
 		Drive drive = Drive.getInstance();
 		return new Action("Setting drive mode",
-				() -> drive.isNotInPositionMode(),
-				() -> drive.returnToDriveMode());
+				() -> isNotInPositionMode(),
+				() -> drive.setDriveMode());
 	}
 
 	public static Action moveDistanceForward(double distance) {
 		Drive drive = Drive.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
-				() -> drive.moveDistanceComplete(),
+				() -> moveDistanceComplete(distance),
 				() -> drive.crabDrive(0, distance));
+	}
+
+	public static boolean moveDistanceComplete(double distance) {
+		Drive drive = Drive.getInstance();
+		double distanceMoved = drive.absoluteDistanceMoved();
+		System.out.println("Distances - Target: " + Math.abs(distance) + " Moved: " + distanceMoved);
+		if (distanceMoved >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
+			System.out.println("Finished moving");
+			return true;
+		} else {
+			System.out.println("Still moving");
+			return false;
+		}
 	}
 
 	public static Action turnAndMoveDistanceForward(double angle, double distance) {
 		Drive drive = Drive.getInstance();
 		String actionText = "Turn to " + angle + " and move " + distance + " feet";
 		return new Action(actionText,
-				() -> drive.moveDistanceComplete(),
+				() -> moveDistanceComplete(distance),
 				() -> drive.crabDrive(angle, distance));
 	}
 
