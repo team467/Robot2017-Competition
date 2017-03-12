@@ -75,9 +75,9 @@ public class Robot extends IterativeRobot {
 		vision = VisionProcessing.getInstance();
 		autonomous = Actions.doNothing();
 
-		SmartDashboard.putString("DB/String 0", "1.0");
+		SmartDashboard.putString("DB/String 0", "0.017");
 		SmartDashboard.putString("DB/String 1", "0.0");
-		SmartDashboard.putString("DB/String 2", "0.0");
+		SmartDashboard.putString("DB/String 2", "0.06");
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
 	}
@@ -92,9 +92,9 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.017"));
 		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.06"));
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
 		vision.update();
