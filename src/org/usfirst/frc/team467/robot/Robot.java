@@ -85,7 +85,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
 		
+		//made usb camera and captures video
 		cam = CameraServer.getInstance().startAutomaticCapture();
+		//set resolution and frames per second to match driverstation
 		cam.setResolution(320, 240);
 		cam.setFPS(15);
 	}
