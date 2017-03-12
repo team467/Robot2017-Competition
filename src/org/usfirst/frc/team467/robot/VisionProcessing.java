@@ -16,8 +16,11 @@ public class VisionProcessing {
 
 	private VisionProcessing() {
 		table = NetworkTable.getTable("Vision Table");
+		
+		// Constants
 		table.putNumber("CamToCenterWidth", RobotMap.CamToCenterWidthInches);
 		table.putNumber("CamToCenterLength", RobotMap.CamToCenterLengthInches);
+		
 		gyro = Gyrometer.getInstance();
 		update();
 	}
@@ -28,8 +31,12 @@ public class VisionProcessing {
 		}
 		return instance;
 	}
-
+	
+	/**
+	 * Updates data to and from NetworkTables
+	 */
 	public void update() {
+		// Get data
 		seeTwo = table.getBoolean("seeTwo", false);
 		targetAngle = table.getNumber("angle", 0.0);
 		x = table.getNumber("x", 0.0);
@@ -37,6 +44,8 @@ public class VisionProcessing {
 		distance = table.getNumber("distance", 0.0);
 		width = table.getNumber("w", 0.0);
 		height = table.getNumber("h", 0.0);
+		
+		// Put data
 		table.putNumber("gyro", gyro.getRobotAngleDegrees());
 
 		// LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
@@ -71,7 +80,7 @@ public class VisionProcessing {
 	}
 
 	public void logDistanceValues() {
-		LOGGER.info("distance," + getHeight() + "," + 3580 / getHeight() + "," + getHeight() * getWidth());
+		LOGGER.debug("distance," + getHeight() + "," + 3580 / getHeight() + "," + getHeight() * getWidth());
 	}
 
 	@Override
