@@ -351,13 +351,24 @@ public class Drive extends RobotDrive {
 	 * @return true if the move is complete
 	 */
 	public void turnAndMoveDistance(double angle, double distance) {
+
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, distance);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-		// In this case, the corrected speed is actually a corrected distance
-		// measurement.
-		// This only reverse the direction if that is the best way to turn the
-		// wheel.
-		fourWheelMoveDistance(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+
+		/* check how many wheelpods are in place	`*/
+		int numgood = 0;
+		for (int i = 0; i < 4; ++i) {
+			if (steering[i].getAngleDelta() < Math.PI / 6) {
+				numgood++;
+			}
+		}
+		/* if at least 2 wheelpods are in place, proceed as normal*/
+		if (numgood >= 2) {
+			/* In this case, the corrected speed is actually a corrected distance measurement.
+			 * This only reverse the direction if that is the best way to turn the wheel.
+			 */
+			fourWheelMoveDistance(corrected.speed, corrected.speed, corrected.speed, corrected.speed);
+		}
 	}
 
 	public boolean moveDistanceComplete() {
