@@ -275,11 +275,10 @@ public class Robot extends IterativeRobot {
 
 		case CRAB_SLOW:
 			double povAngleDeg = driverstation.getDriveJoystick().getPOV();
-			// Timer.delay(0.25);
 
+			// Only respond to 0, 90, 180 and 270 degree positions from POV input
 			if (povAngleDeg % 90 == 0) {
 				drive.crabDrive(povAngleDeg * (Math.PI / 180), 0.4);
-				System.out.println("pov angle:" + driverstation.getDriveJoystick().getPOV());
 			} else {
 				drive.stop();
 			}
