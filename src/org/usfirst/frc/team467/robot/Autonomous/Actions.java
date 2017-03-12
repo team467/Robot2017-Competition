@@ -14,7 +14,7 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
 		return new Action(actionText,
-				() -> drive.isStopped(),
+				new ActionGroup.RunOnce(),
 				() -> drive.crabDrive(0, 0));
 	}
 

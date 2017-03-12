@@ -150,9 +150,9 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		gyro.reset();
 		driverstation.readInputs();
-		// autonomous.terminate();
-		autonomous = Actions.doNothing();
-		// autonomous = driverstation.getActionGroup();
+		autonomous.terminate();
+//		autonomous = Actions.doNothing();
+//		autonomous = driverstation.getActionGroup();
 	}
 
 	public void testInit() {
