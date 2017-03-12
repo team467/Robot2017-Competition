@@ -144,14 +144,14 @@ public class Robot extends IterativeRobot {
 
 	public void testInit() {
 		gyro.reset();
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.018"));
 		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.06"));
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
-		String tuneSetting = SmartDashboard.getString("DB/String 5", "none");
-		tuner = new TuneRobot(tuneSetting);
-		tuner.init();
+//		String tuneSetting = SmartDashboard.getString("DB/String 5", "none");
+//		tuner = new TuneRobot(tuneSetting);
+//		tuner.init();
 	}
 
 	public void testPeriodic() {
@@ -159,11 +159,11 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		// SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		// driverstation.readInputs();
-		// boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
-		// if (onTarget) {
-		// System.out.println("TARGET ACQUIRED");
-		// }
-		tuner.periodic();
+		 boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
+		 if (onTarget) {
+		 System.out.println("TARGET ACQUIRED");
+		 }
+//		tuner.periodic();
 	}
 
 	public void autonomousPeriodic() {
