@@ -10,6 +10,7 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team467.robot.AutoCalibration.TuneRobot;
@@ -40,8 +41,6 @@ public class Robot extends IterativeRobot {
 
 	private TuneRobot tuner;
 	
-	private UsbCamera cam;
-
 	int session;
 
 	/**
@@ -86,10 +85,22 @@ public class Robot extends IterativeRobot {
 		LOGGER.debug("Robot Initialized");
 		
 		//made usb camera and captures video
-		cam = CameraServer.getInstance().startAutomaticCapture();
+		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
 		cam.setResolution(320, 240);
 		cam.setFPS(15);
+		
+		// Setup autonomous mode selectors
+		String[] autoList = {
+				"none",
+				"go",
+				"lg",
+				"rg",
+				"back"
+		};
+
+		NetworkTable table = NetworkTable.getTable("SmartDashboard");
+		table.putStringArray("Auto List", autoList);
 	}
 
 	public void disabledInit() {
