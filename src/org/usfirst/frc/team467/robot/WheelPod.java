@@ -19,6 +19,8 @@ public class WheelPod {
 	private static final int VELOCITY_PID_PROFILE = 0;
 	private static final int POSITION_PID_PROFILE = 1;
 
+	public static final double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEELPOD_CIRCUMFERENCE); // 1/2 inch
+
 	/**
 	 * The top speed for use in speed mode of this wheel pod. The overall robot max speed is set in the Robot Map.
 	 */
@@ -228,7 +230,7 @@ public class WheelPod {
 		boolean moveComplete = false;
 		double position = motor.getPosition();
 		System.out.println("Position: " + position + " Target: " + targetRevolutions);
-		if (position >= targetRevolutions) {
+		if (position >= (targetRevolutions - POSITION_ALLOWED_ERROR)) {
 			moveComplete = true;
 		}
 		return moveComplete;
