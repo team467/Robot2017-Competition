@@ -120,6 +120,8 @@ public class Actions {
 	}
 
 	public static Action aim(double angle) {
+		System.out.println("Creating aim action, angle=" + angle + ", gyro heading=" + Gyrometer.getInstance().pidGet());
+		
 		Drive drive = Drive.getInstance();
 		return new Action(
 				"Aim",
@@ -129,7 +131,7 @@ public class Actions {
 
 	public static Action disableAiming = new Action(
 				"Disable",
-				() -> true, // Done immediately
+				new ActionGroup.RunOnce(), // Done immediately
 				() -> Drive.getInstance().aiming.disable());
 
 	public static ActionGroup newAimAndDisable(double angle) {

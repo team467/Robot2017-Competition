@@ -282,8 +282,7 @@ public class Drive extends RobotDrive {
 	/**
 	 * Turns to specified angle according to gyro
 	 *
-	 * @param angle
-	 *            in degrees
+	 * @param angle in degrees
 	 *
 	 * @return True when pointing at the angle
 	 */

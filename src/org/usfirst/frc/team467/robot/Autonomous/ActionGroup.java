@@ -32,7 +32,7 @@ public class ActionGroup {
 				LOGGER.debug("Next action");
 				if (!agenda.isEmpty()) {
 					action = agenda.pop();
-					LOGGER.info("----- Starting action: " + action.description + " -----");
+					LOGGER.info("----- Starting action: " + action + " -----");
 				} else {
 					// Stop everything forever
 					LOGGER.info("----- Final action completed -----");
@@ -73,17 +73,25 @@ public class ActionGroup {
 	public void enable() {
 		LOGGER.debug("Resetting Process");
 		for (Action act : master) {
-			if (act.condition instanceof Duration) {
-				LOGGER.debug("Resetting Duration");
-				((Duration) act.condition).reset();
-			}
+			act.resetCondition();
 		}
 		// Copy master (not reference)
 		agenda = new LinkedList<>(master);
 		action = null;
 	}
+	
+	static class RunOnce implements Action.Condition {
+		boolean isDone = false;
+		
+		@Override
+		public boolean isDone() {
+			final boolean prevVal = isDone;
+			isDone = true;
+			return prevVal;
+		}
+	}
 
-	public static class Duration implements Action.Condition {
+	static class Duration implements Action.Condition {
 		private double durationMS;
 		private double actionStartTimeMS = -1;
 

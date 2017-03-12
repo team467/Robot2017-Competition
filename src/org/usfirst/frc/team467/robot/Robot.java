@@ -83,6 +83,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 1", "0.0");
 		SmartDashboard.putString("DB/String 2", "0.06");
 		SmartDashboard.putString("DB/String 3", "0.0");
+		SmartDashboard.putString("DB/String 5", "90.0");
 		LOGGER.debug("Robot Initialized");
 		
 		//made usb camera and captures video
@@ -171,10 +172,11 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("gyro", gyro.getRobotAngleDegrees());
 		// SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		// driverstation.readInputs();
-		 boolean onTarget = drive.turnToAngle(90.0); // Face 90º according to gyro
-		 if (onTarget) {
-		 System.out.println("TARGET ACQUIRED");
-		 }
+		double targetAngle = Double.parseDouble(SmartDashboard.getString("DB/String 5", "90.0"));
+		boolean onTarget = drive.turnToAngle(targetAngle); // Face 90º according to gyro
+		if (onTarget) {
+		System.out.println("TARGET ACQUIRED");
+		}
 //		tuner.periodic();
 	}
 
