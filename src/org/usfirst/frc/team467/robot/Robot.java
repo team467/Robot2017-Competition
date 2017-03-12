@@ -173,7 +173,7 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		// driverstation.readInputs();
 		double targetAngle = Double.parseDouble(SmartDashboard.getString("DB/String 5", "90.0"));
-		boolean onTarget = drive.turnToAngle(targetAngle); // Face 90º according to gyro
+		boolean onTarget = drive.turnToAngle(targetAngle);
 		if (onTarget) {
 		System.out.println("TARGET ACQUIRED");
 		}

@@ -77,8 +77,8 @@ public class Drive extends RobotDrive {
 						turnDrive(output);
 					}
 				});
-		aiming.setInputRange(0, 360); // 4 Gyro units per degree
-		aiming.setContinuous(); // 0º and 360º are the same point
+		aiming.setInputRange(-180, 180);
+		aiming.setContinuous(); // -180º and 180 are the same point
 		aiming.setOutputRange(-1.0, 1.0); // Max Speed in either direction
 		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
 	}
@@ -288,7 +288,7 @@ public class Drive extends RobotDrive {
 	 */
 	public boolean turnToAngle(double angle) {
 		aiming.enable();
-		aiming.setSetpoint(angle); // 4 gyro units per degree
+		aiming.setSetpoint(angle); // Convert to PID range
 		System.out.println("Turn to Angle: angle=" + angle);
 		System.out.println("Turn to Angle: output=" + aiming.get());
 		return aiming.onTarget();
