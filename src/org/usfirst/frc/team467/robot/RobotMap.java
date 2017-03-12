@@ -35,7 +35,6 @@ public class RobotMap {
 			width = 18.5; // side to side in inches
 			CamToCenterWidthInches = 4.5; // TODO Get measurement for other robots
 			CamToCenterLengthInches = 17; // TODO Get measurement for other robots
-			crabDriveFrontAngle = 0;
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -49,15 +48,14 @@ public class RobotMap {
 
 		case MIRACLE:
 			robotID = RobotID.MIRACLE;
-			steeringMotorChannel = new int[] { 0, 3, 1, 2 };
+			steeringMotorChannel = new int[] { 2, 1, 3, 0 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
-			steeringSensorChannel = new int[] { 0, 3, 1, 2 };
-			driveMotorChannel = new int[] { 1, 4, 2, 3 };
+			steeringSensorChannel = new int[] { 2, 1, 3, 0 };
+			driveMotorChannel = new int[] { 3, 2, 4, 1 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 18.5; // front to back - in inches
 			width = 22.5; // side to side in inches
-			crabDriveFrontAngle = Math.PI;
 			MAX_SPEED = 450.0;
 			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -71,11 +69,11 @@ public class RobotMap {
 			
 		case MISTAKE:
             robotID = id;
-            steeringMotorChannel = new int[] { 0, 3, 1, 2 };
+            steeringMotorChannel = new int[] { 2, 1, 3, 0 };
             steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
                     Steering.PWMType.TALON, Steering.PWMType.TALON };
-            steeringSensorChannel = new int[] { 0, 3, 1, 2 };
-            driveMotorChannel = new int[] { 1, 4, 2, 3 };
+            steeringSensorChannel = new int[] { 2, 1, 3, 0 };
+            driveMotorChannel = new int[] { 3, 2, 4, 1 };
             isDriveMotorInverted = new boolean[] { false, true, false, true };
             length = 18.5; // front to back - in inches
             width = 22.5; // side to side in inches
@@ -123,7 +121,6 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double length;
 	public static double width;
-	public static double crabDriveFrontAngle;
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;
 

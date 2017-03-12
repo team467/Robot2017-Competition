@@ -319,11 +319,9 @@ public class Drive extends RobotDrive {
 	 *            Speed to drive at
 	 */
 	public void crabDrive(double angle, double speed) {
-		angle += RobotMap.crabDriveFrontAngle;
 
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, speed);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
-
 
 		/* check how many wheelpods are in place	`*/
 		int numgood = 0;
@@ -353,7 +351,6 @@ public class Drive extends RobotDrive {
 	 * @return true if the move is complete
 	 */
 	public void turnAndMoveDistance(double angle, double distance) {
-		angle += RobotMap.crabDriveFrontAngle;
 		WheelCorrection corrected = wrapAroundCorrect(RobotMap.BACK_RIGHT, angle, distance);
 		fourWheelSteer(corrected.angle, corrected.angle, corrected.angle, corrected.angle);
 		// In this case, the corrected speed is actually a corrected distance
@@ -379,10 +376,8 @@ public class Drive extends RobotDrive {
 	 * @return true if the move is complete
 	 */
 	public void moveDistance(double distance) {
-		turnAndMoveDistance(RobotMap.crabDriveFrontAngle, distance);
+		turnAndMoveDistance(0, distance);
 	}
-
-
 
 	/**
 	 * Vector drive

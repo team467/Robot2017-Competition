@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.ROBOT2015);
+		RobotMap.init(RobotMap.RobotID.MISTAKE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -199,8 +199,10 @@ public class Robot extends IterativeRobot {
 		} else if (driverstation.isInCalibrateMode()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
-			System.out.println(" FL: " + drive.getSteeringAngle(0) + " BL: " + drive.getSteeringAngle(1) + " BR: "
-					+ drive.getSteeringAngle(2) + " FR: " + drive.getSteeringAngle(3));
+			System.out.println("FL: " + drive.getSteeringAngle(RobotMap.FRONT_LEFT) + 
+					           " FR: " + drive.getSteeringAngle(RobotMap.FRONT_RIGHT) + 
+					           " BL: " + drive.getSteeringAngle(RobotMap.BACK_LEFT) + 
+					           " BR: " + drive.getSteeringAngle(RobotMap.BACK_RIGHT)); 
 		} else {
 			autonomous = driverstation.getActionGroup();
 			// Drive Mode
