@@ -155,7 +155,7 @@ public class Actions {
 						minimumDistance.set((int)currentDistance);
 					}
 
-					// If we are currently more than two inches further away than our start
+					// If we are currently more than four inches further away than our start
 					if (currentDistance > minimumDistance.get() + 4.0) {
 						return true;
 					}

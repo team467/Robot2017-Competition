@@ -19,7 +19,7 @@ public class DriverStation2017 {
 	private static int CALIBRATE_BUTTON = XBoxJoystick467.BUTTON_X;
 	private static int CRAB_DRIVE = XBoxJoystick467.BUTTON_A;
 	private static int AIM_BUTTON = XBoxJoystick467.BUTTON_LEFT;
-	private static int BASIC_PROCESS_BUTTON = XBoxJoystick467.BUTTON_RIGHT;
+	private static int AIM_AND_DRIVE = XBoxJoystick467.BUTTON_RIGHT;
 	private static int TERMINATE_BUTTON = XBoxJoystick467.BUTTON_BACK;
 
 	// Mapping of functions to Joystick Buttons for calibration mode
@@ -141,8 +141,11 @@ public class DriverStation2017 {
 		// }
 		if (driverJoy.buttonDown(AIM_BUTTON)) {
 			autonomous = Actions.newAimAndDisable(VisionProcessing.getInstance().getTargetAngle());
-			autonomous.enable();
 		}
+		if (driverJoy.buttonDown(AIM_AND_DRIVE)) {
+			autonomous = Actions.aimProcess(VisionProcessing.getInstance().getTargetAngle());
+		}
+		autonomous.enable();
 		return autonomous; // TODO Get multiple options
 	}
 

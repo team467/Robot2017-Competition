@@ -80,7 +80,7 @@ public class Drive extends RobotDrive {
 		aiming.setInputRange(-180, 180);
 		aiming.setContinuous(); // -180º and 180 are the same point
 		aiming.setOutputRange(-1.0, 1.0); // Max Speed in either direction
-		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
+		aiming.setAbsoluteTolerance(3.0); // 1 degree tolerance
 	}
 
 	/**
