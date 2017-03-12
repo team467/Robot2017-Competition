@@ -138,7 +138,11 @@ public class DriverStation2017 {
 		//		if (buttonPanel.buttonDown(Buttons.VISION_ALIGN_SHOOT)) {
 		//			autonomous = Actions.newBasicProcess();
 		//		}
-		// } 
+		// }
+		if (driverJoy.buttonDown(AIM_BUTTON)) {
+			autonomous = Actions.aimAndDisable(VisionProcessing.getInstance().getTargetAngle());
+			autonomous.enable();
+		}
 		return autonomous; // TODO Get multiple options
 	}
 

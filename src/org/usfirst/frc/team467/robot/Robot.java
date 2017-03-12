@@ -226,13 +226,13 @@ public class Robot extends IterativeRobot {
 		}
 
 		switch (driveMode) {
-		case AIM:
-			LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
-			if (vision.canSeeTwo()) {
-				LOGGER.debug("AIM DRIVE: TURNING");
-				drive.turnToAngle(vision.getTargetAngle());
-			}
-			break;
+//		case AIM:
+//			LOGGER.debug("AIM DRIVE-CAN_SEE_TWO=" + vision.canSeeTwo());
+//			if (vision.canSeeTwo()) {
+//				LOGGER.debug("AIM DRIVE: TURNING");
+//				drive.turnToAngle(vision.getTargetAngle());
+//			}
+//			break;
 
 		case VECTOR:
 			double turnSpeed = driverstation.getDriveJoystick().getRightStickDistance() * 0.5;

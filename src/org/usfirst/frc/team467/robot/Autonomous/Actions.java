@@ -121,26 +121,21 @@ public class Actions {
 
 	public static Action aim(double angle) {
 		Drive drive = Drive.getInstance();
-		Action aim =  new Action(
+		return new Action(
 				"Aim",
 				() -> drive.aiming.onTarget(),
 				() -> drive.turnToAngle(angle));
-		return aim;
 	}
 
-	public static Action disableAiming() {
-		Drive drive = Drive.getInstance();
-		Action disableAimingAction = new Action(
+	public static Action disableAiming = new Action(
 				"Disable",
-				() -> true,
-				() -> drive.aiming.disable());
-		return disableAimingAction;
-	}
+				() -> true, // Done immediately
+				() -> Drive.getInstance().aiming.disable());
 
 	public static ActionGroup aimAndDisable(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
 		mode.addAction(aim(angle));
-		mode.addAction(disableAiming());
+		mode.addAction(disableAiming);
 		return mode;
 	}
 
@@ -228,7 +223,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup("gear");
 		mode.addAction(goForward(0.9));
 		mode.addAction(aim(60));
-		mode.addAction(disableAiming());
+		mode.addAction(disableAiming);
 		mode.addAction(goForward(1.0));
 		mode.addAction(dispenseGearA());
 		mode.addAction(dispenseGearB());
@@ -239,7 +234,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup("gear");
 		mode.addAction(goForward(0.9));
 		mode.addAction(aim(-60));
-		mode.addAction(disableAiming());
+		mode.addAction(disableAiming);
 		mode.addAction(goForward(1.0));
 		mode.addAction(dispenseGearA());
 		mode.addAction(dispenseGearB());
@@ -259,7 +254,7 @@ public class Actions {
 		mode.addAction(goForward(2.0));
 		mode.addAction(goBackward(1.3));
 		mode.addAction(aim(-60));
-		mode.addAction(disableAiming());
+		mode.addAction(disableAiming);
 		return mode;
 	}
 
