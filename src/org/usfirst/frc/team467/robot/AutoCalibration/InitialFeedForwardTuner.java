@@ -20,18 +20,14 @@ public class InitialFeedForwardTuner extends BaseTuner implements Tuner {
 	 * @param talon
 	 * @param reverseDirection
 	 */
-	public InitialFeedForwardTuner(WheelPod wheelPod, boolean findVelocityPID) {
-		super(wheelPod, findVelocityPID);
+	public InitialFeedForwardTuner(WheelPod wheelPod) {
+		super(wheelPod, true);
 		System.out.println("Initializing initial feed forward stage.");
 		clear();
 		currentValue = 0.1;
 		increaseFactor = 1;
 		lastAverageError = Long.MAX_VALUE;
-		if (findVelocityPID) {
-			wheelPod.speedMode();
-		} else {
-			wheelPod.positionMode();
-		}
+		wheelPod.speedMode();
 		errors = new ArrayList<Long>();
 	}
 

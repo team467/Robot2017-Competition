@@ -11,7 +11,6 @@ public enum TuneStage {
 	NO_TUNING,
 	CHECK_SENSORS,
 	INITIAL_FEED_FORWARD,
-	MAX_SPEED,
 	ULTIMATE_PROPORTIONAL_TERM,
 	FEED_FORWARD_CURVE,
 	POSITION,
@@ -25,8 +24,6 @@ public enum TuneStage {
 			stage =  ULTIMATE_PROPORTIONAL_TERM;
 		} else if (tuneStageString.compareToIgnoreCase("feed_forward") == 0) {
 			stage =  INITIAL_FEED_FORWARD;
-		} else if (tuneStageString.compareToIgnoreCase("max_speed") == 0) {
-			stage =  MAX_SPEED;
 		} else if (tuneStageString.compareToIgnoreCase("position") == 0) {
 			stage =  POSITION;
 		} else if (tuneStageString.compareToIgnoreCase("none") == 0) {
