@@ -105,6 +105,7 @@ public class RobotMap {
 	public static final int POSITION_PID_PROFILE = 1;
 	public static final double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEELPOD_CIRCUMFERENCE); // 1/2 inch
 	public static final int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
+	public static final int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = 8; 	// This is in encoder ticks
 
 	// Set to true to use LSM9DS1 IMU on Raspberry Pi
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio
@@ -170,7 +171,7 @@ public class RobotMap {
 
 	// The circumference of the wheels for use in determining distance in
 	// position mode
-	public static final double WHEELPOD_CIRCUMFERENCE = 18.85;
+	public static final double WHEELPOD_CIRCUMFERENCE = 20.5139;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
 }
