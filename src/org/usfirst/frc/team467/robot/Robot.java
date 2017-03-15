@@ -61,8 +61,12 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-		// drive.setSpeedMode();
-		drive.setPercentVoltageBusMode();
+		
+		if (RobotMap.useSpeedControllers) {
+			drive.setSpeedMode();
+		} else {
+			drive.setPercentVoltageBusMode();
+		}
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
