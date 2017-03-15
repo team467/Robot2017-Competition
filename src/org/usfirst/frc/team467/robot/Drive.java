@@ -100,6 +100,7 @@ public class Drive extends RobotDrive {
 		talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		talon.configEncoderCodesPerRev(RobotMap.WHEELPOD_ENCODER_CODES_PER_REVOLUTION);
 		talon.setNominalClosedLoopVoltage(RobotMap.NOMINAL_BATTERY_VOLTAGE);
+//		talon.setCloseLoopRampRate(5);
 		talon.reverseSensor(true);
 	}
 
@@ -164,6 +165,7 @@ public class Drive extends RobotDrive {
 	private void initMotorForPositionMode(CANTalon talon) {
 		talon.changeControlMode(TalonControlMode.Position);
 		talon.setProfile(RobotMap.POSITION_PID_PROFILE);
+		talon.setAllowableClosedLoopErr(RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR);
 		// Try and get to the right position.
 		talon.setAllowableClosedLoopErr(0);
 		// Zero the position
@@ -327,6 +329,12 @@ public class Drive extends RobotDrive {
 		return false;
 	}
 
+	private double compareTicks(double base, double compare) {
+		double absVal = Math.abs(compare);
+		if(absVal < base) return absVal;
+		return base;
+	}
+
 	/**
 	 * Gets the distance moved for checking drive modes.
 	 *
@@ -335,7 +343,12 @@ public class Drive extends RobotDrive {
 	public double absoluteDistanceMoved() {
 		System.out.println("Distances: FL: " + frontLeft.getPosition() + " FR: " + frontRight.getPosition()
 		+ " BL: " + backLeft.getPosition() + " BR: " + backRight.getPosition());
-		return Math.abs(backRight.getPosition() * RobotMap.WHEELPOD_CIRCUMFERENCE / 12);
+		double ticks =  Math.abs(frontLeft.getPosition());
+		ticks = compareTicks(ticks, frontRight.getPosition());
+		ticks = compareTicks(ticks, backRight.getPosition());
+		ticks = compareTicks(ticks, backLeft.getPosition());
+
+		return ticks * RobotMap.WHEELPOD_CIRCUMFERENCE / 12;
 	}
 
 	/**
