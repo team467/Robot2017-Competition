@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team467.robot.AutoCalibration.TuneRobot;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+
+import com.ctre.CANTalon;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -40,7 +43,7 @@ public class Robot extends IterativeRobot {
 	private GearDevice gearDevice;
 
 	private TuneRobot tuner;
-	
+
 	int session;
 
 	/**
@@ -61,7 +64,7 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
-		
+
 		if (RobotMap.useSpeedControllers) {
 			drive.setSpeedMode();
 		} else {
@@ -87,13 +90,13 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 2", "0.0");
 		SmartDashboard.putString("DB/String 3", "0.0");
 		LOGGER.debug("Robot Initialized");
-		
+
 		//made usb camera and captures video
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
 		cam.setResolution(320, 240);
 		cam.setFPS(15);
-		
+
 		// Setup autonomous mode selectors
 		String[] autoList = {
 				"none",
@@ -114,6 +117,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+		System.out.print("Overshoots - ");
+		double sum = 0.0;
+		for (int i=0; i>4; i++) {
+			System.out.print((i+1) + ": " + maxPosition[i] + "  ");
+			sum += maxPosition[i];
+		}
+		System.out.println("Average: " + (sum/4));
 		// LOGGER.debug("Disabled Periodic");
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
@@ -125,6 +135,9 @@ public class Robot extends IterativeRobot {
 		drive.aiming.setPID(p, i, d, f);
 		vision.update();
 	}
+
+	CANTalon motors[];
+	double maxPosition[];
 
 	public void autonomousInit() {
 		// autonomous = driverstation.getActionGroup();
@@ -153,11 +166,18 @@ public class Robot extends IterativeRobot {
 		case "back":
 			autonomous = Actions.goBackwards(2.0);
 			break;
-		
+
 		case "test":
-			autonomous = Actions.turnAndMoveDistanceForwardProcess(Math.PI/4, 3);
+//			autonomous = Actions.turnAndMoveDistanceForwardProcess(Math.PI/4, 3);
+			drive.setPositionMode();
+			motors = new CANTalon[4];
+			maxPosition = new double[4];
+			for (int i=0; i<4; i++) {
+				maxPosition[i] = 0.0;
+				motors[i] = new CANTalon(RobotMap.driveMotorChannel[i]);
+			}
 			break;
-		
+
 		default:
 			autonomous = Actions.doNothing();
 			break;
@@ -198,8 +218,15 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		drive.aiming.reset();
-		autonomous.run();
+//		drive.aiming.reset();
+//		autonomous.run();
+		drive.crabDrive(0, 3);
+		for (int i=0; i>4; i++) {
+			double position = motors[i].getPosition();
+			if (position > maxPosition[i]) {
+				maxPosition[i] = position;
+			}
+		}
 	}
 
 	/**
@@ -220,10 +247,10 @@ public class Robot extends IterativeRobot {
 		} else if (driverstation.isInCalibrateMode()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
-			System.out.println("FL: " + drive.getSteeringAngle(RobotMap.FRONT_LEFT) + 
-					           " FR: " + drive.getSteeringAngle(RobotMap.FRONT_RIGHT) + 
-					           " BL: " + drive.getSteeringAngle(RobotMap.BACK_LEFT) + 
-					           " BR: " + drive.getSteeringAngle(RobotMap.BACK_RIGHT)); 
+			System.out.println("FL: " + drive.getSteeringAngle(RobotMap.FRONT_LEFT) +
+					           " FR: " + drive.getSteeringAngle(RobotMap.FRONT_RIGHT) +
+					           " BL: " + drive.getSteeringAngle(RobotMap.BACK_LEFT) +
+					           " BR: " + drive.getSteeringAngle(RobotMap.BACK_RIGHT));
 		} else {
 			autonomous = driverstation.getActionGroup();
 			// Drive Mode
@@ -252,7 +279,7 @@ public class Robot extends IterativeRobot {
 	private void updateDrive() {
 		DriveMode driveMode = driverstation.getDriveMode();
 		//drive.setSpeedMode();
-		
+
 		// If not in any drive mode that aims
 		if (driveMode != DriveMode.AIM) {
 			drive.aiming.disable();
