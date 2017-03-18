@@ -113,18 +113,19 @@ public class Robot extends IterativeRobot {
 
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
+		drive.logClosedLoopErrors();
 		autonomous.terminate();
 	}
 
 	public void disabledPeriodic() {
-		System.out.print("Overshoots - ");
-		double sum = 0.0;
-		for (int i=0; i>4; i++) {
-			System.out.print((i+1) + ": " + maxPosition[i] + "  ");
-			sum += maxPosition[i];
-		}
-		System.out.println("Average: " + (sum/4));
-		// LOGGER.debug("Disabled Periodic");
+//		System.out.print("Overshoots - ");
+//		double sum = 0.0;
+//		for (int i=0; i>4; i++) {
+//			System.out.print((i+1) + ": " + maxPosition[i] + "  ");
+//			sum += maxPosition[i];
+//		}
+//		System.out.println("Average: " + (sum/4));
+		LOGGER.trace("Disabled Periodic");
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
@@ -350,8 +351,10 @@ public class Robot extends IterativeRobot {
 
 		if (driverstation.isGearDown()) {
 			gearDevice.goDown();
+			LOGGER.debug("Gear is going down");
 		} else {
 			gearDevice.goUp();
+			LOGGER.debug("Gear is going up");
 		}
 	}
 

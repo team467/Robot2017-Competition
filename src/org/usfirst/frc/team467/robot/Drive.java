@@ -170,6 +170,12 @@ public class Drive extends RobotDrive {
 		talon.setAllowableClosedLoopErr(0);
 		// Zero the position
 		talon.setPosition(0);
+	public void logClosedLoopErrors() {
+		LOGGER.debug(
+				"closedLoopErr FL=" + frontLeft.getClosedLoopError() +
+				" FR=" + frontRight.getClosedLoopError() +
+				" BL=" + backLeft.getClosedLoopError() +
+				" BR=" + backRight.getClosedLoopError());
 	}
 
 	public TalonControlMode getControlMode() {
@@ -462,6 +468,17 @@ public class Drive extends RobotDrive {
 		}
 
 		fourWheelDrive(frontLeftSpeed, frontRightSpeed, rearLeftSpeed, rearRightSpeed);
+	}
+
+	/**
+	 * Used for correcting the steering sensors, especially if they are out of range.
+	 */
+	public void logSteeringValues() {
+		LOGGER.debug(
+				"FL=" + steering[RobotMap.FRONT_LEFT].getSensorValue() +
+				" FR=" + steering[RobotMap.FRONT_RIGHT].getSensorValue() +
+				" BL=" + steering[RobotMap.BACK_LEFT].getSensorValue() +
+				" BR=" + steering[RobotMap.BACK_RIGHT].getSensorValue());
 	}
 
 	/**

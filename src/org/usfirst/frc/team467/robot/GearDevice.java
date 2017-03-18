@@ -1,8 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Logger;
+
 import edu.wpi.first.wpilibj.Spark;
 
 public class GearDevice {
+	private static final Logger LOGGER = Logger.getLogger(GearDevice.class);
 	private static GearDevice instance = null;
 	private static Spark spark;
 
@@ -19,10 +22,12 @@ public class GearDevice {
 	}
 
 	public void goDown() {
+		LOGGER.debug("Going Down");
 		spark.set(0.5);
 	}
 
 	public void goUp() {
+		LOGGER.debug("Going Up");
 		spark.set(-0.5);
 	}
 
