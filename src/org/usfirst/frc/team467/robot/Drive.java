@@ -156,20 +156,30 @@ public class Drive extends RobotDrive {
 	 */
 	public void setPositionMode() {
 		controlMode = TalonControlMode.Position;
-		initMotorForPositionMode(frontLeft);
-		initMotorForPositionMode(frontRight);
+
 		initMotorForPositionMode(backLeft);
 		initMotorForPositionMode(backRight);
+		
+		// Front follows back
+		initMotorForFollowerMode(backLeft, frontLeft);
+		initMotorForFollowerMode(backRight, frontRight);
 	}
 
 	private void initMotorForPositionMode(CANTalon talon) {
 		talon.changeControlMode(TalonControlMode.Position);
 		talon.setProfile(RobotMap.POSITION_PID_PROFILE);
 		talon.setAllowableClosedLoopErr(RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR);
-		// Try and get to the right position.
-		talon.setAllowableClosedLoopErr(0);
 		// Zero the position
 		talon.setPosition(0);
+		LOGGER.debug("Set " + talon.getDeviceID() + " "+ talon.getControlMode());
+	}
+	
+	private void initMotorForFollowerMode(CANTalon master, CANTalon slave) {
+		slave.changeControlMode(TalonControlMode.Follower);
+		slave.set(master.getDeviceID());
+		LOGGER.debug("Set " + slave.getDeviceID() + " Following " + master.getDeviceID());
+	}
+	
 	public void logClosedLoopErrors() {
 		LOGGER.debug(
 				"closedLoopErr FL=" + frontLeft.getClosedLoopError() +
@@ -211,16 +221,22 @@ public class Drive extends RobotDrive {
 		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
 		}
-
-		frontLeft.set(
-				(RobotMap.isDriveMotorInverted[RobotMap.FRONT_LEFT] ? -1 : 1) * adjustSpeedOrDistance((frontLeftParam), RobotMap.FRONT_LEFT));
-		frontRight.set(
-				(RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(frontRightParam, RobotMap.FRONT_RIGHT));
+		
 		backLeft.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.BACK_LEFT] ? -1 : 1) * adjustSpeedOrDistance(backLeftParam, RobotMap.BACK_LEFT));
 		backRight.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.BACK_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(backRightParam, RobotMap.BACK_RIGHT));
-
+		
+		if (getControlMode() == TalonControlMode.Position) {
+			frontLeft.set(backLeft.getDeviceID());
+			frontRight.set(backRight.getDeviceID());
+		} else {
+			frontLeft.set(
+					(RobotMap.isDriveMotorInverted[RobotMap.FRONT_LEFT] ? -1 : 1) * adjustSpeedOrDistance((frontLeftParam), RobotMap.FRONT_LEFT));
+			frontRight.set(
+					(RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(frontRightParam, RobotMap.FRONT_RIGHT));
+		}
+				
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
 		}
@@ -554,17 +570,6 @@ public class Drive extends RobotDrive {
 	 */
 	public double getNormalizedSteeringAngle(int steeringMotor) {
 		return steering[steeringMotor].getSteeringAngle();
-	}
-
-	/**
-	 * Used for correcting the steering sensors, especially if they are out of range.
-	 */
-	public void logSteeringValues() {
-		LOGGER.debug(
-				"FL=" + steering[RobotMap.FRONT_LEFT].getSensorValue() +
-				" FR=" + steering[RobotMap.FRONT_RIGHT].getSensorValue() +
-				" BL=" + steering[RobotMap.BACK_LEFT].getSensorValue() +
-				" BR=" + steering[RobotMap.BACK_RIGHT].getSensorValue());
 	}
 
 }
