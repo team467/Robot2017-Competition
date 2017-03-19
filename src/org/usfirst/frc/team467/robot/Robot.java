@@ -82,11 +82,10 @@ public class Robot extends IterativeRobot {
 		vision = VisionProcessing.getInstance();
 		autonomous = Actions.doNothing();
 
-		SmartDashboard.putString("DB/String 0", "1.0");
-		SmartDashboard.putString("DB/String 1", "0.0");
-		SmartDashboard.putString("DB/String 2", "0.0");
-		SmartDashboard.putString("DB/String 3", "0.0");
-		LOGGER.debug("Robot Initialized");
+//		SmartDashboard.putString("DB/String 0", ".018");
+//		SmartDashboard.putString("DB/String 1", "0.0");
+//		SmartDashboard.putString("DB/String 2", "0.06");
+//		SmartDashboard.putString("DB/String 3", "0.0");
 
 		//made usb camera and captures video
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
@@ -108,6 +107,7 @@ public class Robot extends IterativeRobot {
 
 		NetworkTable table = NetworkTable.getTable("SmartDashboard");
 		table.putStringArray("Auto List", autoList);
+		LOGGER.debug("Robot Initialized");
 	}
 
 	public void disabledInit() {
@@ -142,6 +142,7 @@ public class Robot extends IterativeRobot {
 	double maxPosition[];
 
 	public void autonomousInit() {
+		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		System.out.println("Autonomous init: " + autoMode);
@@ -194,6 +195,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		vision.update();
 		drive.setDefaultDriveMode();
 		gyro.reset();
 		driverstation.readInputs();
@@ -227,7 +229,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		drive.aiming.reset();
+		vision.update();
+//		drive.aiming.reset();
 		autonomous.run();
 //		drive.crabDrive(0, 3);
 //		for (int i=0; i>4; i++) {
@@ -242,6 +245,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		vision.update();
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyro.pidGet()));
 		drive.aiming.reset();
 
