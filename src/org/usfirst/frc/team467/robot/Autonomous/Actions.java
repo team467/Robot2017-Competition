@@ -250,10 +250,6 @@ public class Actions {
 				});
 	}
 
-	public static boolean isGearHolderDown(){
-		return false;
-	}
-
 	public static ActionGroup aimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
 		mode.addActions(aimAndDisable(angle));
