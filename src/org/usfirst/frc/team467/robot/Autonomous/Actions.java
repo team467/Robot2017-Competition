@@ -233,7 +233,6 @@ public class Actions {
 	public static Action dispenseGearA() {
 		GearDevice gear = GearDevice.getInstance();
 		String actionText = "dispense gear";
-		new ActionGroup.Duration(1.5);
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> gear.goDown());
@@ -243,7 +242,6 @@ public class Actions {
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
 		String actionText = "dispense gear";
-		new ActionGroup.Duration(1.5);
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> {
