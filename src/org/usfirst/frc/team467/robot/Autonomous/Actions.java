@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
 	private static final Logger LOGGER = Logger.getLogger(Actions.class);
-	static Timer timer = new Timer();
-
+	
 	public static final Action nothing(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
@@ -57,9 +56,6 @@ public class Actions {
 	public static final Action goForward(double seconds){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move Forward " + seconds + "seconds";
-		new ActionGroup.Duration(seconds);
-		timer.reset();
-		timer.start();
 		return new Action(actionText,
 				new ActionGroup.Duration(seconds),
 				() -> drive.crabDrive(0, 0.7));
@@ -119,7 +115,7 @@ public class Actions {
 		}
 	}
 
-	public static Action setDriveMode() {
+	public static Action setDefaultDriveMode() {
 		Drive drive = Drive.getInstance();
 		return new Action("Setting drive mode",
 				() -> isNotInPositionMode(),
@@ -160,7 +156,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(setPositionProcess());
 		mode.addAction(turnAndMoveDistance(angle, distance));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
@@ -169,7 +165,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(setPositionProcess());
 		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
@@ -181,7 +177,7 @@ public class Actions {
 		mode.addAction(turnAndMoveDistance((Math.PI / 2), distance));
 		mode.addAction(turnAndMoveDistance(Math.PI, distance));
 		mode.addAction(turnAndMoveDistance((3 * Math.PI / 2), distance));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
@@ -234,34 +230,24 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.3));
 	}
 
-	public static Action dispenseGearA() {
+	public static Action lowerGearDevice() {
 		GearDevice gear = GearDevice.getInstance();
-		String actionText = "dispense gear";
-		new ActionGroup.Duration(1.5);
-		timer.reset();
-		timer.start();
+		String actionText = "lower gear device";
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> gear.goDown());
 	}
 
-	public static Action dispenseGearB(){
+	public static Action lowerGearAndBackAway(){
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
-		String actionText = "dispense gear";
-		new ActionGroup.Duration(1.5);
-		timer.reset();
-		timer.start();
+		String actionText = "lower gear and back away";
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> {
 					gear.goDown();
 					drive.crabDrive(Math.PI, -0.5);
 				});
-	}
-
-	public static boolean isGearHolderDown(){
-		return false;
 	}
 
 	public static ActionGroup aimProcess(double angle) {
@@ -296,8 +282,8 @@ public class Actions {
 		mode.addAction(aim(60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addAction(dispenseGearA());
-		mode.addAction(dispenseGearB());
+		mode.addAction(lowerGearDevice());
+		mode.addAction(lowerGearAndBackAway());
 		return mode;
 	}
 
@@ -307,8 +293,8 @@ public class Actions {
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addAction(dispenseGearA());
-		mode.addAction(dispenseGearB());
+		mode.addAction(lowerGearDevice());
+		mode.addAction(lowerGearAndBackAway());
 		return mode;
 	}
 
@@ -335,7 +321,7 @@ public class Actions {
 		for (int i = 0; i <= 6; i++){
 			mode.addAction(moveDistanceForward(1));
 		}
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 	
@@ -346,7 +332,7 @@ public class Actions {
 		mode.addAction(turnAndMoveDistance(90, 2));
 		mode.addAction(turnAndMoveDistance(180, 2));
 		mode.addAction(turnAndMoveDistance(270, 2));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
