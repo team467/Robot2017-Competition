@@ -209,7 +209,7 @@ public class Drive extends RobotDrive {
 	/**
 	 * Takes the drive out of position mode back into its default drive mode.
 	 */
-	public void setDriveMode() {
+	public void setDefaultDriveMode() {
 		if (RobotMap.useSpeedControllers) {
 			setSpeedMode();
 		} else {

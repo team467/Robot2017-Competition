@@ -65,11 +65,8 @@ public class Robot extends IterativeRobot {
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
 
-		if (RobotMap.useSpeedControllers) {
-			drive.setSpeedMode();
-		} else {
-			drive.setPercentVoltageBusMode();
-		}
+		drive.setDefaultDriveMode();  
+
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
@@ -194,7 +191,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		drive.setSpeedMode();
+		drive.setDefaultDriveMode();
 		gyro.reset();
 		driverstation.readInputs();
 		// autonomous.terminate();
