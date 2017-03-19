@@ -229,25 +229,22 @@ public class Actions {
 					},
 				() -> drive.crabDrive(0, 0.3));
 	}
-
-	public static Action lowerGearDevice() {
-		GearDevice gear = GearDevice.getInstance();
-		String actionText = "lower gear device";
-		return new Action(actionText,
-				new ActionGroup.Duration(1.5),
-				() -> gear.goDown());
-	}
-
-	public static Action lowerGearAndBackAway(){
+	
+	public static ActionGroup dispenceGear(){
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
-		String actionText = "lower gear and back away";
-		return new Action(actionText,
+		
+		ActionGroup mode = new ActionGroup("Dispence Gear");
+		mode.addAction(new Action("lower gear device",
+				new ActionGroup.Duration(1.5),
+				() -> gear.goDown()));
+		mode.addAction(new Action("lower gear and back away",
 				new ActionGroup.Duration(1.5),
 				() -> {
 					gear.goDown();
 					drive.crabDrive(Math.PI, -0.5);
-				});
+				}));
+		return mode;
 	}
 
 	public static ActionGroup aimProcess(double angle) {
@@ -282,8 +279,7 @@ public class Actions {
 		mode.addAction(aim(60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addAction(lowerGearDevice());
-		mode.addAction(lowerGearAndBackAway());
+		mode.addActions(dispenceGear());
 		return mode;
 	}
 
@@ -293,8 +289,7 @@ public class Actions {
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addAction(lowerGearDevice());
-		mode.addAction(lowerGearAndBackAway());
+		mode.addActions(dispenceGear());
 		return mode;
 	}
 
