@@ -23,12 +23,12 @@ public class GearDevice {
 
 	public void goDown() {
 		LOGGER.debug("Going Down");
-		spark.set(0.5);
+		spark.set(1);
 	}
 
 	public void goUp() {
 		LOGGER.debug("Going Up");
-		spark.set(-0.5);
+		spark.set(-1);
 	}
 
 }
