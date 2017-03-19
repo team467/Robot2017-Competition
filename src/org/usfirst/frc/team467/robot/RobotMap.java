@@ -81,7 +81,7 @@ public class RobotMap {
             length = 18.5; // front to back - in inches
             width = 22.5; // side to side in inches
             CamToCenterWidthInches = 0; // TODO Get measurement for other robots
-			CamToCenterLengthInches = 4; // TODO Get measurement for other robots
+			CamToCenterLengthInches = -4; // TODO Get measurement for other robots
             MAX_SPEED = 450.0;
             PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
             PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
