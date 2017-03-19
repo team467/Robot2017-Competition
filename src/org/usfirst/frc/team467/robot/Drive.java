@@ -297,10 +297,10 @@ public class Drive extends RobotDrive {
 	 * @return True when pointing at the angle
 	 */
 	public boolean turnToAngle(double angle) {
+		setDefaultDriveMode();
 		aiming.enable();
 		aiming.setSetpoint(angle); // 4 gyro units per degree
-		System.out.println("Turn to Angle: angle=" + angle);
-		System.out.println("Turn to Angle: output=" + aiming.get());
+		LOGGER.debug("Turn to Angle: aimAngle=" + angle + " currentAngle=" + gyro.pidGet() + " output=" + aiming.get());
 		return aiming.onTarget();
 	}
 

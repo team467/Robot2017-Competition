@@ -114,6 +114,7 @@ public class Robot extends IterativeRobot {
 		LOGGER.debug("Disabled Starting");
 		drive.logClosedLoopErrors();
 		autonomous.terminate();
+		autonomous = Actions.doNothing();
 	}
 
 	public void disabledPeriodic() {
@@ -134,6 +135,7 @@ public class Robot extends IterativeRobot {
 		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		drive.aiming.setPID(p, i, d, f);
 		vision.update();
+//		LOGGER.debug("Gyro Angle=" + gyro.getRobotAngleDegrees());
 	}
 
 	CANTalon motors[];
@@ -195,7 +197,7 @@ public class Robot extends IterativeRobot {
 		drive.setDefaultDriveMode();
 		gyro.reset();
 		driverstation.readInputs();
-		// autonomous.terminate();
+		autonomous.terminate();
 		autonomous = Actions.doNothing();
 		// autonomous = driverstation.getActionGroup();
 	}
