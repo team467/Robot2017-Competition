@@ -119,7 +119,7 @@ public class Actions {
 		}
 	}
 
-	public static Action setDriveMode() {
+	public static Action setDefaultDriveMode() {
 		Drive drive = Drive.getInstance();
 		return new Action("Setting drive mode",
 				() -> isNotInPositionMode(),
@@ -160,7 +160,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(setPositionProcess());
 		mode.addAction(turnAndMoveDistance(angle, distance));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
@@ -169,7 +169,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(setPositionProcess());
 		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
@@ -181,7 +181,7 @@ public class Actions {
 		mode.addAction(turnAndMoveDistance((Math.PI / 2), distance));
 		mode.addAction(turnAndMoveDistance(Math.PI, distance));
 		mode.addAction(turnAndMoveDistance((3 * Math.PI / 2), distance));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
@@ -335,7 +335,7 @@ public class Actions {
 		for (int i = 0; i <= 6; i++){
 			mode.addAction(moveDistanceForward(1));
 		}
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 	
@@ -346,7 +346,7 @@ public class Actions {
 		mode.addAction(turnAndMoveDistance(90, 2));
 		mode.addAction(turnAndMoveDistance(180, 2));
 		mode.addAction(turnAndMoveDistance(270, 2));
-		mode.addAction(setDriveMode());
+		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
 
