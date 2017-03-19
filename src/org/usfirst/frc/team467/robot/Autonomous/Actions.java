@@ -200,7 +200,7 @@ public class Actions {
 	}
 
 	public static ActionGroup aimAndDisable(double angle) {
-		ActionGroup mode = new ActionGroup("Aim");
+		ActionGroup mode = new ActionGroup("Aim and Disable");
 		mode.addAction(aim(angle));
 		mode.addAction(disableAiming());
 		return mode;
@@ -246,12 +246,21 @@ public class Actions {
 				}));
 		return mode;
 	}
+	
+	public static ActionGroup testDispenceGear(){
+		GearDevice gear = GearDevice.getInstance();
+		ActionGroup mode = new ActionGroup("Test Dispence Gear");
+		mode.addActions(dispenceGear());
+		mode.addAction(new Action("Raise gear",
+				() -> false,
+				() -> gear.goUp()));
+		return mode;
+	}
 
 	public static ActionGroup aimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");
 		mode.addActions(aimAndDisable(angle));
 		mode.addAction(driveToGear(40));
-		mode.enable();
 		return mode;
 	}
 

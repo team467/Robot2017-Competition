@@ -86,7 +86,7 @@ public class Drive extends RobotDrive {
 		aiming = new PIDController(aimingPIDs[0], aimingPIDs[1], aimingPIDs[2], aimingPIDs[3], Gyrometer.getInstance(),
 				(output) -> {
 					if (aiming.isEnabled()) {
-						System.out.println("PID Output=" + output);
+						LOGGER.debug("PID Output=" + output);
 						turnDrive(output);
 					}
 				});

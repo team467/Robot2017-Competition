@@ -187,6 +187,7 @@ public class Robot extends IterativeRobot {
 			autonomous = Actions.doNothing();
 			break;
 		}
+		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
 	}
 
@@ -224,15 +225,15 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-//		drive.aiming.reset();
-//		autonomous.run();
-		drive.crabDrive(0, 3);
-		for (int i=0; i>4; i++) {
-			double position = motors[i].getPosition();
-			if (position > maxPosition[i]) {
-				maxPosition[i] = position;
-			}
-		}
+		drive.aiming.reset();
+		autonomous.run();
+//		drive.crabDrive(0, 3);
+//		for (int i=0; i>4; i++) {
+//			double position = motors[i].getPosition();
+//			if (position > maxPosition[i]) {
+//				maxPosition[i] = position;
+//			}
+//		}
 	}
 
 	/**

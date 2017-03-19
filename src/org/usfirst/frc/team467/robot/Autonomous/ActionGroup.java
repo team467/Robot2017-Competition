@@ -71,7 +71,7 @@ public class ActionGroup {
 	}
 
 	public void enable() {
-		LOGGER.debug("Resetting Process");
+		LOGGER.debug("Enabling Process");
 		for (Action act : master) {
 			if (act.condition instanceof Duration) {
 				LOGGER.debug("Resetting Duration");
