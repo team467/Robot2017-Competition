@@ -230,18 +230,18 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.3));
 	}
 
-	public static Action dispenseGearA() {
+	public static Action lowerGearDevice() {
 		GearDevice gear = GearDevice.getInstance();
-		String actionText = "dispense gear";
+		String actionText = "lower gear device";
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> gear.goDown());
 	}
 
-	public static Action dispenseGearB(){
+	public static Action lowerGearAndBackAway(){
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
-		String actionText = "dispense gear";
+		String actionText = "lower gear and back away";
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> {
@@ -286,8 +286,8 @@ public class Actions {
 		mode.addAction(aim(60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addAction(dispenseGearA());
-		mode.addAction(dispenseGearB());
+		mode.addAction(lowerGearDevice());
+		mode.addAction(lowerGearAndBackAway());
 		return mode;
 	}
 
@@ -297,8 +297,8 @@ public class Actions {
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addAction(dispenseGearA());
-		mode.addAction(dispenseGearB());
+		mode.addAction(lowerGearDevice());
+		mode.addAction(lowerGearAndBackAway());
 		return mode;
 	}
 
