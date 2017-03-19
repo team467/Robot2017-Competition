@@ -123,7 +123,7 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		return new Action("Setting drive mode",
 				() -> isNotInPositionMode(),
-				() -> drive.setDriveMode());
+				() -> drive.setDefaultDriveMode());
 	}
 
 	public static Action moveDistanceForward(double distance) {
