@@ -82,8 +82,28 @@ public class ActionGroup {
 		agenda = new LinkedList<>(master);
 		action = null;
 	}
+	
+	static class RunOnce implements Action.Condition, Action.Activity {
+		boolean isDone = false;
+		final Action.Activity activity;
+		
+		public RunOnce(Action.Activity activity) {
+			this.activity = activity;
+		}
+		
+		@Override
+		public boolean isDone() {
+			return isDone;
+		}
 
-	public static class Duration implements Action.Condition {
+		@Override
+		public void doIt() {
+			activity.doIt();
+			isDone = true;
+		}
+	}
+	
+	static class Duration implements Action.Condition {
 		private double durationMS;
 		private double actionStartTimeMS = -1;
 
