@@ -104,7 +104,8 @@ public class Robot extends IterativeRobot {
 				"lg",
 				"rg",
 				"test",
-				"back"
+				"back",
+				"square"
 		};
 
 		NetworkTable table = NetworkTable.getTable("SmartDashboard");
@@ -178,7 +179,9 @@ public class Robot extends IterativeRobot {
 				motors[i] = new CANTalon(RobotMap.driveMotorChannel[i]);
 			}
 			break;
-
+		case "square":
+			autonomous = Actions.newDriveSquareProcess();
+			break;
 		default:
 			autonomous = Actions.doNothing();
 			break;

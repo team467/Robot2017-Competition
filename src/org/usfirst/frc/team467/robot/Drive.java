@@ -123,13 +123,21 @@ public class Drive extends RobotDrive {
 
 	/**
 	 * Sets the motors to drive in speed mode.
+	 * 
+	 * @return Successful or not
 	 */
-	public void setSpeedMode() {
-		controlMode = TalonControlMode.Speed;
-		initMotorForSpeedMode(frontLeft);
-		initMotorForSpeedMode(frontRight);
-		initMotorForSpeedMode(backLeft);
-		initMotorForSpeedMode(backRight);
+	public boolean setSpeedMode() {
+		if (RobotMap.useSpeedControllers) {
+			controlMode = TalonControlMode.Speed;
+			initMotorForSpeedMode(frontLeft);
+			initMotorForSpeedMode(frontRight);
+			initMotorForSpeedMode(backLeft);
+			initMotorForSpeedMode(backRight);
+			return true;
+		} else {
+			LOGGER.debug("No Speed Sensors, No Speed Mode");
+			return false;
+		}
 	}
 
 	private void initMotorForSpeedMode(CANTalon talon) {
@@ -140,8 +148,6 @@ public class Drive extends RobotDrive {
 
 	/**
 	 * Sets the motors to drive in percent of voltage mode. Default for when the speed sensors are not working.
-	 *
-	 * @return true when the percent of voltage mode is set, which is required for autonomous
 	 */
 	public void setPercentVoltageBusMode() {
 		controlMode = TalonControlMode.PercentVbus;
@@ -153,16 +159,24 @@ public class Drive extends RobotDrive {
 
 	/**
 	 * Sets the motors to drive in position mode.
+	 * 
+	 * @return Successful or not
 	 */
-	public void setPositionMode() {
-		controlMode = TalonControlMode.Position;
-
-		initMotorForPositionMode(backLeft);
-		initMotorForPositionMode(backRight);
-		
-		// Front follows back
-		initMotorForFollowerMode(backLeft, frontLeft);
-		initMotorForFollowerMode(backRight, frontRight);
+	public boolean setPositionMode() {
+		if (RobotMap.useSpeedControllers) {
+			controlMode = TalonControlMode.Position;
+	
+			initMotorForPositionMode(backLeft);
+			initMotorForPositionMode(backRight);
+			
+			// Front follows back
+			initMotorForFollowerMode(backLeft, frontLeft);
+			initMotorForFollowerMode(backRight, frontRight);
+			return true;
+		} else {
+			LOGGER.debug("No Speed Sensors, no Position Mode");
+			return false;
+		}
 	}
 
 	private void initMotorForPositionMode(CANTalon talon) {
@@ -193,7 +207,7 @@ public class Drive extends RobotDrive {
 	}
 
 	/**
-	 * Takes the drive out of position mode back into its previous drive mode.
+	 * Takes the drive out of position mode back into its default drive mode.
 	 */
 	public void setDriveMode() {
 		if (RobotMap.useSpeedControllers) {

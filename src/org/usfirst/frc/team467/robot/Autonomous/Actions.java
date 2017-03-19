@@ -2,6 +2,7 @@ package org.usfirst.frc.team467.robot.Autonomous;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.*;
 
 import com.ctre.CANTalon.TalonControlMode;
@@ -9,14 +10,22 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
-
+	private static final Logger LOGGER = Logger.getLogger(Actions.class);
 	static Timer timer = new Timer();
 
-	public static final Action nothingForever(){
+	public static final Action nothing(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> drive.isStopped(),
+				() -> drive.crabDrive(0, 0));
+	}
+	
+	public static final Action nothingForever(){
+		Drive drive = Drive.getInstance();
+		String actionText = "Do Nothing";
+		return new Action(actionText,
+				() -> false,
 				() -> drive.crabDrive(0, 0));
 	}
 
@@ -39,6 +48,13 @@ public class Actions {
 			new ActionGroup.Duration(2),
 			() -> Drive.getInstance().crabDrive(0, -0.5));
 
+	public static Action print(String message) {
+		return new Action(
+				"Print custom message",
+				() -> true, // Done immediately
+				() -> LOGGER.info(message));
+	}
+	
 	public static final Action goForward(double seconds){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move Forward " + seconds + "seconds";
@@ -53,9 +69,6 @@ public class Actions {
 	public static Action goBackward(double seconds){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move backward " + seconds + "seconds";
-		new ActionGroup.Duration(seconds);
-		timer.reset();
-		timer.start();
 		return new Action(actionText,
 				new ActionGroup.Duration(seconds),
 				() -> drive.crabDrive(0, -0.5));
@@ -66,6 +79,17 @@ public class Actions {
 		return new Action("Setting position mode for driving a set distance.",
 				() -> isInPositionMode(),
 				() -> drive.setPositionMode());
+	}
+	
+	public static ActionGroup setPositionProcess() {
+		ActionGroup mode = new ActionGroup("Set Position mode if sensors are present");
+		if (RobotMap.useSpeedControllers) {
+			mode.addAction(setPositionMode());
+		} else {
+			mode.addAction(print("ERROR: NO SPEED SENSORS"));
+			mode.addAction(nothingForever());
+		}
+		return mode;
 	}
 
 	/**
@@ -124,7 +148,7 @@ public class Actions {
 		}
 	}
 
-	public static Action turnAndMoveDistanceForward(double angle, double distance) {
+	public static Action turnAndMoveDistance(double angle, double distance) {
 		Drive drive = Drive.getInstance();
 		String actionText = "Turn to " + angle + " and move " + distance + " feet";
 		return new Action(actionText,
@@ -132,11 +156,11 @@ public class Actions {
 				() -> drive.crabDrive(angle, distance));
 	}
 
-	public static ActionGroup turnAndMoveDistanceForwardProcess(double angle, double distance) {
+	public static ActionGroup turnAndMoveDistanceProcess(double angle, double distance) {
 		String actionGroupText = "Turn to " + angle + " and move " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(setPositionMode());
-		mode.addAction(turnAndMoveDistanceForward(angle, distance));
+		mode.addActions(setPositionProcess());
+		mode.addAction(turnAndMoveDistance(angle, distance));
 		mode.addAction(setDriveMode());
 		return mode;
 	}
@@ -144,7 +168,7 @@ public class Actions {
 	public static ActionGroup moveDistanceForwardProcess(double distance) {
 		String actionGroupText = "Move forward " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(setPositionMode());
+		mode.addActions(setPositionProcess());
 		mode.addAction(moveDistanceForward(distance));
 		mode.addAction(setDriveMode());
 		return mode;
@@ -153,11 +177,11 @@ public class Actions {
 	public static ActionGroup moveInSquareTest(double distance) {
 		String actionGroupText = "Move in " + distance + " foot square";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(setPositionMode());
-		mode.addAction(turnAndMoveDistanceForward(0, distance));
-		mode.addAction(turnAndMoveDistanceForward((Math.PI / 2), distance));
-		mode.addAction(turnAndMoveDistanceForward(Math.PI, distance));
-		mode.addAction(turnAndMoveDistanceForward((3 * Math.PI / 2), distance));
+		mode.addActions(setPositionProcess());
+		mode.addAction(turnAndMoveDistance(0, distance));
+		mode.addAction(turnAndMoveDistance((Math.PI / 2), distance));
+		mode.addAction(turnAndMoveDistance(Math.PI, distance));
+		mode.addAction(turnAndMoveDistance((3 * Math.PI / 2), distance));
 		mode.addAction(setDriveMode());
 		return mode;
 	}
@@ -263,7 +287,7 @@ public class Actions {
 
 	public static ActionGroup doNothing(){
 		ActionGroup mode = new ActionGroup("none");
-		mode.addAction(nothingForever());
+		mode.addAction(nothing());
 		return mode;
 	}
 
@@ -303,6 +327,27 @@ public class Actions {
 		mode.addAction(goBackward(1.3));
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
+		return mode;
+	}
+	
+	public static ActionGroup newDriveDistanceForwardSubdivided() {
+		ActionGroup mode = new ActionGroup("Drive 6 feet in 1 foot intervals");
+		mode.addActions(setPositionProcess());
+		for (int i = 0; i <= 6; i++){
+			mode.addAction(moveDistanceForward(1));
+		}
+		mode.addAction(setDriveMode());
+		return mode;
+	}
+	
+	public static ActionGroup newDriveSquareProcess() {
+		ActionGroup mode = new ActionGroup("Drive in a 2x2 square clockwise from bottom left");
+		mode.addActions(setPositionProcess());
+		mode.addAction(turnAndMoveDistance(0, 2));
+		mode.addAction(turnAndMoveDistance(90, 2));
+		mode.addAction(turnAndMoveDistance(180, 2));
+		mode.addAction(turnAndMoveDistance(270, 2));
+		mode.addAction(setDriveMode());
 		return mode;
 	}
 
