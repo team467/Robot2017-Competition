@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
 	private static final Logger LOGGER = Logger.getLogger(Actions.class);
-	static Timer timer = new Timer();
-
+	
 	public static final Action nothing(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
@@ -57,9 +56,6 @@ public class Actions {
 	public static final Action goForward(double seconds){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move Forward " + seconds + "seconds";
-		new ActionGroup.Duration(seconds);
-		timer.reset();
-		timer.start();
 		return new Action(actionText,
 				new ActionGroup.Duration(seconds),
 				() -> drive.crabDrive(0, 0.7));
@@ -238,8 +234,6 @@ public class Actions {
 		GearDevice gear = GearDevice.getInstance();
 		String actionText = "dispense gear";
 		new ActionGroup.Duration(1.5);
-		timer.reset();
-		timer.start();
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> gear.goDown());
@@ -250,8 +244,6 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		String actionText = "dispense gear";
 		new ActionGroup.Duration(1.5);
-		timer.reset();
-		timer.start();
 		return new Action(actionText,
 				new ActionGroup.Duration(1.5),
 				() -> {
