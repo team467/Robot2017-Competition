@@ -7,6 +7,7 @@ import org.usfirst.frc.team467.robot.*;
 
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
@@ -200,7 +201,9 @@ public class Actions {
 	}
 
 	public static ActionGroup aimAndDisable(double angle) {
+		PIDController aiming = Drive.getInstance().aiming;
 		ActionGroup mode = new ActionGroup("Aim and Disable");
+		mode.addAction(print("p=" + aiming.getP() + " i=" + aiming.getI() + " d=" + aiming.getD()));
 		mode.addAction(aim(angle));
 		mode.addAction(disableAiming());
 		return mode;
