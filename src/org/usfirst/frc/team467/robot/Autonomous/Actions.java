@@ -76,7 +76,7 @@ public class Actions {
 	public static Action setPositionMode() {
 		Drive drive = Drive.getInstance();
 		return new Action("Setting position mode for driving a set distance.",
-				() -> isInPositionMode(),
+				() -> isInPositionMode(), // TODO Make Run Once
 				() -> drive.setPositionMode());
 	}
 	

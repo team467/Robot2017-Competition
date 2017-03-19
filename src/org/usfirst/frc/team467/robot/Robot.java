@@ -105,6 +105,7 @@ public class Robot extends IterativeRobot {
 				"rg",
 				"test",
 				"back",
+				"aim",
 				"square"
 		};
 
@@ -181,6 +182,9 @@ public class Robot extends IterativeRobot {
 			break;
 		case "square":
 			autonomous = Actions.newDriveSquareProcess();
+			break;
+		case "aim":
+			autonomous = Actions.aimAndDisable(vision.getTargetAngle());
 			break;
 		default:
 			autonomous = Actions.doNothing();
