@@ -51,7 +51,7 @@ public class Actions {
 	public static Action print(String message) {
 		return new Action(
 				"Print custom message",
-				() -> ActionGroup.RunOnce(() -> LOGGER.info(message)));
+				new ActionGroup.RunOnce(() -> LOGGER.info(message)));
 	}
 	
 	public static final Action goForward(double seconds){
