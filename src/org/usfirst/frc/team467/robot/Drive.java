@@ -86,14 +86,14 @@ public class Drive extends RobotDrive {
 		aiming = new PIDController(aimingPIDs[0], aimingPIDs[1], aimingPIDs[2], aimingPIDs[3], Gyrometer.getInstance(),
 				(output) -> {
 					if (aiming.isEnabled()) {
-						LOGGER.debug("PID Output=" + output);
+						LOGGER.debug("PID Output=" + output + " error=" + aiming.getError());
 						turnDrive(output);
 					}
 				});
 		aiming.setInputRange(0, 360); // 4 Gyro units per degree
 		aiming.setContinuous(); // 0º and 360º are the same point
 		aiming.setOutputRange(-1.0, 1.0); // Max Speed in either direction
-		aiming.setAbsoluteTolerance(1.0); // 1 degree tolerance
+		aiming.setAbsoluteTolerance(5.0); // 1 degree tolerance
 	}
 
 	private void initMotor(CANTalon talon) {
@@ -297,9 +297,8 @@ public class Drive extends RobotDrive {
 	 * @return True when pointing at the angle
 	 */
 	public boolean turnToAngle(double angle) {
-		setDefaultDriveMode();
 		aiming.enable();
-		aiming.setSetpoint(angle); // 4 gyro units per degree
+		aiming.setSetpoint(angle);
 		LOGGER.debug("Turn to Angle: aimAngle=" + angle + " currentAngle=" + gyro.pidGet() + " output=" + aiming.get());
 		return aiming.onTarget();
 	}
