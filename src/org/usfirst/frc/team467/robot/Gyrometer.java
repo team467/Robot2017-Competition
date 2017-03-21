@@ -106,7 +106,7 @@ public class Gyrometer implements PIDSource {
 	 * @return the gyro angle
 	 */
 	public double getAngleXRadians() {
-		return -imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
+		return imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
 	}
 
 	/**
