@@ -188,7 +188,7 @@ public class Robot extends IterativeRobot {
 			autonomous = Actions.aimAndDisable(vision.getTargetAngle());
 			break;
 		case "gear":
-			autonomous = Actions.approachDispenceBackAway();
+			autonomous = Actions.approachDispenseBackAway();
 			break;
 		default:
 			autonomous = Actions.doNothing();

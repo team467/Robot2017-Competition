@@ -233,11 +233,11 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.3));
 	}
 	
-	public static ActionGroup dispenceGear(){
+	public static ActionGroup dispenseGear(){
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
 		
-		ActionGroup mode = new ActionGroup("Dispence Gear");
+		ActionGroup mode = new ActionGroup("Dispense Gear");
 		mode.addAction(new Action("lower gear and back away",
 				new ActionGroup.Duration(0.5),
 				() -> {
@@ -247,21 +247,21 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup raiseDispenceGear(){
+	public static ActionGroup raiseDispenseGear(){
 		GearDevice gear = GearDevice.getInstance();
-		ActionGroup mode = new ActionGroup("Test Dispence Gear");
-		mode.addActions(dispenceGear());
+		ActionGroup mode = new ActionGroup("Raise and Dispense Gear");
+		mode.addActions(dispenseGear());
 		mode.addAction(new Action("Raise gear",
 				() -> false,
 				() -> gear.goUp()));
 		return mode;
 	}
 	
-	public static ActionGroup approachDispenceBackAway() {
+	public static ActionGroup approachDispenseBackAway() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
 		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
-		mode.addActions(raiseDispenceGear());
+		mode.addActions(raiseDispenseGear());
 		return mode;
 	}
 
@@ -296,7 +296,7 @@ public class Actions {
 		mode.addAction(aim(60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addActions(dispenceGear());
+		mode.addActions(dispenseGear());
 		return mode;
 	}
 
@@ -306,7 +306,7 @@ public class Actions {
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
 		mode.addAction(goForward(1.0));
-		mode.addActions(dispenceGear());
+		mode.addActions(dispenseGear());
 		return mode;
 	}
 
