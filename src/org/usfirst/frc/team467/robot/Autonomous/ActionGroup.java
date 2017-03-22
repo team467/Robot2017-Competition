@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
+import org.usfirst.frc.team467.robot.RobotMap;
 
 /**
  * Runs through a set of actions. <br>
@@ -85,7 +86,7 @@ public class ActionGroup {
 		action = null;
 	}
 	
-	static class RunOnce implements Action.Condition, Action.Activity {
+	static class RunOnce implements Action.Combined {
 		boolean isDone = false;
 		final Action.Activity activity;
 		
@@ -129,6 +130,36 @@ public class ActionGroup {
 		public void reset() {
 			actionStartTimeMS = -1;
 		}
+	}
+	
+	static class ReachDistance implements Action.Condition {
+		private double distance = 0.0;
+		private double currentPosition = 0.0;
+		private double lastPosition = 0.0;
+		private double increment = 0.0;
+		private Drive drive = Drive.getInstance();
+		public ReachDistance(double distance) {
+			this.distance = distance;
+		}
+
+		@Override
+		public boolean isDone() {
+			lastPosition = currentPosition;
+			currentPosition = drive.absoluteDistanceMoved();
+			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
+			if (currentPosition > 0.0 && lastPosition == currentPosition) {
+				increment++;
+			}
+			if (increment >= 5) {
+				return true;
+			} else if (currentPosition >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
+				LOGGER.debug("Finished moving");
+				return true;
+			} else {
+				LOGGER.debug("Still moving");
+				return false;
+			}
+		}		
 	}
 
 	public String getName() {

@@ -102,7 +102,8 @@ public class Robot extends IterativeRobot {
 				"test",
 				"back",
 				"aim",
-				"square"
+				"square",
+				"gear"
 		};
 
 		NetworkTable table = NetworkTable.getTable("SmartDashboard");
@@ -185,6 +186,9 @@ public class Robot extends IterativeRobot {
 			break;
 		case "aim":
 			autonomous = Actions.aimAndDisable(vision.getTargetAngle());
+			break;
+		case "gear":
+			autonomous = Actions.approachDispenceBackAway();
 			break;
 		default:
 			autonomous = Actions.doNothing();

@@ -127,19 +127,19 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
-				() -> moveDistanceComplete(distance),
+				new ActionGroup.ReachDistance(distance),
 				() -> drive.crabDrive(0, distance));
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
 		Drive drive = Drive.getInstance();
 		double distanceMoved = drive.absoluteDistanceMoved();
-		System.out.println("Distances - Target: " + Math.abs(distance) + " Moved: " + distanceMoved);
+		LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + distanceMoved);
 		if (distanceMoved >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
-			System.out.println("Finished moving");
+			LOGGER.debug("Finished moving");
 			return true;
 		} else {
-			System.out.println("Still moving");
+			LOGGER.debug("Still moving");
 			return false;
 		}
 	}
@@ -238,25 +238,30 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		
 		ActionGroup mode = new ActionGroup("Dispence Gear");
-		mode.addAction(new Action("lower gear device",
-				new ActionGroup.Duration(1.5),
-				() -> gear.goDown()));
 		mode.addAction(new Action("lower gear and back away",
-				new ActionGroup.Duration(1.5),
+				new ActionGroup.Duration(0.5),
 				() -> {
 					gear.goDown();
-					drive.crabDrive(Math.PI, -0.5);
+					drive.crabDrive(Math.PI, 0.5);
 				}));
 		return mode;
 	}
 	
-	public static ActionGroup testDispenceGear(){
+	public static ActionGroup raiseDispenceGear(){
 		GearDevice gear = GearDevice.getInstance();
 		ActionGroup mode = new ActionGroup("Test Dispence Gear");
 		mode.addActions(dispenceGear());
 		mode.addAction(new Action("Raise gear",
 				() -> false,
 				() -> gear.goUp()));
+		return mode;
+	}
+	
+	public static ActionGroup approachDispenceBackAway() {
+		VisionProcessing vision = VisionProcessing.getInstance();
+		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
+		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
+		mode.addActions(raiseDispenceGear());
 		return mode;
 	}
 

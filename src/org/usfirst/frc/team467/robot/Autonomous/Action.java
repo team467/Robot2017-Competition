@@ -11,10 +11,10 @@ public class Action {
 		this.activity = activity;
 	}
 	
-	public Action(String description, ActionGroup.RunOnce runOnce) {
+	public Action(String description, Combined combined) {
 		this.description = description;
-		this.condition = runOnce;
-		this.activity = runOnce;
+		this.condition = combined;
+		this.activity = combined;
 	}
 
 	public void run() {
@@ -40,6 +40,8 @@ public class Action {
 	public static interface Activity {
 		public void doIt();
 	}
+	
+	public static interface Combined extends Condition, Activity {} // Special type that contains both
 
 	@Override
 	public String toString() {
