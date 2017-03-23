@@ -33,7 +33,7 @@ public class Drive extends RobotDrive {
 	// Gyroscope
 	private Gyrometer gyro;
 
-	private double[] aimingPIDs = { .018, 0.0, 0.06, 0.0 };
+	private double[] aimingPIDs = { .017, 0.0, 0.06, 0.0 };
 	public PIDController aiming;
 
 	// Steering objects
@@ -90,7 +90,7 @@ public class Drive extends RobotDrive {
 						turnDrive(output);
 					}
 				});
-		aiming.setInputRange(0, 360); // 4 Gyro units per degree
+		aiming.setInputRange(-180, 180); // 4 Gyro units per degree
 		aiming.setContinuous(); // 0º and 360º are the same point
 		aiming.setOutputRange(-1.0, 1.0); // Max Speed in either direction
 		aiming.setAbsoluteTolerance(5.0); // 1 degree tolerance

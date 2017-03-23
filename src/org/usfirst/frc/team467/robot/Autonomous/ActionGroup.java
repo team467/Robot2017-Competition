@@ -149,6 +149,8 @@ public class ActionGroup {
 			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
 			if (currentPosition > 0.0 && lastPosition == currentPosition) {
 				increment++;
+			} else {
+				increment = 0;
 			}
 			if (increment >= 5) {
 				return true;
