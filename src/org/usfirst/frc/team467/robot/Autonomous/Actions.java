@@ -260,6 +260,7 @@ public class Actions {
 	public static ActionGroup approachDispenseBackAway() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
+		mode.addActions(Actions.aimAndDisable(vision.getTargetAngle()));
 		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
 		mode.addActions(raiseDispenseGear());
 		return mode;

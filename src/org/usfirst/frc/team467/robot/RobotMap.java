@@ -169,7 +169,7 @@ public class RobotMap {
 	 * If the available voltage is below the nominal and a value about that is
 	 * requested, the output will be 100%.
 	 */
-	public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
+	public static final double NOMINAL_BATTERY_VOLTAGE = 8.0;
 
 	// The circumference of the wheels for use in determining distance in
 	// position mode
