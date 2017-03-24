@@ -233,7 +233,7 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.3));
 	}
 	
-	public static ActionGroup dispenceGear(){
+	public static ActionGroup dispenseGear(){
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
 		
@@ -250,14 +250,14 @@ public class Actions {
 	public static ActionGroup raiseDispenceGear(){
 		GearDevice gear = GearDevice.getInstance();
 		ActionGroup mode = new ActionGroup("Test Dispence Gear");
-		mode.addActions(dispenceGear());
+		mode.addActions(dispenseGear());
 		mode.addAction(new Action("Raise gear",
 				() -> false,
 				() -> gear.goUp()));
 		return mode;
 	}
 	
-	public static ActionGroup approachDispenceBackAway() {
+	public static ActionGroup approachDispenseBackAway() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
 		mode.addActions(Actions.aimAndDisable(vision.getTargetAngle()));
@@ -293,21 +293,33 @@ public class Actions {
 
 	public static ActionGroup dropGearFromLeft(){
 		ActionGroup mode = new ActionGroup("gear");
-		mode.addAction(goForward(0.9));
+		mode.addActions(moveDistanceForwardProcess(7.3042));
 		mode.addAction(aim(60));
 		mode.addAction(disableAiming());
-		mode.addAction(goForward(1.0));
-		mode.addActions(dispenceGear());
+		//at this point, Nathan's aim code should take over
+		mode.addActions(moveDistanceForwardProcess(1.4583));
+		mode.addActions(dispenseGear());
+		return mode;
+	}
+	
+	public static ActionGroup dropGearFromCenter(){
+		ActionGroup mode = new ActionGroup("gear");
+		mode.addActions(moveDistanceForwardProcess(7.3042));
+		mode.addAction(aim(0));
+		//at this point, Nathan's aim code should take over
+		mode.addAction(disableAiming());
+		mode.addActions(dispenseGear());
 		return mode;
 	}
 
 	public static ActionGroup dropGearFromRight(){
 		ActionGroup mode = new ActionGroup("gear");
-		mode.addAction(goForward(0.9));
+		mode.addActions(moveDistanceForwardProcess(7.3042));
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
-		mode.addAction(goForward(1.0));
-		mode.addActions(dispenceGear());
+		//at this point, Nathan's aim code should take over
+		mode.addActions(moveDistanceForwardProcess(1.4583));
+		mode.addActions(dispenseGear());
 		return mode;
 	}
 
