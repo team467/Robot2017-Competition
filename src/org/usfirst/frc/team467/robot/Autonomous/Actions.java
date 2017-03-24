@@ -181,12 +181,12 @@ public class Actions {
 		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
-
+	
 	public static Action aim(double angle) {
 		Drive drive = Drive.getInstance();
 		Action aim =  new Action(
 				"Aim",
-				() -> drive.aiming.onTarget(),
+				new ActionGroup.OnTarget(5),
 				() -> drive.turnToAngle(angle));
 		return aim;
 	}
@@ -205,6 +205,16 @@ public class Actions {
 		ActionGroup mode = new ActionGroup("Aim and Disable");
 		mode.addAction(print("p=" + aiming.getP() + " i=" + aiming.getI() + " d=" + aiming.getD()));
 		mode.addAction(aim(angle));
+		mode.addAction(disableAiming());
+		return mode;
+	}
+	
+	public static ActionGroup aimAndDisableVision() {
+		PIDController aiming = Drive.getInstance().aiming;
+		ActionGroup mode = new ActionGroup("Aim and Disable Vision");
+		mode.addAction(new Action("Aim with Vision",
+				new ActionGroup.OnTarget(5),
+				new ActionGroup.AimVision()));
 		mode.addAction(disableAiming());
 		return mode;
 	}
@@ -260,7 +270,9 @@ public class Actions {
 	public static ActionGroup approachDispenseBackAway() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
-		mode.addActions(Actions.aimAndDisable(vision.getTargetAngle()));
+		mode.addActions(moveDistanceForwardProcess(4));
+		mode.addActions(Actions.aimAndDisable(45 + Gyrometer.getInstance().pidGet()));
+		mode.addActions(Actions.aimAndDisableVision());
 		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
 		mode.addActions(raiseDispenseGear());
 		return mode;

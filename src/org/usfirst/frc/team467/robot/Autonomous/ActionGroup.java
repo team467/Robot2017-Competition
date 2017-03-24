@@ -7,6 +7,9 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.VisionProcessing;
+
+import edu.wpi.first.wpilibj.PIDController;
 
 /**
  * Runs through a set of actions. <br>
@@ -136,7 +139,7 @@ public class ActionGroup {
 		private double distance = 0.0;
 		private double currentPosition = 0.0;
 		private double lastPosition = 0.0;
-		private double increment = 0.0;
+		private int increment = 0;
 		private Drive drive = Drive.getInstance();
 		public ReachDistance(double distance) {
 			this.distance = distance;
@@ -162,6 +165,39 @@ public class ActionGroup {
 				return false;
 			}
 		}		
+	}
+	
+	static class OnTarget implements Action.Condition {
+		private final int numSamples;
+		private int increment = 0;
+		private final PIDController aiming = Drive.getInstance().aiming;
+		
+		public OnTarget(int numSamples) {
+			this.numSamples = numSamples;
+		}
+		
+		@Override
+		public boolean isDone() {
+			if (aiming.onTarget()) {
+				increment++;
+			} else {
+				increment = 0;
+			}
+			return increment >= numSamples;
+		}
+		
+	}
+	
+	static class AimVision implements Action.Activity {
+		private double targetAngle = 999; // Initialization bogus value
+		private Drive drive = Drive.getInstance();
+		@Override
+		public void doIt() {
+			if (targetAngle == 999) {
+				targetAngle = VisionProcessing.getInstance().getTargetAngle();
+			}
+			drive.turnToAngle(targetAngle);
+		}
 	}
 
 	public String getName() {
