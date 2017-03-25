@@ -69,6 +69,7 @@ public class RobotMap {
 			speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
 			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
 			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
+			GEAR_CLIMBER_PDP_CHANNEL = 9;
 			break;
 
 		case MISTAKE:
@@ -93,6 +94,7 @@ public class RobotMap {
             speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
             speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
             speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
+            GEAR_CLIMBER_PDP_CHANNEL = 11;
             break;
 		default:
 			System.out.println("Robot ID not defined");
@@ -137,6 +139,10 @@ public class RobotMap {
 	public static double width;
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;
+	
+	
+	//PDP channels
+	public static int GEAR_CLIMBER_PDP_CHANNEL;
 
 	// Game pieces motor channels
 

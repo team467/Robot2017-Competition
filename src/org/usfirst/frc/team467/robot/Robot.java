@@ -199,7 +199,6 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		vision.update();
 		drive.setDefaultDriveMode();
-		gyro.reset();
 		driverstation.readInputs();
 		autonomous.terminate();
 		autonomous = Actions.doNothing();
