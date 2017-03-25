@@ -10,7 +10,7 @@ public class GearDevice {
 	private static GearDevice instance = null;
 	private Spark spark;
 	private PowerDistributionPanel pdp;
-	private final int pdpChannel = 11;
+	private final int pdpChannel = RobotMap.GEAR_CLIMBER_PDP_CHANNEL;
 	private CheckCurrentLimit limitChecker;
 
 	public static GearDevice getInstance() {
