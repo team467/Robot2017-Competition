@@ -97,13 +97,8 @@ public class Robot extends IterativeRobot {
 		String[] autoList = {
 				"none",
 				"go",
-				"lg",
-				"rg",
-				"test",
+				"gear-middle",
 				"back",
-				"aim",
-				"square",
-				"gear"
 		};
 
 		NetworkTable table = NetworkTable.getTable("SmartDashboard");
@@ -171,7 +166,6 @@ public class Robot extends IterativeRobot {
 		case "back":
 			autonomous = Actions.goBackwards(2.0);
 			break;
-
 		case "test":
 //			autonomous = Actions.turnAndMoveDistanceForwardProcess(Math.PI/4, 3);
 			drive.setPositionMode();
@@ -188,8 +182,11 @@ public class Robot extends IterativeRobot {
 		case "aim":
 			autonomous = Actions.aimAndDisable(vision.getTargetAngle());
 			break;
-		case "gear":
-			autonomous = Actions.approachDispenseBackAway();
+		case "gear-middle":
+			autonomous = Actions.middleGear();
+			break;
+		case "position":
+			autonomous = Actions.moveDistanceForwardProcess(6.0);
 			break;
 		default:
 			autonomous = Actions.doNothing();

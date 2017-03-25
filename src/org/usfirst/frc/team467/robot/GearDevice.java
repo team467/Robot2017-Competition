@@ -23,7 +23,7 @@ public class GearDevice {
 	private GearDevice() {
 		spark = new Spark(RobotMap.GEAR_MOTOR);
 		pdp = new PowerDistributionPanel();
-		limitChecker = new CheckCurrentLimit(5, 3.5);
+		limitChecker = new CheckCurrentLimit(5, 2.0);
 	}
 
 	public void goDown() {

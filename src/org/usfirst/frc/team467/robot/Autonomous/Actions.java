@@ -276,6 +276,14 @@ public class Actions {
 		mode.addActions(raiseDispenseGear());
 		return mode;
 	}
+	
+	public static ActionGroup middleGear() {
+		VisionProcessing vision = VisionProcessing.getInstance();
+		ActionGroup mode = new ActionGroup("Middle Gear");
+		mode.addActions(moveDistanceForwardProcess(vision.getDistance()));
+		mode.addActions(raiseDispenseGear());
+		return mode;
+	}
 
 	public static ActionGroup aimProcess(double angle) {
 		ActionGroup mode = new ActionGroup("Aim");

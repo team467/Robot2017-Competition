@@ -145,6 +145,7 @@ public class Drive extends RobotDrive {
 		talon.changeControlMode(TalonControlMode.Speed);
 		talon.setProfile(RobotMap.VELOCITY_PID_PROFILE);
 		talon.setAllowableClosedLoopErr(RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR);
+		talon.setNominalClosedLoopVoltage(12);
 	}
 
 	/**
@@ -184,6 +185,7 @@ public class Drive extends RobotDrive {
 		talon.changeControlMode(TalonControlMode.Position);
 		talon.setProfile(RobotMap.POSITION_PID_PROFILE);
 		talon.setAllowableClosedLoopErr(RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR);
+		talon.setNominalClosedLoopVoltage(8);
 		// Zero the position
 		talon.setPosition(0);
 		LOGGER.debug("Set " + talon.getDeviceID() + " "+ talon.getControlMode());
@@ -216,6 +218,7 @@ public class Drive extends RobotDrive {
 		} else {
 			setPercentVoltageBusMode();
 		}
+		
 		stop();
 	}
 
