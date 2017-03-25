@@ -181,12 +181,12 @@ public class Actions {
 		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
-
+	
 	public static Action aim(double angle) {
 		Drive drive = Drive.getInstance();
 		Action aim =  new Action(
 				"Aim",
-				() -> drive.aiming.onTarget(),
+				new ActionGroup.OnTarget(5),
 				() -> drive.turnToAngle(angle));
 		return aim;
 	}
@@ -205,6 +205,15 @@ public class Actions {
 		ActionGroup mode = new ActionGroup("Aim and Disable");
 		mode.addAction(print("p=" + aiming.getP() + " i=" + aiming.getI() + " d=" + aiming.getD()));
 		mode.addAction(aim(angle));
+		mode.addAction(disableAiming());
+		return mode;
+	}
+	
+	public static ActionGroup aimAndDisableVision() {
+		ActionGroup mode = new ActionGroup("Aim and Disable Vision");
+		mode.addAction(new Action("Aim with Vision",
+				new ActionGroup.OnTarget(5),
+				new ActionGroup.AimVision()));
 		mode.addAction(disableAiming());
 		return mode;
 	}
@@ -237,7 +246,7 @@ public class Actions {
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
 		
-		ActionGroup mode = new ActionGroup("Dispence Gear");
+		ActionGroup mode = new ActionGroup("Dispense Gear");
 		mode.addAction(new Action("lower gear and back away",
 				new ActionGroup.Duration(0.5),
 				() -> {
@@ -247,9 +256,9 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup raiseDispenceGear(){
+	public static ActionGroup raiseDispenseGear(){
 		GearDevice gear = GearDevice.getInstance();
-		ActionGroup mode = new ActionGroup("Test Dispence Gear");
+		ActionGroup mode = new ActionGroup("Raise and Dispense Gear");
 		mode.addActions(dispenseGear());
 		mode.addAction(new Action("Raise gear",
 				() -> false,
@@ -260,9 +269,11 @@ public class Actions {
 	public static ActionGroup approachDispenseBackAway() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
-		mode.addActions(Actions.aimAndDisable(vision.getTargetAngle()));
+		mode.addActions(moveDistanceForwardProcess(4));
+		mode.addActions(Actions.aimAndDisable(Gyrometer.getInstance().pidGet() + 45)); // 45º right of current heading
+		mode.addActions(Actions.aimAndDisableVision());
 		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
-		mode.addActions(raiseDispenceGear());
+		mode.addActions(raiseDispenseGear());
 		return mode;
 	}
 
@@ -293,32 +304,20 @@ public class Actions {
 
 	public static ActionGroup dropGearFromLeft(){
 		ActionGroup mode = new ActionGroup("gear");
-		mode.addActions(moveDistanceForwardProcess(7.3042));
+		mode.addAction(goForward(0.9));
 		mode.addAction(aim(60));
 		mode.addAction(disableAiming());
-		//at this point, Nathan's aim code should take over
-		mode.addActions(moveDistanceForwardProcess(1.4583));
-		mode.addActions(dispenseGear());
-		return mode;
-	}
-	
-	public static ActionGroup dropGearFromCenter(){
-		ActionGroup mode = new ActionGroup("gear");
-		mode.addActions(moveDistanceForwardProcess(7.3042));
-		mode.addAction(aim(0));
-		//at this point, Nathan's aim code should take over
-		mode.addAction(disableAiming());
+		mode.addAction(goForward(1.0));
 		mode.addActions(dispenseGear());
 		return mode;
 	}
 
 	public static ActionGroup dropGearFromRight(){
 		ActionGroup mode = new ActionGroup("gear");
-		mode.addActions(moveDistanceForwardProcess(7.3042));
+		mode.addAction(goForward(0.9));
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
-		//at this point, Nathan's aim code should take over
-		mode.addActions(moveDistanceForwardProcess(1.4583));
+		mode.addAction(goForward(1.0));
 		mode.addActions(dispenseGear());
 		return mode;
 	}

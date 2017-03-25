@@ -49,7 +49,7 @@ public class RobotMap {
 
 		case MIRACLE:
 			robotID = RobotID.MIRACLE;
-            useSpeedControllers = false;
+            useSpeedControllers = true;
 			steeringMotorChannel = new int[] { 2, 1, 3, 0 };
 			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
 					Steering.PWMType.TALON, Steering.PWMType.TALON };
@@ -58,10 +58,12 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			length = 18.5; // front to back - in inches
 			width = 22.5; // side to side in inches
+			CamToCenterWidthInches = 8.5; // TODO Get measurement for other robots
+			CamToCenterLengthInches = 12.5; // TODO Get measurement for other robots
 			MAX_SPEED = 450.0;
 			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
-			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
-			PIDvalues[BACK_LEFT] = new PID(0.013, 0.0, 0.0);
+			PIDvalues[FRONT_RIGHT] = new PID(0.013, 0.0, 0.0);
+			PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[BACK_RIGHT] = new PID(0.015, 0.0, 0.0);;
 			speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
 			speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
