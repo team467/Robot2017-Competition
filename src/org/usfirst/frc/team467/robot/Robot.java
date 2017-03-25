@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MISTAKE);
+		RobotMap.init(RobotMap.RobotID.MIRACLE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -137,6 +137,7 @@ public class Robot extends IterativeRobot {
 //		drive.aiming.setPID(p, i, d, f);
 		vision.update();
 //		LOGGER.debug("Gyro Angle=" + gyro.getRobotAngleDegrees());
+//		printSteeringSensors();
 	}
 
 	CANTalon motors[];
@@ -264,10 +265,7 @@ public class Robot extends IterativeRobot {
 		} else if (driverstation.isInCalibrateMode()) {
 			// Calibrate Mode
 			Calibration.updateCalibrate();
-			System.out.println("FL: " + drive.getSteeringAngle(RobotMap.FRONT_LEFT) +
-					           " FR: " + drive.getSteeringAngle(RobotMap.FRONT_RIGHT) +
-					           " BL: " + drive.getSteeringAngle(RobotMap.BACK_LEFT) +
-					           " BR: " + drive.getSteeringAngle(RobotMap.BACK_RIGHT));
+			printSteeringSensors();
 		} else {
 			autonomous = driverstation.getActionGroup();
 			// Drive Mode
@@ -371,6 +369,13 @@ public class Robot extends IterativeRobot {
 			gearDevice.goUp();
 			LOGGER.debug("Gear is going up");
 		}
+	}
+
+	public void printSteeringSensors() {
+		LOGGER.debug("FL: " + drive.getSteeringAngle(RobotMap.FRONT_LEFT) +
+				" FR: " + drive.getSteeringAngle(RobotMap.FRONT_RIGHT) +
+				" BL: " + drive.getSteeringAngle(RobotMap.BACK_LEFT) +
+				" BR: " + drive.getSteeringAngle(RobotMap.BACK_RIGHT));
 	}
 
 }

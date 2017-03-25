@@ -210,7 +210,6 @@ public class Actions {
 	}
 	
 	public static ActionGroup aimAndDisableVision() {
-		PIDController aiming = Drive.getInstance().aiming;
 		ActionGroup mode = new ActionGroup("Aim and Disable Vision");
 		mode.addAction(new Action("Aim with Vision",
 				new ActionGroup.OnTarget(5),
@@ -271,7 +270,7 @@ public class Actions {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
 		mode.addActions(moveDistanceForwardProcess(4));
-		mode.addActions(Actions.aimAndDisable(45 + Gyrometer.getInstance().pidGet()));
+		mode.addActions(Actions.aimAndDisable(Gyrometer.getInstance().pidGet() + 45)); // 45º right of current heading
 		mode.addActions(Actions.aimAndDisableVision());
 		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
 		mode.addActions(raiseDispenseGear());

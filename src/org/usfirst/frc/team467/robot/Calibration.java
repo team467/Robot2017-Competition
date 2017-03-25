@@ -4,11 +4,14 @@
  */
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class contains only static variables and functions, and simply acts as a container for all the calibration code.
  */
 public class Calibration {
 	// Creates objects
+	private static final Logger LOGGER = Logger.getLogger(Calibration.class);
 
 	private static Drive drive;
 	private static DataStorage data;
