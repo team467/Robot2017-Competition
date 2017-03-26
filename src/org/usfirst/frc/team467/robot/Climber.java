@@ -36,8 +36,8 @@ public class Climber {
 	
 	// Only climb button because driver station climb button broke
 	public void slow() {
-		motorLeft.set(motorSpeed);
-		motorRight.set(motorSpeed);
+		motorLeft.set(0.7 * motorSpeed);
+		motorRight.set(0.7 * motorSpeed);
 	}
 
 }

@@ -280,8 +280,8 @@ public class Actions {
 	public static ActionGroup middleGear() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Middle Gear");
-		mode.addActions(moveDistanceForwardProcess(vision.getDistance()));
-		mode.addActions(raiseDispenseGear());
+		mode.addActions(moveDistanceForwardProcess(6.44));
+//		mode.addActions(raiseDispenseGear());
 		return mode;
 	}
 

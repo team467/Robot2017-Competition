@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj.Joystick;
 public class ButtonPanel2017 {
 
 	public enum Buttons {
-		VISION_ALIGN_SHOOT(1), 
-		SHOOTER_SHOOT(2), 
-		SHOOTER_FAILSAFE(3), 
+//		VISION_ALIGN_SHOOT(1), 
+//		SHOOTER_SHOOT(2), 
+//		SHOOTER_FAILSAFE(3), 
 		GEAR_DOWN(4), 
 		VISION_ALIGN_GEAR(5), 
-//		CLIMBER_UP(6), 
+		CLIMBER_UP(2), 
 		TOGGLE_SWITCH_UP(7), 
-		CLIMBER_SLOW(8), 
+		CLIMBER_SLOW(3), 
 		TOGGLE_SWITCH_DOWN(9); 
 
 		public final int id;

@@ -142,8 +142,11 @@ public class Robot extends IterativeRobot {
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		System.out.println("Autonomous init: " + autoMode);
+		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
+		case "none":
+			autonomous = Actions.doNothing();
+			break;
 		case "go":
 			autonomous = Actions.goFoward(2.0);
 			break;

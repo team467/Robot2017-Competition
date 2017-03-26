@@ -154,7 +154,7 @@ public class DriverStation2017 {
 	}
 
 	public boolean isClimbing() {
-		return false; // buttonPanel.buttonDown(Buttons.CLIMBER_UP);
+		return buttonPanel.buttonDown(Buttons.CLIMBER_UP);
 	}
 
 	public boolean isClimbingSlow() {
