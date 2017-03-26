@@ -21,6 +21,14 @@ public class Actions {
 				() -> drive.crabDrive(0, 0));
 	}
 	
+	public static Action wait(double duration) {
+		Drive drive = Drive.getInstance();
+		String actionText = "Do Nothing";
+		return new Action(actionText,
+				new ActionGroup.Duration(duration),
+				() -> drive.crabDrive(0, 0));
+	}
+	
 	public static final Action nothingForever(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
@@ -62,12 +70,12 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.7));
 	}
 
-	public static Action goBackward(double seconds){
+	public static Action goBackward(double seconds, double speed){
 		Drive drive = Drive.getInstance();
 		String actionText = "Move backward " + seconds + "seconds";
 		return new Action(actionText,
 				new ActionGroup.Duration(seconds),
-				() -> drive.crabDrive(0, -0.5));
+				() -> drive.crabDrive(0, -speed));
 	}
 
 	public static Action setPositionMode() {
@@ -277,11 +285,20 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup middleGear() {
+	public static ActionGroup middleGearPassive() {
 		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Middle Gear");
 		mode.addActions(moveDistanceForwardProcess(6.44));
-//		mode.addActions(raiseDispenseGear());
+		mode.addAction(wait(3.5));
+		mode.addAction(goBackward(0.5, 0.5));
+		return mode;
+	}
+	
+	public static ActionGroup middleGearActive() {
+		VisionProcessing vision = VisionProcessing.getInstance();
+		ActionGroup mode = new ActionGroup("Middle Gear");
+		mode.addActions(moveDistanceForwardProcess(6.44));
+		mode.addActions(raiseDispenseGear());
 		return mode;
 	}
 
@@ -298,9 +315,9 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup goBackwards(double seconds){
+	public static ActionGroup goBackwards(double seconds, double speed){
 		ActionGroup mode = new ActionGroup("go back");
-		mode.addAction(goBackward(seconds));
+		mode.addAction(goBackward(seconds, speed));
 		return mode;
 	}
 
@@ -333,7 +350,7 @@ public class Actions {
 	public static ActionGroup getIntoGearPositionFromLeft() {
 		ActionGroup mode = new ActionGroup("line up into gear position");
 		mode.addAction(goForward(2.0));
-		mode.addAction(goBackward(1.3));
+		mode.addAction(goBackward(1.3, 0.5));
 //		mode.addAction(aim(60));
 		return mode;
 	}
@@ -341,7 +358,7 @@ public class Actions {
 	public static ActionGroup getIntoGearPositionFromRight() {
 		ActionGroup mode = new ActionGroup("line up into gear position");
 		mode.addAction(goForward(2.0));
-		mode.addAction(goBackward(1.3));
+		mode.addAction(goBackward(1.3, 0.5));
 		mode.addAction(aim(-60));
 		mode.addAction(disableAiming());
 		return mode;
