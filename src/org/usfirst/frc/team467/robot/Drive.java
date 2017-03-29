@@ -291,6 +291,30 @@ public class Drive extends RobotDrive {
 		this.fourWheelSteer(frontLeft.angle, frontRight.angle, backLeft.angle, backRight.angle);
 		this.fourWheelDrive(frontLeft.speed, frontRight.speed, backLeft.speed, backRight.speed);
 	}
+	
+	public void turnDriveAngle(double rads) {
+		// will cause the steering to unwind; on purpose as it is simpler
+		this.fourWheelSteer(TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, TURN_IN_PLACE_ANGLE);
+		//TODO: not sure if I am suppose to call this every time...
+		setPositionMode();
+		
+		/* same as what was in crab
+		 * makes sure that wheels are in correct position before moving
+		 * check how many wheelpods are in place	`*/
+		int numgood = 0;
+		for (int i = 0; i < 4; ++i) {
+			if (steering[i].getAngleDelta() < Math.PI / 6) {
+				numgood++;
+			}
+		}
+		/* if at least 2 wheelpods are in place, proceed as normal*/
+		if (numgood >= 2) {
+			//distance to travel for the wheelpod
+			double rotations = rads * RobotMap.radsToInches;
+			this.fourWheelDrive(rotations, rotations, rotations, rotations);
+		}
+	
+	}
 
 	/**
 	 * Turns to specified angle according to gyro

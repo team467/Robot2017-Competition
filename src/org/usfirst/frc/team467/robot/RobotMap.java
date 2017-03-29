@@ -36,6 +36,7 @@ public class RobotMap {
 			width = 18.5; // side to side in inches
 			CamToCenterWidthInches = 4.5; // TODO Get measurement for other robots
 			CamToCenterLengthInches = 17; // TODO Get measurement for other robots
+			radsToInches = Math.sqrt((length * length) + (width * width)) / 2;
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -60,6 +61,7 @@ public class RobotMap {
 			width = 22.5; // side to side in inches
 			CamToCenterWidthInches = 8.5; // TODO Get measurement for other robots
 			CamToCenterLengthInches = 12.5; // TODO Get measurement for other robots
+			radsToInches = Math.sqrt((length * length) + (width * width)) / 2;
 			MAX_SPEED = 480.0;
 			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(0.013, 0.0, 0.0);
@@ -85,7 +87,8 @@ public class RobotMap {
             width = 22.5; // side to side in inches
             CamToCenterWidthInches = 0; // TODO Get measurement for other robots
 			CamToCenterLengthInches = -4; // TODO Get measurement for other robots
-            MAX_SPEED = 450.0;
+			radsToInches = Math.sqrt((length * length) + (width * width)) / 2;
+			MAX_SPEED = 450.0;
             PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
             PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
             PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
@@ -140,6 +143,8 @@ public class RobotMap {
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;
 	
+	// how many inches to turn to turn X radians
+	public static double radsToInches;
 	
 	//PDP channels
 	public static int GEAR_CLIMBER_PDP_CHANNEL;
