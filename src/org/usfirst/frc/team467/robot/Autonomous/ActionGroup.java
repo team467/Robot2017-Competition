@@ -40,7 +40,7 @@ public class ActionGroup {
 					LOGGER.info("----- Starting action: " + action.description + " -----");
 				} else {
 					// Stop everything forever
-					LOGGER.info("----- Final action completed -----");
+					LOGGER.debug("----- Final action completed -----");
 					action = null;
 					return;
 				}

@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MIRACLE);
+		RobotMap.init(RobotMap.RobotID.MISTAKE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -81,17 +81,18 @@ public class Robot extends IterativeRobot {
 
 		vision = VisionProcessing.getInstance();
 		autonomous = Actions.doNothing();
+	
 
 //		SmartDashboard.putString("DB/String 0", ".018");
 //		SmartDashboard.putString("DB/String 1", "0.0");
 //		SmartDashboard.putString("DB/String 2", "0.06");
 //		SmartDashboard.putString("DB/String 3", "0.0");
 
-		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+//		//made usb camera and captures video
+//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+//		//set resolution and frames per second to match driverstation
+//		cam.setResolution(320, 240);
+//		cam.setFPS(15);
 
 		// Setup autonomous mode selectors
 		String[] autoList = {
@@ -140,6 +141,16 @@ public class Robot extends IterativeRobot {
 	double maxPosition[];
 
 	public void autonomousInit() {
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.setPIDF(p, i, d, f);
+		LOGGER.info("p:" + p + " i:" + i + " d:" + d + " f:" + f);
+		
+		double distance = Double.parseDouble(SmartDashboard.getString("DB/String 5", "0.0"));
+
+
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
@@ -175,9 +186,9 @@ public class Robot extends IterativeRobot {
 			drive.setPositionMode();
 			motors = new CANTalon[4];
 			maxPosition = new double[4];
-			for (int i=0; i<4; i++) {
-				maxPosition[i] = 0.0;
-				motors[i] = new CANTalon(RobotMap.driveMotorChannel[i]);
+			for (int j=0; j<4; j++) {
+				maxPosition[j] = 0.0;
+				motors[j] = new CANTalon(RobotMap.driveMotorChannel[j]);
 			}
 			break;
 		case "square":
@@ -193,7 +204,7 @@ public class Robot extends IterativeRobot {
 			autonomous = Actions.middleGearActive();
 			break;
 		case "position":
-			autonomous = Actions.moveDistanceForwardProcess(6.0);
+			autonomous = Actions.moveDistanceForwardProcess(distance);
 			break;
 		default:
 			autonomous = Actions.doNothing();
