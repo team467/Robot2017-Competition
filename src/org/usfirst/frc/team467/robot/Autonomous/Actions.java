@@ -139,6 +139,15 @@ public class Actions {
 				() -> drive.crabDrive(0, distance));
 	}
 	
+	public static Action turnDistance(double distance) {
+		Drive drive = Drive.getInstance();
+		String actionText = "Turn " + distance + " feet";
+		return new Action(actionText,
+				new ActionGroup.ReachDistance(distance),
+				() -> drive.fourWheelDrive(distance, -distance,
+		                  distance, -distance));
+	}
+	
 	public static Action setTurnInPlace(){
 		Drive drive = Drive.getInstance();
 		String actionText = "set wheels to turn in place";
@@ -155,7 +164,7 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(setTurnInPlace());
 		mode.addActions(setPositionProcess());
-		mode.addAction(moveDistanceForward(feet));
+		mode.addAction(turnDistance(feet));
 		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
