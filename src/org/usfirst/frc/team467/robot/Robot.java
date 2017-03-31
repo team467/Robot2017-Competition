@@ -145,6 +145,8 @@ public class Robot extends IterativeRobot {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
+		case "turn":
+			autonomous = Actions.turnToRadians(Math.PI/2);
 		case "none":
 			autonomous = Actions.doNothing();
 			break;

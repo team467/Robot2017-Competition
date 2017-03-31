@@ -32,11 +32,11 @@ public class RobotMap {
 			steeringSensorChannel = new int[] { 0, 1, 2, 3 };
 			driveMotorChannel = new int[] { 2, 1, 3, 4 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
-			length = 31.5; // front to back - in inches
-			width = 18.5; // side to side in inches
+			WHEEL_BASE_LENGTH = 31.5; // front to back - in inches
+			WHEEL_BASE_WIDTH = 18.5; // side to side in inches
+			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
 			CamToCenterWidthInches = 4.5; // TODO Get measurement for other robots
 			CamToCenterLengthInches = 17; // TODO Get measurement for other robots
-			radsToInches = Math.sqrt((length * length) + (width * width)) / 2;
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -57,11 +57,11 @@ public class RobotMap {
 			steeringSensorChannel = new int[] { 2, 1, 3, 0 };
 			driveMotorChannel = new int[] { 3, 2, 4, 1 };
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
-			length = 18.5; // front to back - in inches
-			width = 22.5; // side to side in inches
+			WHEEL_BASE_LENGTH = 18.5; // front to back - in inches
+			WHEEL_BASE_WIDTH = 22.5; // side to side in inches
+			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
 			CamToCenterWidthInches = 8.5; // TODO Get measurement for other robots
 			CamToCenterLengthInches = 12.5; // TODO Get measurement for other robots
-			radsToInches = Math.sqrt((length * length) + (width * width)) / 2;
 			MAX_SPEED = 480.0;
 			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
 			PIDvalues[FRONT_RIGHT] = new PID(0.013, 0.0, 0.0);
@@ -83,11 +83,11 @@ public class RobotMap {
             steeringSensorChannel = new int[] { 2, 1, 3, 0 };
             driveMotorChannel = new int[] { 3, 2, 4, 1 };
             isDriveMotorInverted = new boolean[] { false, true, false, true };
-            length = 18.5; // front to back - in inches
-            width = 22.5; // side to side in inches
+            WHEEL_BASE_LENGTH = 18.5; // front to back - in inches
+            WHEEL_BASE_WIDTH = 22.5; // side to side in inches
+			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
             CamToCenterWidthInches = 0; // TODO Get measurement for other robots
 			CamToCenterLengthInches = -4; // TODO Get measurement for other robots
-			radsToInches = Math.sqrt((length * length) + (width * width)) / 2;
 			MAX_SPEED = 450.0;
             PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
             PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
@@ -138,13 +138,13 @@ public class RobotMap {
 	public static boolean[] isDriveMotorInverted;
 
 	// Robot Dimensions
-	public static double length;
-	public static double width;
+	public static double WHEEL_BASE_LENGTH;
+	public static double WHEEL_BASE_WIDTH;
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;
 	
 	// how many inches to turn to turn X radians
-	public static double radsToInches;
+	public static double WHEEL_BASE_RADIUS;
 	
 	//PDP channels
 	public static int GEAR_CLIMBER_PDP_CHANNEL;

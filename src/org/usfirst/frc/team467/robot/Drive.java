@@ -44,7 +44,7 @@ public class Drive extends RobotDrive {
 	// Angle to turn at when rotating in place - initialized in constructor
 	// takes the arctan of width over length in radians
 	// Length is the wide side
-	private static final double TURN_IN_PLACE_ANGLE = Math.atan(RobotMap.length / RobotMap.width);
+	private static final double TURN_IN_PLACE_ANGLE = Math.atan(RobotMap.WHEEL_BASE_LENGTH / RobotMap.WHEEL_BASE_WIDTH);
 
 	// Private constructor
 	private Drive(CANTalon frontLeftMotor, CANTalon backLeftMotor, CANTalon frontRightMotor, CANTalon backRightMotor) {
@@ -234,7 +234,7 @@ public class Drive extends RobotDrive {
 	 * @param backRightParam
 	 * 			Speed or Distance value for back right wheel
 	 */
-	private void fourWheelDrive(double frontLeftParam, double frontRightParam, double backLeftParam, double backRightParam) {
+	public void fourWheelDrive(double frontLeftParam, double frontRightParam, double backLeftParam, double backRightParam) {
 		// If any of the motors doesn't exist then exit
 		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
@@ -266,7 +266,7 @@ public class Drive extends RobotDrive {
 	 * @param backLeft
 	 * @param backRight
 	 */
-	private void fourWheelSteer(double frontLeft, double frontRight, double backLeft, double backRight) {
+	public void fourWheelSteer(double frontLeft, double frontRight, double backLeft, double backRight) {
 		// set the angles to steer
 		steering[RobotMap.FRONT_LEFT].setAngle(frontLeft);
 		steering[RobotMap.FRONT_RIGHT].setAngle(frontRight);
@@ -310,10 +310,27 @@ public class Drive extends RobotDrive {
 		/* if at least 2 wheelpods are in place, proceed as normal*/
 		if (numgood >= 2) {
 			//distance to travel for the wheelpod
-			double rotations = rads * RobotMap.radsToInches;
+			double rotations = rads * RobotMap.WHEEL_BASE_RADIUS;
 			this.fourWheelDrive(rotations, rotations, rotations, rotations);
 		}
 	
+	}
+	
+	public void setFourWheelSteer(){
+		this.fourWheelSteer(TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, TURN_IN_PLACE_ANGLE);
+	}
+	
+	public boolean allWheelsTurned(){
+		int numgood = 0;
+		for (int i = 0; i < 4; ++i) {
+			if (steering[i].getAngleDelta() < Math.PI / 6) {
+				numgood++;
+			}
+		}
+		if (numgood >= 2) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

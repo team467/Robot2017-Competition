@@ -138,6 +138,27 @@ public class Actions {
 				new ActionGroup.ReachDistance(distance),
 				() -> drive.crabDrive(0, distance));
 	}
+	
+	public static Action setTurnInPlace(){
+		Drive drive = Drive.getInstance();
+		String actionText = "set wheels to turn in place";
+		return new Action(actionText,
+				() -> drive.allWheelsTurned(),
+				() -> drive.setFourWheelSteer());
+	}
+	
+	//takes in radians
+	public static ActionGroup turnToRadians(double angle){
+		String actionGroupText = "Turn to " + angle + "radians";
+		double inches = angle * RobotMap.WHEEL_BASE_RADIUS;
+		double feet = inches / 12;
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(setTurnInPlace());
+		mode.addActions(setPositionProcess());
+		mode.addAction(moveDistanceForward(feet));
+		mode.addAction(setDefaultDriveMode());
+		return mode;
+	}
 
 	public static boolean moveDistanceComplete(double distance) {
 		Drive drive = Drive.getInstance();
@@ -168,7 +189,7 @@ public class Actions {
 		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
-
+	
 	public static ActionGroup moveDistanceForwardProcess(double distance) {
 		String actionGroupText = "Move forward " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
