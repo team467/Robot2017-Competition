@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 
 		vision = VisionProcessing.getInstance();
 		autonomous = Actions.doNothing();
-
+		
 //		SmartDashboard.putString("DB/String 0", ".018");
 //		SmartDashboard.putString("DB/String 1", "0.0");
 //		SmartDashboard.putString("DB/String 2", "0.06");
@@ -127,12 +127,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
 		
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
-		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
-		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		drive.aiming.setPID(p, i, d, f);
-		
 		vision.update();
 //		LOGGER.debug("Gyro Angle=" + gyro.getRobotAngleDegrees());
 //		printSteeringSensors();
@@ -142,6 +136,14 @@ public class Robot extends IterativeRobot {
 	double maxPosition[];
 
 	public void autonomousInit() {
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1.75"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "450.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.05"));
+//		drive.aiming.setPID(p, i, d, f);
+		drive.setPIDF(p, i, d, f);
+		LOGGER.info("p: " + p + " i: " + i + " d: " + d + " f: " + f);
+
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
@@ -181,9 +183,9 @@ public class Robot extends IterativeRobot {
 			drive.setPositionMode();
 			motors = new CANTalon[4];
 			maxPosition = new double[4];
-			for (int i=0; i<4; i++) {
-				maxPosition[i] = 0.0;
-				motors[i] = new CANTalon(RobotMap.driveMotorChannel[i]);
+			for (int j=0; j<4; j++) {
+				maxPosition[j] = 0.0;
+				motors[j] = new CANTalon(RobotMap.driveMotorChannel[j]);
 			}
 			break;
 		case "square":

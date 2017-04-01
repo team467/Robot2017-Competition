@@ -121,6 +121,15 @@ public class Drive extends RobotDrive {
 		}
 		return instance;
 	}
+	
+	public void setPIDF(double p, double i, double d, double f){
+		frontLeft.setPID(p, i, d, f, 128, 2, 1);
+		backLeft.setPID(p, i, d, f, 128, 2, 1);
+		frontRight.setPID(p, i, d, f, 128, 2, 1);
+		backRight.setPID(p, i, d, f, 128, 2, 1);
+		
+	}
+
 
 	/**
 	 * Sets the motors to drive in speed mode.
@@ -421,7 +430,7 @@ public class Drive extends RobotDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double absoluteDistanceMoved() {
-		System.out.println("Distances: FL: " + frontLeft.getPosition() + " FR: " + frontRight.getPosition()
+		LOGGER.info("Distances: FL: " + frontLeft.getPosition() + " FR: " + frontRight.getPosition()
 		+ " BL: " + backLeft.getPosition() + " BR: " + backRight.getPosition());
 		double rotations =  Math.abs(frontLeft.getPosition());
 		rotations = getMinimum(rotations, frontRight.getPosition());
