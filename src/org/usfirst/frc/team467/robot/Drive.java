@@ -234,7 +234,7 @@ public class Drive extends RobotDrive {
 	 * @param backRightParam
 	 * 			Speed or Distance value for back right wheel
 	 */
-	public void fourWheelDrive(double frontLeftParam, double frontRightParam, double backLeftParam, double backRightParam) {
+	private void fourWheelDrive(double frontLeftParam, double frontRightParam, double backLeftParam, double backRightParam) {
 		// If any of the motors doesn't exist then exit
 		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
@@ -266,7 +266,7 @@ public class Drive extends RobotDrive {
 	 * @param backLeft
 	 * @param backRight
 	 */
-	public void fourWheelSteer(double frontLeft, double frontRight, double backLeft, double backRight) {
+	private void fourWheelSteer(double frontLeft, double frontRight, double backLeft, double backRight) {
 		// set the angles to steer
 		steering[RobotMap.FRONT_LEFT].setAngle(frontLeft);
 		steering[RobotMap.FRONT_RIGHT].setAngle(frontRight);

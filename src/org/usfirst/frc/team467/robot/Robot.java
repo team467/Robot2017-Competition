@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MIRACLE);
+		RobotMap.init(RobotMap.RobotID.MISTAKE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -143,10 +143,12 @@ public class Robot extends IterativeRobot {
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
+//		double angle = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1.5707"));
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
 		case "turn":
-			autonomous = Actions.turnToRadians(Math.PI/2);
+			autonomous = Actions.turnRadians(Math.PI/2);
+			break;
 		case "none":
 			autonomous = Actions.doNothing();
 			break;
