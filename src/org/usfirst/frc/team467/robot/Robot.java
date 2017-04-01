@@ -126,11 +126,13 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-//		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
-//		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-//		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
-//		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-//		drive.aiming.setPID(p, i, d, f);
+		
+		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.0"));
+		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0"));
+		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		drive.aiming.setPID(p, i, d, f);
+		
 		vision.update();
 //		LOGGER.debug("Gyro Angle=" + gyro.getRobotAngleDegrees());
 //		printSteeringSensors();
@@ -147,7 +149,7 @@ public class Robot extends IterativeRobot {
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
 		case "turn":
-			autonomous = Actions.turnRadians(Math.PI/2);
+			autonomous = Actions.turnRadians(Math.PI/6);
 			break;
 		case "none":
 			autonomous = Actions.doNothing();

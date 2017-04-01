@@ -157,9 +157,9 @@ public class Actions {
 	
 	//takes in radians
 	public static ActionGroup turnRadians(double angle){
-		String actionGroupText = "Turn to " + angle + " radians";
 		double inches = angle * RobotMap.WHEEL_BASE_RADIUS;
 		double feet = inches / 12.0;
+		String actionGroupText = "Turn to " + angle + " radians and " + feet + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 //		mode.addAction(setTurnInPlace());
 		mode.addActions(setPositionProcess());
@@ -182,14 +182,27 @@ public class Actions {
 		double distanceMoved = drive.absoluteDistanceMoved();
 		LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + distanceMoved);
 		if (distanceMoved >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
-			LOGGER.debug("Finished moving");
+			LOGGER.info("Finished moving " + distanceMoved + " feet");
 			return true;
 		} else {
-			LOGGER.debug("Still moving");
+			LOGGER.info("Still moving " + distanceMoved + " feet");
 			return false;
 		}
 	}
 
+	public static boolean turnDistanceComplete() {
+		Drive drive = Drive.getInstance();
+		double turnError = drive.getTurnError();
+		LOGGER.debug("Error: " + turnError);
+		if (turnError <= RobotMap.POSITION_ALLOWED_ERROR) {
+			LOGGER.info("Error: " + turnError);
+			return true;
+		} else {
+			LOGGER.debug("Error" + turnError);
+			return false;
+		}
+	}
+	
 	public static Action turnAndMoveDistance(double angle, double distance) {
 		Drive drive = Drive.getInstance();
 		String actionText = "Turn to " + angle + " and move " + distance + " feet";

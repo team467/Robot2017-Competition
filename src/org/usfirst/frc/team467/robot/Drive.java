@@ -409,7 +409,7 @@ public class Drive extends RobotDrive {
 		return false;
 	}
 
-	private double compareTicks(double base, double compare) {
+	private double getMinimum(double base, double compare) {
 		double absVal = Math.abs(compare);
 		if(absVal < base) return absVal;
 		return base;
@@ -423,12 +423,21 @@ public class Drive extends RobotDrive {
 	public double absoluteDistanceMoved() {
 		System.out.println("Distances: FL: " + frontLeft.getPosition() + " FR: " + frontRight.getPosition()
 		+ " BL: " + backLeft.getPosition() + " BR: " + backRight.getPosition());
-		double ticks =  Math.abs(frontLeft.getPosition());
-		ticks = compareTicks(ticks, frontRight.getPosition());
-		ticks = compareTicks(ticks, backRight.getPosition());
-		ticks = compareTicks(ticks, backLeft.getPosition());
+		double rotations =  Math.abs(frontLeft.getPosition());
+		rotations = getMinimum(rotations, frontRight.getPosition());
+		rotations = getMinimum(rotations, backRight.getPosition());
+		rotations = getMinimum(rotations, backLeft.getPosition());
 
-		return ticks * RobotMap.WHEELPOD_CIRCUMFERENCE / 12;
+		return rotations * RobotMap.WHEELPOD_CIRCUMFERENCE / 12;
+	}
+	
+	public double getTurnError() {
+		double errorInFeet = (backLeft.getError() / 1024) * (RobotMap.WHEELPOD_CIRCUMFERENCE / 12);
+		System.out.println("Distances: BL: " + backLeft.getPosition() + " error:" + errorInFeet);
+		double rotations =  Math.abs(backLeft.getError());
+		rotations = getMinimum(rotations, backLeft.getPosition());
+
+		return Math.abs(errorInFeet);
 	}
 
 	/**
