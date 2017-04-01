@@ -147,11 +147,11 @@ public class Robot extends IterativeRobot {
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-//		double angle = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1.5707"));
+		double angle = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1.5707"));
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
 		case "turn":
-			autonomous = Actions.turnRadians(Math.PI/6);
+			autonomous = Actions.turnRadians(angle);
 			break;
 		case "none":
 			autonomous = Actions.doNothing();
