@@ -430,10 +430,8 @@ public class Drive extends RobotDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double absoluteDistanceMoved() {
-		LOGGER.info("Distances: FL: " + frontLeft.getPosition() + " FR: " + frontRight.getPosition()
-		+ " BL: " + backLeft.getPosition() + " BR: " + backRight.getPosition());
+		LOGGER.info(" BL: " + backLeft.getPosition() + " BR: " + backRight.getPosition());
 		double rotations =  Math.abs(frontLeft.getPosition());
-		rotations = getMinimum(rotations, frontRight.getPosition());
 		rotations = getMinimum(rotations, backRight.getPosition());
 		rotations = getMinimum(rotations, backLeft.getPosition());
 
