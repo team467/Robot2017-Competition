@@ -121,19 +121,25 @@ public class Drive extends RobotDrive {
 		}
 		return instance;
 	}
-	
+
 	public void setPIDF(double p, double i, double d, double f){
-		frontLeft.setPID(p, i, d, f, 128, 2, 1);
-		backLeft.setPID(p, i, d, f, 128, 2, 1);
-		frontRight.setPID(p, i, d, f, 128, 2, 1);
-		backRight.setPID(p, i, d, f, 128, 2, 1);
-		
+		frontLeft.setPID(p, i, d, f, 32, 2, 1);
+		backLeft.setPID(p, i, d, f, 32, 2, 1);
+		frontRight.setPID(p, i, d, f, 32, 2, 1);
+		backRight.setPID(p, i, d, f, 32, 2, 1);
+
+		// It did not seem to set the ramp rate in set PID correctly, so setting explicitly.
+		frontLeft.setCloseLoopRampRate(1);
+		backLeft.setCloseLoopRampRate(1);
+		frontRight.setCloseLoopRampRate(1);
+		backRight.setCloseLoopRampRate(1);
+
 	}
 
 
 	/**
 	 * Sets the motors to drive in speed mode.
-	 * 
+	 *
 	 * @return Successful or not
 	 */
 	public boolean setSpeedMode() {
@@ -170,16 +176,16 @@ public class Drive extends RobotDrive {
 
 	/**
 	 * Sets the motors to drive in position mode.
-	 * 
+	 *
 	 * @return Successful or not
 	 */
 	public boolean setPositionMode() {
 		if (RobotMap.useSpeedControllers) {
 			controlMode = TalonControlMode.Position;
-	
+
 			initMotorForPositionMode(backLeft);
 			initMotorForPositionMode(backRight);
-			
+
 			// Front follows back
 			initMotorForFollowerMode(backLeft, frontLeft);
 			initMotorForFollowerMode(backRight, frontRight);
@@ -199,13 +205,13 @@ public class Drive extends RobotDrive {
 		talon.setPosition(0);
 		LOGGER.debug("Set " + talon.getDeviceID() + " "+ talon.getControlMode());
 	}
-	
+
 	private void initMotorForFollowerMode(CANTalon master, CANTalon slave) {
 		slave.changeControlMode(TalonControlMode.Follower);
 		slave.set(master.getDeviceID());
 		LOGGER.debug("Set " + slave.getDeviceID() + " Following " + master.getDeviceID());
 	}
-	
+
 	public void logClosedLoopErrors() {
 		LOGGER.debug(
 				"closedLoopErr FL=" + frontLeft.getClosedLoopError() +
@@ -227,7 +233,7 @@ public class Drive extends RobotDrive {
 		} else {
 			setPercentVoltageBusMode();
 		}
-		
+
 		stop();
 	}
 
@@ -248,12 +254,12 @@ public class Drive extends RobotDrive {
 		if (m_rearLeftMotor == null || m_rearRightMotor == null || m_frontLeftMotor == null || m_frontRightMotor == null) {
 			throw new NullPointerException("Null motor provided");
 		}
-		
+
 		backLeft.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.BACK_LEFT] ? -1 : 1) * adjustSpeedOrDistance(backLeftParam, RobotMap.BACK_LEFT));
 		backRight.set(
 				(RobotMap.isDriveMotorInverted[RobotMap.BACK_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(backRightParam, RobotMap.BACK_RIGHT));
-		
+
 		if (getControlMode() == TalonControlMode.Position) {
 			frontLeft.set(backLeft.getDeviceID());
 			frontRight.set(backRight.getDeviceID());
@@ -263,7 +269,7 @@ public class Drive extends RobotDrive {
 			frontRight.set(
 					(RobotMap.isDriveMotorInverted[RobotMap.FRONT_RIGHT] ? -1 : 1) * adjustSpeedOrDistance(frontRightParam, RobotMap.FRONT_RIGHT));
 		}
-				
+
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
 		}
@@ -300,13 +306,13 @@ public class Drive extends RobotDrive {
 		this.fourWheelSteer(frontLeft.angle, frontRight.angle, backLeft.angle, backRight.angle);
 		this.fourWheelDrive(frontLeft.speed, frontRight.speed, backLeft.speed, backRight.speed);
 	}
-	
+
 	public void turnDriveAngle(double rads) {
 		// will cause the steering to unwind; on purpose as it is simpler
 		this.fourWheelSteer(TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, TURN_IN_PLACE_ANGLE);
 		//TODO: not sure if I am suppose to call this every time...
 		setPositionMode();
-		
+
 		/* same as what was in crab
 		 * makes sure that wheels are in correct position before moving
 		 * check how many wheelpods are in place	`*/
@@ -322,13 +328,13 @@ public class Drive extends RobotDrive {
 			double rotations = rads * RobotMap.WHEEL_BASE_RADIUS;
 			this.fourWheelDrive(rotations, rotations, rotations, rotations);
 		}
-	
+
 	}
-	
+
 	public void setFourWheelSteer(){
 		this.fourWheelSteer(TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, -TURN_IN_PLACE_ANGLE, TURN_IN_PLACE_ANGLE);
 	}
-	
+
 	public boolean allWheelsTurned(){
 		int numgood = 0;
 		for (int i = 0; i < 4; ++i) {
@@ -437,7 +443,7 @@ public class Drive extends RobotDrive {
 
 		return rotations * RobotMap.WHEELPOD_CIRCUMFERENCE / 12;
 	}
-	
+
 	public double getTurnError() {
 		double errorInFeet = (backLeft.getError() / 1024) * (RobotMap.WHEELPOD_CIRCUMFERENCE / 12);
 		System.out.println("Distances: BL: " + backLeft.getPosition() + " error:" + errorInFeet);

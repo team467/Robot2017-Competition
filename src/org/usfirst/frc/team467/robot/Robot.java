@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MISTAKE);
+		RobotMap.init(RobotMap.RobotID.MIRACLE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -65,7 +65,7 @@ public class Robot extends IterativeRobot {
 		driverstation = DriverStation2017.getInstance();
 		drive = Drive.getInstance();
 
-		drive.setDefaultDriveMode();  
+		drive.setDefaultDriveMode();
 
 		Calibration.init();
 		gyro = Gyrometer.getInstance();
@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 
 		vision = VisionProcessing.getInstance();
 		autonomous = Actions.doNothing();
-		
+
 //		SmartDashboard.putString("DB/String 0", ".018");
 //		SmartDashboard.putString("DB/String 1", "0.0");
 //		SmartDashboard.putString("DB/String 2", "0.06");
@@ -126,7 +126,7 @@ public class Robot extends IterativeRobot {
 		double gyroAngle = gyro.pidGet();
 		SmartDashboard.putNumber("gyro", gyroAngle);
 		SmartDashboard.putString("DB/String 4", String.valueOf(gyroAngle));
-		
+
 		vision.update();
 //		LOGGER.debug("Gyro Angle=" + gyro.getRobotAngleDegrees());
 //		printSteeringSensors();
@@ -147,7 +147,8 @@ public class Robot extends IterativeRobot {
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		double angle = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1.5707"));
+		double angle = (Double.parseDouble(SmartDashboard.getString("DB/String 5", "90.0")) / 360 * (2 * Math.PI));
+		double distance = Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.0"));
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
 		case "turn":
@@ -200,8 +201,11 @@ public class Robot extends IterativeRobot {
 		case "gear-middle-active":
 			autonomous = Actions.middleGearActive();
 			break;
+		case "position3X":
+			autonomous = Actions.moveDistanceForwardProcess3X(distance);
+			break;
 		case "position":
-			autonomous = Actions.moveDistanceForwardProcess(6.0);
+			autonomous = Actions.moveDistanceForwardProcess(distance);
 			break;
 		default:
 			autonomous = Actions.doNothing();

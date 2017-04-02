@@ -34,13 +34,14 @@ public class ActionGroup {
 	public void run() {
 		if (action == null || action.isDone()) {
 			try {
-				LOGGER.debug("Next action");
 				if (!agenda.isEmpty()) {
 					action = agenda.pop();
 					LOGGER.info("----- Starting action: " + action.description + " -----");
 				} else {
 					// Stop everything forever
-					LOGGER.info("----- Final action completed -----");
+					if (action != null) {
+						LOGGER.info("----- Final action completed -----");
+					}
 					action = null;
 					return;
 				}
@@ -48,15 +49,15 @@ public class ActionGroup {
 				LOGGER.error("Ran out of actions!", e);
 			}
 		}
-		
+
 		LOGGER.info("run " + action);
 		action.doIt();
 	}
-	
+
 	public boolean isComplete() {
 		return action == null && agenda.isEmpty();
 	}
-	
+
 	public void terminate() {
 		LOGGER.debug("Terminating Process");
 		agenda.clear();
@@ -71,7 +72,7 @@ public class ActionGroup {
 	public void addActions(List<Action> actions) {
 		master.addAll(actions);
 	}
-	
+
 	public void addActions(ActionGroup actions) {
 		master.addAll(actions.master);
 	}
@@ -88,15 +89,15 @@ public class ActionGroup {
 		agenda = new LinkedList<>(master);
 		action = null;
 	}
-	
+
 	static class RunOnce implements Action.Combined {
 		boolean isDone = false;
 		final Action.Activity activity;
-		
+
 		public RunOnce(Action.Activity activity) {
 			this.activity = activity;
 		}
-		
+
 		@Override
 		public boolean isDone() {
 			return isDone;
@@ -108,7 +109,7 @@ public class ActionGroup {
 			isDone = true;
 		}
 	}
-	
+
 	static class Duration implements Action.Condition {
 		private double durationMS;
 		private double actionStartTimeMS = -1;
@@ -134,7 +135,7 @@ public class ActionGroup {
 			actionStartTimeMS = -1;
 		}
 	}
-	
+
 	static class ReachDistance implements Action.Condition {
 		private double distance = 0.0;
 		private double currentPosition = 0.0;
@@ -164,18 +165,18 @@ public class ActionGroup {
 				LOGGER.debug("Still moving");
 				return false;
 			}
-		}		
+		}
 	}
-	
+
 	static class OnTarget implements Action.Condition {
 		private final int numSamples;
 		private int increment = 0;
 		private final PIDController aiming = Drive.getInstance().aiming;
-		
+
 		public OnTarget(int numSamples) {
 			this.numSamples = numSamples;
 		}
-		
+
 		@Override
 		public boolean isDone() {
 			if (aiming.onTarget()) {
@@ -185,9 +186,9 @@ public class ActionGroup {
 			}
 			return increment >= numSamples;
 		}
-		
+
 	}
-	
+
 	static class AimVision implements Action.Activity {
 		private double targetAngle = 999; // Initialization bogus value
 		private Drive drive = Drive.getInstance();

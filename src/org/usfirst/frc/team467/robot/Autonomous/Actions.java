@@ -229,6 +229,19 @@ public class Actions {
 		return mode;
 	}
 
+	public static ActionGroup moveDistanceForwardProcess3X(double distance) {
+		String actionGroupText = "Move forward 3X " + distance + " feet";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(setPositionProcess());
+		mode.addAction(moveDistanceForward(distance));
+		mode.addActions(setPositionProcess());
+		mode.addAction(moveDistanceForward(distance));
+		mode.addActions(setPositionProcess());
+		mode.addAction(moveDistanceForward(distance));
+		mode.addAction(setDefaultDriveMode());
+		return mode;
+	}
+
 	public static ActionGroup moveInSquareTest(double distance) {
 		String actionGroupText = "Move in " + distance + " foot square";
 		ActionGroup mode = new ActionGroup(actionGroupText);
