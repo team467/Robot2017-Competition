@@ -147,7 +147,7 @@ public class Actions {
 				() -> drive.crabDrive(angle, distance));
 	}
 
-	public static Action setTurnInPlace(){
+	public static Action setTurnInPlace() {
 		Drive drive = Drive.getInstance();
 		String actionText = "set wheels to turn in place";
 		return new Action(actionText,
@@ -156,11 +156,11 @@ public class Actions {
 	}
 
 	//takes in radians
-	public static ActionGroup turnRadians(double angle){
-		double inches = angle * RobotMap.WHEEL_BASE_RADIUS;
-		double feet = inches / 12.0;
-		String actionGroupText = "Turn to " + angle + " radians and " + feet + " feet";
-		ActionGroup mode = new ActionGroup(actionGroupText);
+	public static ActionGroup turnRadians(double angle) {
+		final double inches = angle * RobotMap.WHEEL_BASE_RADIUS;
+		final double feet = inches / 12.0;
+		final String actionGroupText = "Turn to " + angle + " radians and " + feet + " feet";
+		final ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(setTurnInPlace());
 		mode.addActions(setPositionProcess());
 		mode.addAction(turnDrive(feet));
@@ -168,12 +168,12 @@ public class Actions {
 		return mode;
 	}
 
-	public static Action turnDrive(double distance){
-		Drive drive = Drive.getInstance();
-		String actionText = "turn " + distance + " feet";
+	public static Action turnDrive(double distance) {
+		final Drive drive = Drive.getInstance();
+		final String actionText = "turn " + distance + " feet";
 		return new Action(actionText,
-		() -> moveDistanceComplete(distance),
-		() -> drive.turnDrive(distance));
+				() -> moveDistanceComplete(distance),
+				() -> drive.turnDrive(distance));
 	}
 
 
@@ -314,7 +314,7 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.3));
 	}
 
-	public static ActionGroup dispenseGear(){
+	public static ActionGroup dispenseGear() {
 		GearDevice gear = GearDevice.getInstance();
 		Drive drive = Drive.getInstance();
 
@@ -328,7 +328,7 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup raiseDispenseGear(){
+	public static ActionGroup raiseDispenseGear() {
 		GearDevice gear = GearDevice.getInstance();
 		ActionGroup mode = new ActionGroup("Raise and Dispense Gear");
 		mode.addActions(dispenseGear());
@@ -350,7 +350,6 @@ public class Actions {
 	}
 
 	public static ActionGroup middleGearPassive() {
-		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Middle Gear");
 		mode.addActions(moveDistanceForwardProcess(6.44));
 		mode.addAction(wait(3.5));
@@ -359,7 +358,6 @@ public class Actions {
 	}
 
 	public static ActionGroup middleGearActive() {
-		VisionProcessing vision = VisionProcessing.getInstance();
 		ActionGroup mode = new ActionGroup("Middle Gear");
 		mode.addActions(moveDistanceForwardProcess(6.44));
 		mode.addActions(raiseDispenseGear());
