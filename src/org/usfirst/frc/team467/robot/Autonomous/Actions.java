@@ -146,6 +146,12 @@ public class Actions {
 				new ActionGroup.ReachDistance(distance),
 				() -> drive.crabDrive(angle, distance));
 	}
+	
+	public static Action moveDistanceForwardVision() {
+		Drive drive = Drive.getInstance();
+		return new Action("Move forward with vision",
+				new ActionGroup.ReachDistanceVision());
+	}
 
 	public static Action setTurnInPlace() {
 		Drive drive = Drive.getInstance();
@@ -258,7 +264,7 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		Action aim =  new Action(
 				"Aim",
-				new ActionGroup.OnTarget(5),
+				new ActionGroup.OnTarget(drive.aiming, 5),
 				() -> drive.turnToAngle(angle));
 		return aim;
 	}
@@ -284,7 +290,7 @@ public class Actions {
 	public static ActionGroup aimAndDisableVision() {
 		ActionGroup mode = new ActionGroup("Aim and Disable Vision");
 		mode.addAction(new Action("Aim with Vision",
-				new ActionGroup.OnTarget(5),
+				new ActionGroup.OnTarget(Drive.getInstance().aiming, 5),
 				new ActionGroup.AimVision()));
 		mode.addAction(disableAiming());
 		return mode;
@@ -352,6 +358,16 @@ public class Actions {
 	public static ActionGroup middleGearPassive() {
 		ActionGroup mode = new ActionGroup("Middle Gear");
 		mode.addActions(moveDistanceForwardProcess(6.44));
+		mode.addAction(wait(3.5));
+		mode.addAction(goBackward(0.5, 0.5));
+		return mode;
+	}
+
+	public static ActionGroup middleGearPassiveVision() {
+		ActionGroup mode = new ActionGroup("Middle Gear");
+		mode.addActions(moveDistanceForwardProcess(6)); //.44));
+		mode.addActions(aimAndDisableVision());
+		mode.addAction(moveDistanceForwardVision());
 		mode.addAction(wait(3.5));
 		mode.addAction(goBackward(0.5, 0.5));
 		return mode;

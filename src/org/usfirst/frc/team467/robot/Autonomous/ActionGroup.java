@@ -167,19 +167,62 @@ public class ActionGroup {
 			}
 		}
 	}
+	
+	static class ReachDistanceVision implements Action.Combined {
+		private double distance = 0.0;
+		private double currentPosition = 0.0;
+		private double lastPosition = 0.0;
+		private int increment = 0;
+		private Drive drive = Drive.getInstance();
+		private VisionProcessing vision = VisionProcessing.getInstance();
+		public ReachDistanceVision() {
+			distance = -1;
+		}
+
+		@Override
+		public boolean isDone() {
+			if (distance == -1) {
+				distance = vision.getDistance();
+			}
+			lastPosition = currentPosition;
+			currentPosition = drive.absoluteDistanceMoved();
+			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
+			if (currentPosition > 0.0 && lastPosition == currentPosition) {
+				increment++;
+			} else {
+				increment = 0;
+			}
+			if (increment >= 5) {
+				return true;
+			} else if (currentPosition >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
+				LOGGER.debug("Finished moving");
+				return true;
+			} else {
+				LOGGER.debug("Still moving");
+				return false;
+			}
+		}
+
+		@Override
+		public void doIt() {
+			// TODO Auto-generated method stub
+			drive.crabDrive(0, distance);
+		}
+	}
 
 	static class OnTarget implements Action.Condition {
 		private final int numSamples;
 		private int increment = 0;
-		private final PIDController aiming = Drive.getInstance().aiming;
+		private final PIDController controller;
 
-		public OnTarget(int numSamples) {
+		public OnTarget(PIDController controller, int numSamples) {
+			this.controller = controller;
 			this.numSamples = numSamples;
 		}
 
 		@Override
 		public boolean isDone() {
-			if (aiming.onTarget()) {
+			if (controller.onTarget()) {
 				increment++;
 			} else {
 				increment = 0;
