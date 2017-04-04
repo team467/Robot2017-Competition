@@ -198,6 +198,9 @@ public class Robot extends IterativeRobot {
 		case "gear-middle-passive":
 			autonomous = Actions.middleGearPassive();
 			break;
+		case "gear-middle-vision":
+			autonomous = Actions.middleGearPassiveVision();
+			break;
 		case "gear-middle-active":
 			autonomous = Actions.middleGearActive();
 			break;
