@@ -8,6 +8,7 @@ import org.usfirst.frc.team467.robot.*;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
@@ -173,6 +174,20 @@ public class Actions {
 		mode.addAction(setDefaultDriveMode());
 		return mode;
 	}
+	
+	//takes in radians
+		public static ActionGroup turnRadiansVision() {
+			final double angle = VisionProcessing.getInstance().getTargetAngle() * Math.PI / 180;
+			final double inches = angle * RobotMap.WHEEL_BASE_RADIUS;
+			final double feet = inches / 12.0;
+			final String actionGroupText = "Turn to " + angle + " radians and " + feet + " feet";
+			final ActionGroup mode = new ActionGroup(actionGroupText);
+			mode.addAction(setTurnInPlace());
+			mode.addActions(setPositionProcess());
+			mode.addAction(turnDriveVision());
+			mode.addAction(setDefaultDriveMode());
+			return mode;
+		}
 
 	public static Action turnDrive(double distance) {
 		final Drive drive = Drive.getInstance();
@@ -182,6 +197,12 @@ public class Actions {
 				() -> drive.turnDrive(distance));
 	}
 
+	public static Action turnDriveVision() {
+		final Drive drive = Drive.getInstance();
+		final String actionText = "turn feet";
+		return new Action(actionText,
+				new ActionGroup.TurnVision());
+	}
 
 	public static boolean moveDistanceComplete(double distance) {
 		Drive drive = Drive.getInstance();

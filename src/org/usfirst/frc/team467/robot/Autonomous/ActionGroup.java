@@ -243,7 +243,35 @@ public class ActionGroup {
 			drive.turnToAngle(targetAngle);
 		}
 	}
+	
+	static class TurnVision implements Action.Combined {
+		private double targetAngleDistance = 999; // Initialization bogus value
+		private Drive drive = Drive.getInstance();
+		@Override
+		public boolean isDone() {
+			if (targetAngleDistance == 999) {
+				targetAngleDistance = VisionProcessing.getInstance().getTargetAngle() * RobotMap.WHEEL_BASE_RADIUS * Math.PI / 180;
+			}
+			double distanceMoved = drive.absoluteDistanceMoved();
+			LOGGER.debug("Distances - Target: " + Math.abs(targetAngleDistance) + " Moved: " + distanceMoved);
+			if (distanceMoved >= (Math.abs(targetAngleDistance) - RobotMap.POSITION_ALLOWED_ERROR)) {
+				LOGGER.info("Finished moving " + distanceMoved + " feet");
+				return true;
+			} else {
+				LOGGER.info("Still moving " + distanceMoved + " feet");
+				return false;
+			}
+		}
+		@Override
+		public void doIt() {
+			if (targetAngleDistance == 999) {
+				targetAngleDistance = VisionProcessing.getInstance().getTargetAngle() * RobotMap.WHEEL_BASE_RADIUS * Math.PI / 180;
+			}
+			drive.turnDrive(targetAngleDistance);
+		}
+	}
 
+	
 	public String getName() {
 		return name;
 	}

@@ -10,6 +10,8 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -56,7 +58,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MIRACLE);
+		RobotMap.init(RobotMap.RobotID.MISTAKE);
 
 		// Initialize logging framework
 		Logging.init();
@@ -87,11 +89,11 @@ public class Robot extends IterativeRobot {
 //		SmartDashboard.putString("DB/String 2", "0.06");
 //		SmartDashboard.putString("DB/String 3", "0.0");
 
-		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+//		//made usb camera and captures video
+//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+//		//set resolution and frames per second to match driverstation
+//		cam.setResolution(320, 240);
+//		cam.setFPS(15);
 
 		// Setup autonomous mode selectors
 		String[] autoList = {
@@ -136,23 +138,26 @@ public class Robot extends IterativeRobot {
 	double maxPosition[];
 
 	public void autonomousInit() {
-		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1.75"));
-		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
-		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "450.0"));
-		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.05"));
+//		double p = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1.75"));
+//		double i = Double.parseDouble(SmartDashboard.getString("DB/String 1", "0.0"));
+//		double d = Double.parseDouble(SmartDashboard.getString("DB/String 2", "450.0"));
+//		double f = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.05"));
 //		drive.aiming.setPID(p, i, d, f);
-		drive.setPIDF(p, i, d, f);
-		LOGGER.info("p: " + p + " i: " + i + " d: " + d + " f: " + f);
+//		drive.setPIDF(p, i, d, f);
+//		LOGGER.info("p: " + p + " i: " + i + " d: " + d + " f: " + f);
 
 		vision.update();
 		// autonomous = driverstation.getActionGroup();
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		double angle = (Double.parseDouble(SmartDashboard.getString("DB/String 5", "90.0")) / 360 * (2 * Math.PI));
+		double angle = (Double.parseDouble(SmartDashboard.getString("DB/String 5", "90.0")) * Math.PI / 180);
 		double distance = Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.0"));
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
 		case "turn":
 			autonomous = Actions.turnRadians(angle);
+			break;
+		case "turn-vision":
+			autonomous = Actions.turnRadiansVision();
 			break;
 		case "none":
 			autonomous = Actions.doNothing();

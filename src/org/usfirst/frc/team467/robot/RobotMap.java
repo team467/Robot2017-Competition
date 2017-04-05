@@ -35,7 +35,7 @@ public class RobotMap {
 			WHEEL_BASE_LENGTH = 31.5; // front to back - in inches
 			WHEEL_BASE_WIDTH = 18.5; // side to side in inches
 			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
-			CamToCenterWidthInches = 4.5; // TODO Get measurement for other robots
+			CamToCenterWidthInches = -4.5; // TODO Get measurement for other robots
 			CamToCenterLengthInches = 17; // TODO Get measurement for other robots
 			MAX_SPEED = 300.0;
 			PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
@@ -86,8 +86,8 @@ public class RobotMap {
             WHEEL_BASE_LENGTH = 18.5; // front to back - in inches
             WHEEL_BASE_WIDTH = 22.5; // side to side in inches
 			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
-            CamToCenterWidthInches = 0; // TODO Get measurement for other robots
-			CamToCenterLengthInches = -4; // TODO Get measurement for other robots
+            CamToCenterWidthInches = 8.0;
+			CamToCenterLengthInches = 14;
 			MAX_SPEED = 450.0;
             PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
             PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
