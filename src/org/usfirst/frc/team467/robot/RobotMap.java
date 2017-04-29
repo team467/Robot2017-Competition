@@ -90,7 +90,7 @@ public class RobotMap {
 			CamToCenterLengthInches = -4; // TODO Get measurement for other robots
 			MAX_SPEED = 450.0;
             PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
-            PIDvalues[FRONT_RIGHT] = new PID(-0.013, 0.0, 0.0);
+            PIDvalues[FRONT_RIGHT] = new PID(0.013, 0.0, 0.0);
             PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
             PIDvalues[BACK_RIGHT] = new PID(-0.015, 0.0, 0.0);
             speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
