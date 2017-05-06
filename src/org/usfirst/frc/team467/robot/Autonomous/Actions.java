@@ -314,53 +314,11 @@ public class Actions {
 				() -> drive.crabDrive(0, 0.3));
 	}
 
-	public static ActionGroup dispenseGear() {
-		GearDevice gear = GearDevice.getInstance();
-		Drive drive = Drive.getInstance();
-
-		ActionGroup mode = new ActionGroup("Dispense Gear");
-		mode.addAction(new Action("lower gear and back away",
-				new ActionGroup.Duration(0.5),
-				() -> {
-					gear.goDown();
-					drive.crabDrive(Math.PI, 0.5);
-				}));
-		return mode;
-	}
-
-	public static ActionGroup raiseDispenseGear() {
-		GearDevice gear = GearDevice.getInstance();
-		ActionGroup mode = new ActionGroup("Raise and Dispense Gear");
-		mode.addActions(dispenseGear());
-		mode.addAction(new Action("Raise gear",
-				() -> false,
-				() -> gear.goUp()));
-		return mode;
-	}
-
-	public static ActionGroup approachDispenseBackAway() {
-		VisionProcessing vision = VisionProcessing.getInstance();
-		ActionGroup mode = new ActionGroup("Approach, Dispense, Back Away from Gear");
-		mode.addActions(moveDistanceForwardProcess(4));
-		mode.addActions(Actions.aimAndDisable(Gyrometer.getInstance().pidGet() + 45)); // 45º right of current heading
-		mode.addActions(Actions.aimAndDisableVision());
-		mode.addActions(moveDistanceForwardProcess(vision.getDistance()/12));
-		mode.addActions(raiseDispenseGear());
-		return mode;
-	}
-
 	public static ActionGroup middleGearPassive() {
 		ActionGroup mode = new ActionGroup("Middle Gear");
 		mode.addActions(moveDistanceForwardProcess(6.44));
 		mode.addAction(wait(3.5));
 		mode.addAction(goBackward(0.5, 0.5));
-		return mode;
-	}
-
-	public static ActionGroup middleGearActive() {
-		ActionGroup mode = new ActionGroup("Middle Gear");
-		mode.addActions(moveDistanceForwardProcess(6.44));
-		mode.addActions(raiseDispenseGear());
 		return mode;
 	}
 
@@ -386,26 +344,6 @@ public class Actions {
 	public static ActionGroup doNothing(){
 		ActionGroup mode = new ActionGroup("none");
 		mode.addAction(nothing());
-		return mode;
-	}
-
-	public static ActionGroup dropGearFromLeft(){
-		ActionGroup mode = new ActionGroup("gear");
-		mode.addAction(goForward(0.9));
-		mode.addAction(aim(60));
-		mode.addAction(disableAiming());
-		mode.addAction(goForward(1.0));
-		mode.addActions(dispenseGear());
-		return mode;
-	}
-
-	public static ActionGroup dropGearFromRight(){
-		ActionGroup mode = new ActionGroup("gear");
-		mode.addAction(goForward(0.9));
-		mode.addAction(aim(-60));
-		mode.addAction(disableAiming());
-		mode.addAction(goForward(1.0));
-		mode.addActions(dispenseGear());
 		return mode;
 	}
 

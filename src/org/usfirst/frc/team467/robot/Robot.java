@@ -39,9 +39,6 @@ public class Robot extends IterativeRobot {
 	private VisionProcessing vision;
 	private Gyrometer gyro;
 
-	private Climber climber;
-	private GearDevice gearDevice;
-
 	private TuneRobot tuner;
 
 	int session;
@@ -71,10 +68,6 @@ public class Robot extends IterativeRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-
-		// game pieces
-		climber = Climber.getInstance();
-		gearDevice = GearDevice.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -161,22 +154,6 @@ public class Robot extends IterativeRobot {
 		case "go":
 			autonomous = Actions.goFoward(2.0);
 			break;
-		// case "dgleft":
-		// //drop gear from position on left side of field
-		// autonomous = Actions.dropGearFromLeft();
-		// break;
-		// case "dgright":
-		// //drop gear from position on right side of field
-		// autonomous = Actions.dropGearFromRight();
-		// break;
-		case "lg":
-			// get into position to drop gear from left side of field
-			autonomous = Actions.getIntoGearPositionFromLeft();
-			break;
-		case "rg":
-			// get into position to drop gear from right side of field
-			autonomous = Actions.getIntoGearPositionFromRight();
-			break;
 		case "back":
 			autonomous = Actions.goBackwards(2.0, 0.5);
 			break;
@@ -195,12 +172,6 @@ public class Robot extends IterativeRobot {
 			break;
 		case "aim":
 			autonomous = Actions.aimAndDisable(vision.getTargetAngle());
-			break;
-		case "gear-middle-passive":
-			autonomous = Actions.middleGearPassive();
-			break;
-		case "gear-middle-active":
-			autonomous = Actions.middleGearActive();
 			break;
 		case "position3X":
 			autonomous = Actions.moveDistanceForwardProcess3X(distance);
@@ -370,21 +341,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void updateNavigation() {
-		if (driverstation.isClimbing()) {
-			climber.climb();
-		} else if (driverstation.isClimbingSlow()) {
-			climber.slow();
-		} else {
-			climber.stop();
-		}
-
-		if (driverstation.isGearDown()) {
-			gearDevice.goDown();
-			LOGGER.debug("Gear is going down");
-		} else {
-			gearDevice.goUp();
-			LOGGER.debug("Gear is going up");
-		}
+		
 	}
 
 	public void printSteeringSensors() {
