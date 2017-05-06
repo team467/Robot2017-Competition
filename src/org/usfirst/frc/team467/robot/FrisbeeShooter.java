@@ -6,17 +6,18 @@ import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Talon;
 
 public class FrisbeeShooter {
 	private static final Logger LOGGER = Logger.getLogger(FrisbeeShooter.class);
 	private Compressor compressor;
 	private Solenoid solenoid;
-	private CANTalon flyWheel;
+	private Talon flyWheel;
 	
 	public FrisbeeShooter(int solChannel, int wheelChannel) {
 		compressor = new Compressor();
 		solenoid = new Solenoid(solChannel);
-		flyWheel = new CANTalon(wheelChannel);
+		flyWheel = new Talon(wheelChannel);
 	}
 	
 	public void setCompressor() {
@@ -27,8 +28,12 @@ public class FrisbeeShooter {
 		compressor.setClosedLoopControl(false);
 	}
 	
-	public void setFlyWheel(int voltage) {
-		flyWheel.set(voltage);
+	public void setFlyWheelOn() {
+		flyWheel.set(1); // Full Speed
+	}
+	
+	public void setFlyWheelOff() {
+		flyWheel.set(0);
 	}
 	
 	public void setSolenoid(boolean on) {
@@ -42,7 +47,7 @@ public class FrisbeeShooter {
 	
 	public void disable() {
 		stopCompressor();
-		setFlyWheel(0);
+		setFlyWheelOff();
 		setSolenoid(false);
 	}
 }

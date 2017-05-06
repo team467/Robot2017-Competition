@@ -40,6 +40,8 @@ public class Robot extends IterativeRobot {
 	private Gyrometer gyro;
 
 	private TuneRobot tuner;
+	
+	private FrisbeeShooter shooter;
 
 	int session;
 
@@ -74,6 +76,8 @@ public class Robot extends IterativeRobot {
 
 		vision = VisionProcessing.getInstance();
 		autonomous = Actions.doNothing();
+		
+		shooter = new FrisbeeShooter(RobotMap.SOLENOID_CHANNEL, RobotMap.FLY_WHEEL_CHANNEL);
 
 //		SmartDashboard.putString("DB/String 0", ".018");
 //		SmartDashboard.putString("DB/String 1", "0.0");

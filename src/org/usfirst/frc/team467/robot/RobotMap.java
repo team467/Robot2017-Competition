@@ -111,7 +111,7 @@ public class RobotMap {
 
 	// Game Pieces
 	public static int SOLENOID_CHANNEL = 0;
-	public static int FLY_WHEEL_CHANNEL = 0;
+	public static int FLY_WHEEL_CHANNEL = 4;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
