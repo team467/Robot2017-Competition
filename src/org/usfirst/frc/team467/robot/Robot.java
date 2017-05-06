@@ -345,7 +345,11 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void updateNavigation() {
-		
+		if (driverstation.getFlyWheelOn()) {
+			shooter.setFlyWheelOn();
+		} else {
+			shooter.setFlyWheelOff();
+		}
 	}
 
 	public void printSteeringSensors() {

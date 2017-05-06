@@ -9,7 +9,6 @@ public class DriverStation2017 {
 	private static DriverStation2017 instance = null;
 
 	XBoxJoystick467 driverJoy = null;
-	ButtonPanel2017 buttonPanel = null;
 	ActionGroup autonomous = null;
 
 	// Mapping of functions to Joystick Buttons for normal operation
@@ -24,6 +23,8 @@ public class DriverStation2017 {
 
 	// Mapping of functions to Joystick Buttons for calibration mode
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
+	
+	private static int FLY_WHEEL_BUTTON = XBoxJoystick467.BUMPER_LEFT;
 
 	enum Speed {
 		SLOW, FAST
@@ -48,7 +49,6 @@ public class DriverStation2017 {
 		driverJoy = new XBoxJoystick467(0);
 		// autonomous = Actions.basicProcess; // Default
 		autonomous = Actions.doNothing();
-		buttonPanel = new ButtonPanel2017(1);
 	}
 
 	/**
@@ -56,7 +56,6 @@ public class DriverStation2017 {
 	 */
 	public void readInputs() {
 		driverJoy.readInputs();
-		buttonPanel.readInputs();
 	}
 
 	/**
@@ -66,10 +65,6 @@ public class DriverStation2017 {
 	 */
 	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
-	}
-
-	public ButtonPanel2017 getButtonPanel() {
-		return buttonPanel;
 	}
 
 	/**
@@ -129,6 +124,10 @@ public class DriverStation2017 {
 	public boolean isInCalibrateMode() {
 		return driverJoy.buttonDown(CALIBRATE_BUTTON);
 	}
+	
+	public boolean getFlyWheelOn() {
+		return driverJoy.buttonDown(FLY_WHEEL_BUTTON);
+	}
 
 	public boolean getTerminateAuto() {
 		return driverJoy.buttonDown(TERMINATE_BUTTON);
@@ -151,17 +150,5 @@ public class DriverStation2017 {
 	 */
 	public boolean getCalibrateConfirmSelection() {
 		return getCalibrationJoystick().buttonDown(CALIBRATE_CONFIRM_BUTTON);
-	}
-
-	public boolean isClimbing() {
-		return buttonPanel.buttonDown(Buttons.CLIMBER_UP);
-	}
-
-	public boolean isClimbingSlow() {
-		return buttonPanel.buttonDown(Buttons.CLIMBER_SLOW);
-	}
-
-	public boolean isGearDown() {
-		return buttonPanel.buttonDown(Buttons.GEAR_DOWN);
 	}
 }
