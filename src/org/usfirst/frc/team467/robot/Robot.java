@@ -198,7 +198,7 @@ public class Robot extends IterativeRobot {
 			autonomous = Actions.newDriveSquareProcess();
 			break;
 		case "aim":
-			autonomous = Actions.aimAndDisable(vision.getTargetAngle());
+			autonomous = Actions.aimAndDisableVision();
 			break;
 		case "gear-middle-passive":
 			autonomous = Actions.middleGearPassive();

@@ -245,16 +245,16 @@ public class ActionGroup {
 	}
 	
 	static class TurnVision implements Action.Combined {
-		private double targetAngleDistance = 999; // Initialization bogus value
+		private double arcLength = 999; // Initialization bogus value
 		private Drive drive = Drive.getInstance();
 		@Override
 		public boolean isDone() {
-			if (targetAngleDistance == 999) {
-				targetAngleDistance = VisionProcessing.getInstance().getTargetAngle() * RobotMap.WHEEL_BASE_RADIUS * Math.PI / 180;
+			if (arcLength == 999) {
+				arcLength = arcLength();
 			}
 			double distanceMoved = drive.absoluteDistanceMoved();
-			LOGGER.debug("Distances - Target: " + Math.abs(targetAngleDistance) + " Moved: " + distanceMoved);
-			if (distanceMoved >= (Math.abs(targetAngleDistance) - RobotMap.POSITION_ALLOWED_ERROR)) {
+			LOGGER.debug("Distances - Target: " + Math.abs(arcLength) + " Moved: " + distanceMoved);
+			if (distanceMoved >= (Math.abs(arcLength) - RobotMap.POSITION_ALLOWED_ERROR)) {
 				LOGGER.info("Finished moving " + distanceMoved + " feet");
 				return true;
 			} else {
@@ -264,10 +264,14 @@ public class ActionGroup {
 		}
 		@Override
 		public void doIt() {
-			if (targetAngleDistance == 999) {
-				targetAngleDistance = VisionProcessing.getInstance().getTargetAngle() * RobotMap.WHEEL_BASE_RADIUS * Math.PI / 180;
+			if (arcLength == 999) {
+				arcLength = arcLength();
 			}
-			drive.turnDrive(targetAngleDistance);
+			drive.turnDrive(arcLength);
+		}
+		
+		private double arcLength() {
+			return VisionProcessing.getInstance().getTargetAngle() * RobotMap.WHEEL_BASE_RADIUS * Math.PI / 180;
 		}
 	}
 

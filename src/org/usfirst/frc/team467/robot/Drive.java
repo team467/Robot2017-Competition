@@ -32,7 +32,8 @@ public class Drive extends RobotDrive {
 
 	// Gyroscope
 	private Gyrometer gyro;
-
+	
+	// Steady Oscillation on Mistake
 	private double[] aimingPIDs = { .017, .00022, .19, .32 };
 	public PIDController aiming;
 
