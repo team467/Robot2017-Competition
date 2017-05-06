@@ -47,58 +47,6 @@ public class RobotMap {
 			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
 			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
 			break;
-
-		case MIRACLE:
-			robotID = RobotID.MIRACLE;
-            useSpeedControllers = true;
-			steeringMotorChannel = new int[] { 2, 1, 3, 0 };
-			steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
-					Steering.PWMType.TALON, Steering.PWMType.TALON };
-			steeringSensorChannel = new int[] { 2, 1, 3, 0 };
-			driveMotorChannel = new int[] { 3, 2, 4, 1 };
-			isDriveMotorInverted = new boolean[] { false, true, false, true };
-			WHEEL_BASE_LENGTH = 18.5; // front to back - in inches
-			WHEEL_BASE_WIDTH = 22.5; // side to side in inches
-			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
-			CamToCenterWidthInches = 8.5; // TODO Get measurement for other robots
-			CamToCenterLengthInches = 12.5; // TODO Get measurement for other robots
-			MAX_SPEED = 480.0;
-			PIDvalues[FRONT_LEFT] = new PID(0.013, 0.0, 0.0);
-			PIDvalues[FRONT_RIGHT] = new PID(0.013, 0.0, 0.0);
-			PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
-			PIDvalues[BACK_RIGHT] = new PID(0.015, 0.0, 0.0);
-			speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
-			speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
-			speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
-			speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
-			GEAR_CLIMBER_PDP_CHANNEL = 9;
-			break;
-
-		case MISTAKE:
-            robotID = id;
-            useSpeedControllers = true;
-            steeringMotorChannel = new int[] { 2, 1, 3, 0 };
-            steeringMotorType = new Steering.PWMType[] { Steering.PWMType.TALON, Steering.PWMType.TALON,
-                    Steering.PWMType.TALON, Steering.PWMType.TALON };
-            steeringSensorChannel = new int[] { 2, 1, 3, 0 };
-            driveMotorChannel = new int[] { 3, 2, 4, 1 };
-            isDriveMotorInverted = new boolean[] { false, true, false, true };
-            WHEEL_BASE_LENGTH = 18.5; // front to back - in inches
-            WHEEL_BASE_WIDTH = 22.5; // side to side in inches
-			WHEEL_BASE_RADIUS = Math.sqrt((WHEEL_BASE_LENGTH * WHEEL_BASE_LENGTH) + (WHEEL_BASE_WIDTH * WHEEL_BASE_WIDTH)) / 2;
-            CamToCenterWidthInches = 0; // TODO Get measurement for other robots
-			CamToCenterLengthInches = -4; // TODO Get measurement for other robots
-			MAX_SPEED = 450.0;
-            PIDvalues[FRONT_LEFT] = new PID(-0.013, 0.0, 0.0);
-            PIDvalues[FRONT_RIGHT] = new PID(0.013, 0.0, 0.0);
-            PIDvalues[BACK_LEFT] = new PID(-0.013, 0.0, 0.0);
-            PIDvalues[BACK_RIGHT] = new PID(-0.015, 0.0, 0.0);
-            speedPIDFvalues[FRONT_LEFT] = new PID(0.50, 0.0036, 18.00, 2.35);
-            speedPIDFvalues[FRONT_RIGHT] = new PID(1.35, 0.0027, 168.75, 1.90);
-            speedPIDFvalues[BACK_LEFT] = new PID(1.35, 0.0020, 168.75, 2.00);
-            speedPIDFvalues[BACK_RIGHT] = new PID(1.35, 0.0027, 168.75, 2.00);
-            GEAR_CLIMBER_PDP_CHANNEL = 11;
-            break;
 		default:
 			System.out.println("Robot ID not defined");
 			break;
@@ -145,9 +93,6 @@ public class RobotMap {
 	
 	// how many inches to turn to turn X radians
 	public static double WHEEL_BASE_RADIUS;
-	
-	//PDP channels
-	public static int GEAR_CLIMBER_PDP_CHANNEL;
 
 	// Game pieces motor channels
 
@@ -165,13 +110,8 @@ public class RobotMap {
 	public static PID[] speedPIDFvalues;
 
 	// Game Pieces
-
-	// Climber
-	public static final int CLIMBER_MOTOR_1 = 5;
-	public static final int CLIMBER_MOTOR_2 = 4;
-
-	// Gear
-	public static final int GEAR_MOTOR = 7;
+	public static int SOLENOID_CHANNEL = 0;
+	public static int FLY_WHEEL_CHANNEL = 0;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
