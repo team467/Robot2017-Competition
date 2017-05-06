@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 
-		RobotMap.init(RobotMap.RobotID.MIRACLE);
+		RobotMap.init(RobotMap.RobotID.ROBOT2015);
 
 		// Initialize logging framework
 		Logging.init();
@@ -130,6 +130,7 @@ public class Robot extends IterativeRobot {
 		vision.update();
 //		LOGGER.debug("Gyro Angle=" + gyro.getRobotAngleDegrees());
 //		printSteeringSensors();
+		drive.logSteeringValues();
 	}
 
 	CANTalon motors[];
