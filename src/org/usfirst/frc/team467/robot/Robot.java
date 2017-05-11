@@ -197,6 +197,7 @@ public class Robot extends IterativeRobot {
 		driverstation.readInputs();
 		autonomous.terminate();
 		autonomous = Actions.doNothing();
+		shooter.setCompressor();
 		// autonomous = driverstation.getActionGroup();
 	}
 
