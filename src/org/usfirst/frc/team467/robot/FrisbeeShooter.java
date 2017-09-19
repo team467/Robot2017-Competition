@@ -29,7 +29,7 @@ public class FrisbeeShooter {
 	}
 	
 	public void setFlyWheelOn() {
-		flyWheel.set(1); // Full Speed
+		flyWheel.set(-1); // Full Speed
 	}
 	
 	public void setFlyWheelOff() {
