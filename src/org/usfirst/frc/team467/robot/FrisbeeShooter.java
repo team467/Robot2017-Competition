@@ -33,7 +33,7 @@ public class FrisbeeShooter {
 	}
 	
 	public void setFlyWheelOff() {
-		flyWheel.set(0);
+		flyWheel.set(0); // Stopped
 	}
 	
 	public void setSolenoid(boolean on) {

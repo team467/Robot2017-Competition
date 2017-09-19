@@ -25,6 +25,7 @@ public class DriverStation2017 {
 	private static int CALIBRATE_CONFIRM_BUTTON = XBoxJoystick467.BUMPER_RIGHT;
 	
 	private static int FLY_WHEEL_BUTTON = XBoxJoystick467.BUMPER_LEFT;
+	private static int LOAD_FRISBEE_BUTTON= XBoxJoystick467.BUMPER_RIGHT;
 
 	enum Speed {
 		SLOW, FAST
@@ -127,6 +128,10 @@ public class DriverStation2017 {
 	
 	public boolean getFlyWheelOn() {
 		return driverJoy.buttonDown(FLY_WHEEL_BUTTON);
+	}
+	
+	public boolean shouldLoadFrisbee() {
+		return driverJoy.buttonDown(LOAD_FRISBEE_BUTTON);
 	}
 
 	public boolean getTerminateAuto() {

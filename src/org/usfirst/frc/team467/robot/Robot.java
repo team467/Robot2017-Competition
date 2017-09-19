@@ -351,6 +351,8 @@ public class Robot extends IterativeRobot {
 		} else {
 			shooter.setFlyWheelOff();
 		}
+		// Activate solenoid if button is pressed
+		shooter.setSolenoid(driverstation.shouldLoadFrisbee());
 	}
 
 	public void printSteeringSensors() {
