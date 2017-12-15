@@ -12,37 +12,118 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  */
 public class XBoxJoystick467 {
-	private static final int NUM_BUTTONS = 10;
 	private Joystick joystick;
-	private boolean[] buttons = new boolean[NUM_BUTTONS]; // array of current button states
-	private boolean[] prevButtons = new boolean[NUM_BUTTONS]; // array of previous button states used for debouncing
-	private double leftStickX = 0.0;
-	private double leftStickY = 0.0;
-	private double rightStickX = 0.0;
-	private double rightStickY = 0.0;
-	private double leftTrigger = 0.0;
-	private double rightTrigger = 0.0;
 	private int pov = 0;
 
 	private static final double DEADZONE = 0.1;
 
-	public static final int BUTTON_A = 1;
-	public static final int BUTTON_B = 2;
-	public static final int BUTTON_X = 3;
-	public static final int BUTTON_Y = 4;
-	public static final int BUMPER_LEFT = 5;
-	public static final int BUMPER_RIGHT = 6;
-	public static final int BUTTON_BACK = 7;
-	public static final int BUTTON_START = 8;
-	public static final int BUTTON_LEFT = 9;
-	public static final int BUTTON_RIGHT = 10;
+	public enum Button {
+		a(1),
+		b(2),
+		x(3),
+		y(4),
+		bumperLeft(5),
+		BumperRight(6),
+		back(7),
+		start(8),
+		left(9),
+		right(10);
+		
+		public boolean isPressed;		
+		public boolean wasPressed;
+		
+		public final int channel;
+		
+		Button(int channel) {
+			this.channel = channel;
+			isPressed = false;
+			wasPressed = false;
+		}
+		
+		public static void read() {
+			// TODO Iterate over the enum, updating all the values. 
+			// Store the current value into the previous state, then read the raw button value
+		}
+		
+		/**
+		 * Check if a specific button is being held down. Ignores first button press, but the robot loops too quickly for this to
+		 * matter.
+		 *
+		 * @return
+		 */
+		public boolean down() {
+			// TODO: Return if the button is currently down
+			return false;
+		}
 
-	private static final int AXIS_LEFT_X = 0;
-	private static final int AXIS_LEFT_Y = 1;
-	private static final int AXIS_LEFT_TRIGGER = 2;
-	private static final int AXIS_RIGHT_TRIGGER = 3;
-	private static final int AXIS_RIGHT_X = 4;
-	private static final int AXIS_RIGHT_Y = 5;
+		/**
+		 * Check if a specific button has just been pressed. (Ignores holding.)
+		 *
+		 * @return
+		 */
+		public boolean pressed() {
+			// TODO: return true if the button is pressed, but wasn't before
+			return false;
+		}
+
+		/**
+		 * Check if a specific button has just been released.
+		 *
+		 * @return
+		 */
+		public boolean buttonReleased() {
+			// TODO: Reverse of above
+			return false;
+		}
+
+
+		
+	}
+	
+	private enum Axis {
+		leftX(0),
+		leftY(1),
+		leftTrigger(2),
+		rightTrigger(3),
+		rightX(4),
+		rightY(5);
+		
+		public final int channel;
+		
+		private double value;
+		
+		Axis(int channel) {
+			this.channel = channel;
+			value = 0.0;
+		}
+		
+		public double value() {
+			return value;
+		}
+		
+		public static void read(Joystick joystick) {
+			// TODO Traverse the enum and read all the values
+			// Example --> value = accelerateJoystickInput(joystick.getRawAxis(channel));
+		}
+		
+		/**
+		 * Implement a dead zone for Joystick centering - and a non-linear acceleration as the user moves away from the zero position.
+		 *
+		 * @param input
+		 * @return processed input
+		 */
+		private double accelerateJoystickInput(double input) {
+			// Ensure that there is a dead zone around zero
+			if (Math.abs(input) < DEADZONE) {
+				return 0.0;
+			}
+			// Simply square the input to provide acceleration
+			// ensuring that the sign of the input is preserved
+			return (input * Math.abs(input));
+		}
+
+
+	}
 
 	/**
 	 * Create a new joystick on a given channel
@@ -50,7 +131,7 @@ public class XBoxJoystick467 {
 	 * @param stick
 	 */
 	public XBoxJoystick467(int stick) {
-		joystick = new Joystick(stick);
+		// TODO: Set a new joystick on the given channel
 	}
 
 	/**
@@ -59,99 +140,21 @@ public class XBoxJoystick467 {
 	 * @return
 	 */
 	public Joystick getJoystick() {
+		// TODO: Get the joystick
 		return joystick;
 	}
 
 	/**
 	 * Read all inputs from the underlying joystick object.
 	 */
-	public void readInputs() {
-		// read all buttons
-		for (int i = 0; i < NUM_BUTTONS; i++) {
-			prevButtons[i] = buttons[i];
-			buttons[i] = joystick.getRawButton(i + 1);
-		}
-
-		// Read Joystick Axes
-		leftStickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_LEFT_X));
-		leftStickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_LEFT_Y));
-
-		rightStickX = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_X));
-		rightStickY = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_Y));
-
-		leftTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_LEFT_TRIGGER));
-		rightTrigger = accelerateJoystickInput(joystick.getRawAxis(AXIS_RIGHT_TRIGGER));
-
+	public void read() {
+		// TODO: Store the current button state into the previous state, then read the raw button
+		// TODO Read all the joystick axis into the values
 		pov = joystick.getPOV(0);
-	}
-
-	/**
-	 * Check if a specific button is being held down. Ignores first button press, but the robot loops too quickly for this to
-	 * matter.
-	 *
-	 * @param button
-	 * @return
-	 */
-	public boolean buttonDown(int button) {
-		return buttons[(button) - 1];
-	}
-
-	/**
-	 * Check if a specific button has just been pressed. (Ignores holding.)
-	 *
-	 * @param button
-	 * @return
-	 */
-	public boolean buttonPressed(int button) {
-		return buttons[button - 1] && !prevButtons[button - 1];
-	}
-
-	/**
-	 * Check if a specific button has just been released.
-	 *
-	 * @param button
-	 * @return
-	 */
-	public boolean buttonReleased(int button) {
-		return !buttons[button - 1] && prevButtons[button - 1];
-	}
-
-	/**
-	 * Gets the X position of the stick. Left to right ranges from -1.0 to 1.0, with 0.0 in the middle. This value is accelerated.
-	 *
-	 * @return
-	 */
-	public double getLeftStickX() {
-		return leftStickX;
-	}
-
-	public double getRightStickX() {
-		return rightStickX;
 	}
 
 	public double getPOV() {
 		return pov;
-	}
-
-	/**
-	 * Gets the Y position of the stick. Up to down ranges from -1.0 to 1.0, with 0.0 in the middle. This value is accelerated.
-	 *
-	 * @return
-	 */
-	public double getLeftStickY() {
-		return leftStickY;
-	}
-
-	public double getRightStickY() {
-		return rightStickY;
-	}
-
-	public double getLeftTrigger() {
-		return leftTrigger;
-	}
-
-	public double getRightTrigger() {
-		return rightTrigger;
 	}
 
 	/**
@@ -160,11 +163,12 @@ public class XBoxJoystick467 {
 	 * @return
 	 */
 	public double getLeftStickDistance() {
-		return Math.sqrt((leftStickX * leftStickX) + (leftStickY * leftStickY));
+		return Math.sqrt((Axis.leftX.value * Axis.leftX.value) + (Axis.leftY.value * Axis.leftY.value));
 	}
 
 	public double getRightStickDistance() {
-		return Math.sqrt((rightStickX * rightStickX) + (rightStickY * rightStickY));
+		// TODO Repeat for right
+		return 0;
 	}
 
 	private double calculateStickAngle(double stickX, double stickY) {
@@ -189,27 +193,12 @@ public class XBoxJoystick467 {
 	 * @return Joystick Angle in range -PI to PI
 	 */
 	public double getLeftStickAngle() {
-		return (calculateStickAngle(leftStickX, leftStickY));
+		return (calculateStickAngle(Axis.leftX.value, Axis.leftY.value));
 	}
 
 	public double getRightStickAngle() {
-		return (calculateStickAngle(rightStickX, rightStickY));
-	}
-
-	/**
-	 * Implement a dead zone for Joystick centering - and a non-linear acceleration as the user moves away from the zero position.
-	 *
-	 * @param input
-	 * @return processed input
-	 */
-	private double accelerateJoystickInput(double input) {
-		// Ensure that there is a dead zone around zero
-		if (Math.abs(input) < DEADZONE) {
-			return 0.0;
-		}
-		// Simply square the input to provide acceleration
-		// ensuring that the sign of the input is preserved
-		return (input * Math.abs(input));
+		// TODO Repeat for right stick
+		return 0;
 	}
 
 }

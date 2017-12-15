@@ -61,11 +61,8 @@ public class Gyrometer implements PIDSource {
 	 * @return the robot angle
 	 */
 	public double getRobotAngleRadians() {
-		if (RobotMap.robotID == RobotMap.RobotID.ROBOT2015) {
-			return getAngleZRadians();
-		} else {
-			return -getAngleYRadians();
-		}
+		// TODO: Check the direction
+		return getAngleZRadians();
 	}
 
 	/**
@@ -75,11 +72,8 @@ public class Gyrometer implements PIDSource {
 	 * @return the robot angle
 	 */
 	public double getRobotAngleDegrees() {
-		if (RobotMap.robotID == RobotMap.RobotID.ROBOT2015) {
-			return getAngleZDegrees();
-		} else {
-			return -getAngleYDegrees();
-		}
+		// TODO: Check the direction
+		return getAngleZDegrees();
 	}
 
 	/**

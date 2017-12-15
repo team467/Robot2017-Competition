@@ -3,19 +3,14 @@
  */
 package org.usfirst.frc.team467.robot;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 /**
  * Utility class for checking current limits over a number of periodic cycles.
  * This is required to avoid stopping a motor based on the initial current spike at motor start.
  */
 public class CheckCurrentLimit {
 
-	private Queue<Double> currentReadings;
-	private int numberOfReadings;
-	private double sumOfCurrents;
-	private double limit;
+//	private Queue<Double> currentReadings;
+	// TODO Add additional required variables
 
 	/**
 	 * Sets up a running average for the specified number of readings.
@@ -23,15 +18,8 @@ public class CheckCurrentLimit {
 	 * @param numberOfReadings  the number of readings for the running average
 	 * @param limit  the max allowable current
 	 */
-	public CheckCurrentLimit(int numberOfReadings, double limit) {
-		this.numberOfReadings = numberOfReadings;
-		this.limit = limit;
-		currentReadings = new ConcurrentLinkedQueue<Double>();
-		for (int i = 0; i < numberOfReadings; i++) {
-			currentReadings.add(0.0);
-		}
-		sumOfCurrents = 0.0;
-
+	public CheckCurrentLimit() {
+		// TODO Initialize a queue and other variables
 	}
 
 	/**
@@ -42,13 +30,8 @@ public class CheckCurrentLimit {
 	 * @return true if over the current limit
 	 */
 	public boolean isOverLimit(double current) {
-		boolean isOverLimit = false;
-		currentReadings.add(current);
-		sumOfCurrents += current - currentReadings.remove();
-		if ((sumOfCurrents / (double) numberOfReadings) > limit) {
-			isOverLimit = true;
-		}
-		return isOverLimit;
+		// TODO Add the current to the reading list, replacing one if neccessary. Then check the average against the limit and return true if over 
+		return false; // Replace with check.
 	}
 
 }
