@@ -126,6 +126,90 @@ public class Drive extends RobotDrive {
 		}
 	}
 
+	private TalonControlMode controlMode = TalonControlMode.PercentVbus;
+	
+	/**
+	 * 
+	 * @param speed		the forward speed or distance
+	 * @param angle		turn angle in radians
+	 */
+	public void goWithAngle(double speedOrDistance, double angle) {
+		double right = speedOrDistance;
+		double left = speedOrDistance;
+		double arcLength = 0.0;
+
+		// double inchesPerMilisecond = RobotMap.MAX_SPEED * RobotMap.WHEELPOD_CIRCUMFERENCE / 60 / 1000;
+		// Wheel base width = 22.5
+		// Wheel circumference = 19.74
+		// at 480 RPM, 3.16 inches per 20 ms cycle
+		// Max turn = Pi * (RobotMap.WHEEL_BASE_WIDTH / 2) ~ 35.325	inches
+		
+		if (controlMode == TalonControlMode.Position) {
+			
+			double radius = RobotMap.WHEEL_BASE_WIDTH / 2;  // in inches			
+			if (angle > Math.PI) {
+				arcLength = (angle - 2 * Math.PI) * radius;
+			} else {
+				arcLength = angle * radius;
+			}
+			
+			// In position mode, only reduce the one side so that position is set to the farthest it will go.
+			if (speedOrDistance != 0) {
+				if (arcLength > 0) {
+					// right back
+					right -= (2*arcLength);
+				} else {
+					// Left back, but arcLength is negative, so add
+					left += (2*arcLength);
+				}
+			} else {
+				// Exception is if the distance is set to 0, turn in place
+				left += arcLength;
+				right -= arcLength;
+			}
+		} else { // Speed or percent of voltage mode
+			
+			// The arc length is divided by the circumference of the robot to ensure the turn value is between -1.0 and 1.0.
+			if (angle > Math.PI) {
+				arcLength = (angle / Math.PI - 2);
+			} else {
+				arcLength = angle / Math.PI;
+			}
+			
+			left += arcLength;
+			right -= arcLength;
+
+			// In speed or postion mode, the setting cannot be above 1.0 or below -1.0
+			if (left > 1.0) {
+				right -= (left - 1.0);
+				left = 1.0;
+				if (right < -1.0) {
+					right = -1.0;
+				}
+			} else if (right > 1.0) {
+				left -= (right - 1.0);
+				right = 1.0;
+				if (left < -1.0) {
+					left = -1.0;
+				}
+			} else if (left < -1.0) {
+				right -= (left + 1.0);
+				left = -1.0;
+				if (right > 1.0) {
+					right = 1.0;
+				}
+			} else if (right < -1.0) {
+				left -= (right + 1.0);
+				right = -1.0;
+				if (left > 1.0) {
+					left = 1.0;
+				}
+			}
+		}
+				
+		go(left,right);
+	}
+
 	public void turnByPosition(double degrees) {
 		// TODO: Turns in place to the specified angle from center using position mode
 	}
